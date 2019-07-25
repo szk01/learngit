@@ -7,7 +7,7 @@ from flask import (
 )
 
 import time
-
+import re
 
 # 先要初始化一个 Flask 实例
 app = Flask(__name__)
@@ -42,8 +42,14 @@ def test_connect():
 @app.route('/', methods=['POST'])
 def ip_phone():
     data = request.data
-    log('数据:',data)
-    return 'post sucess'
+    # log('数据:',data)
+    #单独拿到visitor的id
+    pattern = 'visitor id="(\d+)"'
+    vid = re.search(pattern, data).group()
+    log('visitor id:',vid)
+    return 'post sucess!'
+
+
 # 这是访问 /message 的请求
 # methods 默认是 ['GET'] 因此可以省略
 @app.route('/message')
