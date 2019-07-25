@@ -41,8 +41,8 @@ def test_connect():
 
 @app.route('/', methods=['POST'])
 def ip_phone():
-    # data = request.method
-    log(request)
+    data = request.data
+    log('数据:',data)
     return 'post sucess'
 # 这是访问 /message 的请求
 # methods 默认是 ['GET'] 因此可以省略
