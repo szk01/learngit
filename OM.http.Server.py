@@ -41,15 +41,20 @@ def test_connect():
 
 @app.route('/', methods=['POST'])
 def ip_phone():
-    data = request.data
+    data = request.data.decode('utf-8')      #需要改变成utf-8编码
     # log('数据:',data)
     #单独拿到visitor的id
     pattern = 'visitor id="(\d+)"'
-    # vid = re.search(pattern, data).group()
     vid = re.findall(pattern, data)[0]
-    log('visitor id:',vid)
-    return 'post sucess!'
-
+    log('来电的id:',vid)
+    response_body = '<?xml version="1.0" encoding="utf-8" ?>' \
+                        '<Transfer attribute="Connect">' \
+                        '<visitor id="{}"/>' \
+                        '<ext id="215"/>' \
+                        '<voicefile>silence+silence+connect</voicefile>' \
+                    '</Transfer>'.format(vid)
+    log('返回给OM的响应',response_body)
+    return response_body
 
 # 这是访问 /message 的请求
 # methods 默认是 ['GET'] 因此可以省略
@@ -98,6 +103,7 @@ if __name__ == '__main__':
     config = dict(
         # debug=True,
         host='0.0.0.0',
+        # host='192.168.101.39',
         port=80,
     )
     app.run(**config)
