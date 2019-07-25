@@ -43,6 +43,7 @@ def test_connect():
 def ip_phone():
     # data = request.method
     log(request)
+    return 'post sucess'
 # 这是访问 /message 的请求
 # methods 默认是 ['GET'] 因此可以省略
 @app.route('/message')
