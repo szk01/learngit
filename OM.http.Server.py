@@ -45,7 +45,8 @@ def ip_phone():
     # log('数据:',data)
     #单独拿到visitor的id
     pattern = 'visitor id="(\d+)"'
-    vid = re.search(pattern, data).group()
+    # vid = re.search(pattern, data).group()
+    vid = re.findall(pattern, data)[0]
     log('visitor id:',vid)
     return 'post sucess!'
 
