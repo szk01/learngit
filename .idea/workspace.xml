@@ -48,7 +48,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
     <option name="width" value="1382" />
@@ -74,7 +74,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$USER_HOME$/AppData/Local/Packages/36699Atelier39.forWin10_pke1vz55rvc1r/LocalCache/BilibiliDownload/3、知乎大神萧井陌 Python Flask + HTML5 【后端24课全 + 前端24课全】【Python 3.4 Flask1.02】/萧井陌后端 24课版/下半部/课程13/web13-flask和服务器部署/web13上课用品" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunDashboard">

@@ -32,6 +32,10 @@ def log(*args, **kwargs):
 # 注意 methods 参数是一个 list，它规定了这个函数能接受的 HTTP 方法
 @app.route('/test', methods=['GET'])
 def test_connect():
+    method = request.method
+    data = request.data
+    log('请求方法：',method)
+    log('数据：',data)
     return 'test connect sucess! SZFY'
 
 
