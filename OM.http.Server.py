@@ -51,7 +51,6 @@ def ip_phone():
                         '<Transfer attribute="Connect">' \
                         '<visitor id="{}"/>' \
                         '<ext id="215"/>' \
-                        '<voicefile>silence+silence+connect</voicefile>' \
                     '</Transfer>'.format(vid)
     log('返回给OM的响应',response_body)
     return response_body
