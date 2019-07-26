@@ -42,7 +42,7 @@ def test_connect():
 @app.route('/ip_phone', methods=['POST'])
 def ip_phone():
     data = request.data.decode('utf-8')      #需要改变成utf-8编码
-    # log('数据:',data)
+    log('数据:',data)
     #单独拿到visitor的id
     pattern = 'visitor id="(\d+)"'
     vid = re.findall(pattern, data)[0]
