@@ -5,7 +5,7 @@ def log(*args, **kwargs):
 
 
 def RecHttp(response):
-    ip = '192.168.101.39'         #局域网IP,路由器分配给电脑的，在cmd可以查询
+    ip = '106.15.44.224'         #局域网IP,路由器分配给电脑的，在cmd可以查询
     port = 80
     client = socket.socket()
     address = (ip, port)
