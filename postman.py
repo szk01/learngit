@@ -1,6 +1,6 @@
 import requests
 
-url = "180.175.33.122:8787"
+url = "http://180.175.33.122:8787"
 
 payload = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n  <Control attribute=\"Query\">\n  <Deviceinfo/>\n  </Control>"
 headers = {
