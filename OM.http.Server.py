@@ -49,7 +49,7 @@ def ip_phone():
     vid = re.findall(pattern, data)[0]
     log('来电的id:',vid)
     response_body = '<?xml version="1.0" encoding="utf-8" ?>' \
-                        '<Transfer attribute="Connect">' \
+                    '<Transfer attribute="Connect">' \
                         '<visitor id="{}"/>' \
                         '<ext id="215"/>' \
                     '</Transfer>'.format(vid)
