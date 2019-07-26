@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e9c77bd9-c9fe-4252-84a2-7926d70a4554" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/postman.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/send_info.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OM.http.Server.py" beforeDir="false" afterPath="$PROJECT_DIR$/OM.http.Server.py" afterDir="false" />
-    </list>
+    <list default="true" id="e9c77bd9-c9fe-4252-84a2-7926d70a4554" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -31,8 +26,8 @@
       <file leaf-file-name="send_info.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/send_info.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="437">
-              <caret line="36" column="6" selection-start-line="36" selection-start-column="6" selection-end-line="36" selection-end-column="6" />
+            <state relative-caret-position="-72">
+              <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -123,7 +118,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.send_info">
     <configuration name="OM.http.Server" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="OM-flask" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -142,8 +137,51 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
+    <configuration name="postman" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="OM-flask" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/postman.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
+    <configuration name="send_info" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="OM-flask" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/send_info.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.OM.http.Server" />
+      <item itemvalue="Python.send_info" />
+      <item itemvalue="Python.postman" />
+    </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.send_info" />
+        <item itemvalue="Python.postman" />
         <item itemvalue="Python.OM.http.Server" />
       </list>
     </recent_temporary>
@@ -275,8 +313,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/send_info.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="437">
-          <caret line="36" column="6" selection-start-line="36" selection-start-column="6" selection-end-line="36" selection-end-column="6" />
+        <state relative-caret-position="-72">
+          <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>

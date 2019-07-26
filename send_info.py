@@ -20,7 +20,7 @@ def tcpsend(ip,port,xmlbw):
     client.send(by)
     print("tcp发送成功")
     #接受响应信息
-    data = client.recv(1024)
+    data = client.recv(1024).decode('utf-8')
     print("接受响应成功")
     print(data)
     client.close()
