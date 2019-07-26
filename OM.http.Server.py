@@ -39,7 +39,7 @@ def test_connect():
     return 'test connect sucess! SZFY'
 
 
-@app.route('/', methods=['POST'])
+@app.route('/ip_phone', methods=['POST'])
 def ip_phone():
     data = request.data.decode('utf-8')      #需要改变成utf-8编码
     # log('数据:',data)
