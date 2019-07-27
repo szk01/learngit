@@ -39,7 +39,7 @@ def test_connect():
     return 'test connect sucess! SZFY'
 
 
-@app.route('/ip_phone', methods=['POST'])
+@app.route('/ip_phone', methods=['GET'])
 def ip_phone():
     log(request.method)
     data = request.data.decode('utf-8')      #需要改变成utf-8编码
@@ -54,7 +54,7 @@ def ip_phone():
                         '<ext id="215"/>' \
                     '</Transfer>'.format(vid)
     log('返回给OM的响应',response_body)
-    return response_body
+    # return response_body
 
 # 这是访问 /message 的请求
 # methods 默认是 ['GET'] 因此可以省略
