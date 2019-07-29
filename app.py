@@ -45,15 +45,7 @@ def ip_phone():
     data = request.data.decode('utf-8')      #需要改变成utf-8编码
     log('数据:',data)
     #单独拿到visitor的id
-    pattern = 'visitor id="(\d+)"'
-    vid = re.findall(pattern, data)[0]
-    log('来电的id:',vid)
-    response_body = '<?xml version="1.0" encoding="utf-8" ?>' \
-                    '<Transfer attribute="Connect">' \
-                        '<visitor id="{}"/>' \
-                        '<ext id="215"/>' \
-                    '</Transfer>'.format(vid)
-    log('返回给OM的响应',response_body)
+
     # return response_body
 
 # 这是访问 /message 的请求
