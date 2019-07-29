@@ -44,9 +44,7 @@ def ip_phone():
     log(request.method)
     data = request.data.decode('utf-8')      #需要改变成utf-8编码
     log('数据:',data)
-    #单独拿到visitor的id
-
-    # return response_body
+    return ''
 
 # 这是访问 /message 的请求
 # methods 默认是 ['GET'] 因此可以省略
