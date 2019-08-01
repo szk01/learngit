@@ -1,16 +1,15 @@
 from excuteRequest import Process_request
-import random
-import xml.dom.minidom as xmldom
 from excuteRequest import log
-
+import xml.etree.ElementTree as ET
+import random
 
 
 class Funcs(Process_request):
     #类变量，所有的实例共享这个变量
     p = {
             'BUSY': [],
-            'IDLE': ['215'],
-            'ONLINE': ['215'],
+            'IDLE': [],
+            'ONLINE': [],
             'OFFLINE': [],
         }
     #修改分机状态信息
@@ -52,24 +51,25 @@ class Funcs(Process_request):
     #自动转分机功能
     def autoTransfer(self):
         event = self.getRoot()
-        ext = event.getElementsByTagName('visitor')[0]
-        visitor_id = ext.getAttribute("id")                 #访问者id
+        ext = event.find('visitor')
+        visitor_id = ext.attrib['id']                 #访问者id
 
         #组成来电转分机请求
             #读取xml文件，并修改visitor的属性
-        root = xmldom.parse('autoTransfer.xml')
-        visitor = root.getElementsByTagName('visitor')[0]
-        visitor.setAttribute("id", visitor_id)
+        root = ET.parse('autoTransfer.xml')
+        visitor = root.find('visitor')
+        visitor.set('id', visitor_id)
 
             #随机取到idle的id，赋值给ext
         random_idle_id = random.choice(Funcs.p['IDLE'])     #随机取到IDLE的id
-        ext = root.getElementsByTagName('ext')[0]
-        ext.setAttribute("id", random_idle_id)
-        print(root)
+        ext = root.find('ext')
+        ext.set('id', random_idle_id)
+        log(root.tag)                                       #应该是Transfer
         return root
 
     #根据attribute调用函数
     def funcs(self):
+        #可能少了一个判断root的tag
         f = {
             'INVITE': self.autoTransfer,
             'BUSY': self.phone_status,
