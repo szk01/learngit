@@ -16,8 +16,8 @@ class Process_request(object):
 
 
     def getRoot(self):              #解析根节点
-        # dom = xmldom.parse(self.xml)
-        event = self.xml.documentElement
+        dom = xmldom.parse(self.xml)
+        event = dom.documentElement
         log('getRoot():' ,event)
         return event
 
