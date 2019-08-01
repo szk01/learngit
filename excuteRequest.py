@@ -1,5 +1,6 @@
 import xml.dom.minidom as xmldom
 import time
+import xml.etree.ElementTree as ET
 
 def log(*args, **kwargs):
     format = '%Y/%m/%d %H:%M:%S'
@@ -16,7 +17,8 @@ class Process_request(object):
 
 
     def getRoot(self):              #解析根节点
-        dom = xmldom.parse(self.xml)
+        dom = ET.fromstring(self.xml)
+        # dom = xmldom.parse(self.xml)
         event = dom.documentElement
         log('getRoot():' ,event)
         return event

@@ -2,7 +2,7 @@ from excuteRequest import Process_request
 import random
 import xml.dom.minidom as xmldom
 from excuteRequest import log
-from xml.etree.ElementTree import ElementTree
+
 
 
 class Funcs(Process_request):
