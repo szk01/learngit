@@ -36,9 +36,10 @@ def test_connect():
 def ip_phone():
     log(request.method)
     xml = request.data
-    #
-    funct = Funcs(xml)
-    funct.funcs()
+    #开始处理各种请求
+    log('请求类型：',xml)
+    # funct = Funcs(xml)
+    # funct.funcs()
     log('数据:\n',xml)
     return ''
 
