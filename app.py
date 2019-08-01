@@ -36,7 +36,7 @@ def test_connect():
 def ip_phone():
     log(request.method)
     xml = request.data              #传过来的数据类型是byte类型
-    xml.decode('utf-8')
+    xml = xml.decode('utf-8')
     #开始处理各种请求
     log('请求类型：',type(xml))
     # funct = Funcs(xml)
