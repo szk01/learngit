@@ -9,7 +9,7 @@ class Funcs(Process_request):
     #类变量，所有的实例共享这个变量
     p = {
             'BUSY': [],
-            'IDLE': [],
+            'IDLE': ['215'],
             'ONLINE': ['215'],
             'OFFLINE': [],
         }
