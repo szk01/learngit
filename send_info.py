@@ -31,7 +31,7 @@ def Http():
     # bw = '<?xml version="1.0" encoding="utf-8" ?><Control attribute="Query"><exit id="215"/></Control>'
 
     ip = '180.175.33.122'
-    port = 8787
+    port = 1888
     tcpsend(ip, port, bw)
 
 Http()
