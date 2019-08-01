@@ -35,12 +35,13 @@ def test_connect():
 @app.route('/ip_phone', methods=['GET'])
 def ip_phone():
     log(request.method)
-    xml = request.data
+    xml = request.data              #传过来的数据类型是byte类型
+    xml.decode('utf-8')
     #开始处理各种请求
     log('请求类型：',type(xml))
     # funct = Funcs(xml)
     # funct.funcs()
-    log('数据:\n',xml)
+    log('数据:',xml)
     return ''
 
 
