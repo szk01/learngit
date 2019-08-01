@@ -37,7 +37,7 @@ def ip_phone():
     log(request.method)
     xml = request.data
     #开始处理各种请求
-    log('请求类型：',xml)
+    log('请求类型：',type(xml))
     # funct = Funcs(xml)
     # funct.funcs()
     log('数据:\n',xml)
