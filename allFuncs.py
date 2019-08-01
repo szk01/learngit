@@ -64,7 +64,7 @@ class Funcs(Process_request):
         random_idle_id = random.choice(Funcs.p['IDLE'])     #随机取到IDLE的id
         ext = root.find('ext')
         ext.set('id', random_idle_id)
-        log(root.tag)                                       #应该是Transfer
+                                              #应该是Transfer
         return root
 
     #根据attribute调用函数
