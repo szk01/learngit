@@ -50,6 +50,7 @@ class Funcs(Process_request):
         log(Funcs.p)
     #自动转分机功能
     def autoTransfer(self):
+
         event = self.getRoot()
         ext = event.find('visitor')
         visitor_id = ext.attrib['id']                 #访问者id
@@ -64,7 +65,7 @@ class Funcs(Process_request):
         random_idle_id = random.choice(Funcs.p['IDLE'])     #随机取到IDLE的id
         ext = root.find('ext')
         ext.set('id', random_idle_id)
-                                              #应该是Transfer
+        log('autoTransfer():', root)                                #应该是Transfer
         return root
 
     #根据attribute调用函数
