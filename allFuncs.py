@@ -64,6 +64,7 @@ class Funcs(Process_request):
         visitor = root.find('visitor')
         visitor.set('id', visitor_id)
         res_body = tostring(root, encoding='utf-8')
+        log(type(res_body))
         res_body = res_body.decode('utf-8')
         res = Funcs.res_header + res_body
         # res.encode('utf-8')
@@ -88,6 +89,7 @@ class Funcs(Process_request):
         log('来访者id:', root.find('visitor').attrib['id'])
         log('转接分机id:', root.find('ext').attrib['id'])
         res_body = tostring(root, encoding='utf-8')
+        log(type(res_body))
         res_body = res_body.decode('utf-8')
         res = Funcs.res_header + res_body
         # res.encode('utf-8')
