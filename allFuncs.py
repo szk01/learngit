@@ -98,11 +98,12 @@ class Funcs(Process_request):
         }
         eventName = self.getEvent_name()
         log('func:', eventName)
-        result = f.get(eventName, 'none_func')      #返回的是相应的函数地址
+        result = f.get(eventName, '未找到相应的函数处理')      #返回的是相应的函数地址
         if type(result) != str:
-            result()
+            res = result()                            #找到则调用这个函数
+            return res
         else:
-            log(result)
+            log(result)                         #没有找到就打印,没有找到这个函数
         # log('result:' ,result)
 
 

@@ -39,10 +39,11 @@ def ip_phone():
     xml = xml.decode('utf-8')
     #开始处理各种请求
     log('请求类型：',type(xml))
+    log('请求数据:', xml)
     funct = Funcs(xml)
-    funct.funcs()
-    log('数据:',xml)
-    return ''
+    res = funct.funcs()
+    return res
+
 
 
 
