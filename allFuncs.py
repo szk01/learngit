@@ -85,7 +85,7 @@ class Funcs(Process_request):
         log('autoTransfer():', root)                         #应该是Transfer
         log('来访者id:', root.find('visitor').attrib['id'])
         log('转接分机id:', root.find('ext').attrib['id'])
-        res_body = tostring(root, encoding='utf-8')
+        res_body = tostring(root, encoding='utf-8').decode('utf-8')
         res = res_body + Funcs.res_header
         return res
 
