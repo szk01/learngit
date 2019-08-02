@@ -7,7 +7,7 @@ import random
 
 class Funcs(Process_request):
     #类变量，所有的实例共享这个变量
-    res_header = 'POST /xml HTTP/1.0\r\nContent-Type:text/xml\r\nContent-Length:120\r\n\r\n<? xml version="1.0" encoding="utf-8" ?>'
+    res_header = 'POST /xml HTTP/1.0\r\nContent-Type:text/xml\r\nContent-Length:120\r\n\r\n<?xml version="1.0" encoding="utf-8" ?>'
     p = {
             'BUSY': [],
             'IDLE': ['215'],
@@ -78,7 +78,7 @@ class Funcs(Process_request):
         visitor_id = ext.attrib['id']                 #访问者id
         #组成来电转分机请求
             #读取xml文件，并修改visitor的属性
-        autoText = '<?xml version="1.0" encoding="utf-8" ?><Transfer attribute="Connect"><visitor id="14"/><ext id="215"/><voicefile>silence+silence+connect</voicefile></Transfer>'
+        autoText = '<?xml version="1.0" encoding="utf-8"?><Transfer attribute="Connect"><visitor id="14"/><ext id="215"/><voicefile>silence+silence+connect</voicefile></Transfer>'
         root = ET.fromstring(autoText)
         visitor = root.find('visitor')
         visitor.set('id', visitor_id)
