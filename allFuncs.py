@@ -51,7 +51,6 @@ class Funcs(Process_request):
                 Funcs.p['ONLINE'].remove(id)
         log(Funcs.p)
 
-    def header(self):
 
 
     #对INVITE事件进行处理,接受invite请求
