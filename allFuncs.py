@@ -65,7 +65,8 @@ class Funcs(Process_request):
         visitor.set('id', visitor_id)
         res_body = tostring(root, encoding='utf-8')
         res_body = str(res_body)
-        res = res_body + Funcs.res_header
+        res = Funcs.res_header + res_body
+        # res.encode('utf-8')
         return res
 
     #对INCOMING事件进行处理,转到分机处理
@@ -88,7 +89,8 @@ class Funcs(Process_request):
         log('转接分机id:', root.find('ext').attrib['id'])
         res_body = tostring(root, encoding='utf-8')
         res_body = str(res_body)
-        res = res_body + Funcs.res_header
+        res = Funcs.res_header + res_body
+        # res.encode('utf-8')
         return res
 
     #根据attribute调用函数
