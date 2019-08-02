@@ -63,7 +63,7 @@ class Funcs(Process_request):
         visitor.set('id', visitor_id)
         return root
 
-        
+
     #对INCOMING事件进行处理,转到分机处理
     def autoTransfer(self):
         event = self.getRoot()
@@ -72,16 +72,17 @@ class Funcs(Process_request):
 
         #组成来电转分机请求
             #读取xml文件，并修改visitor的属性
-        autoText = '<?xml version="1.0" encoding="utf-8" ?><Transfer attribute="Connect"><visitor id="14" /><ext id="200"/></Transfer>'
+        autoText = '<?xml version="1.0" encoding="utf-8" ?><Transfer attribute="Connect"><visitor id="14"/><ext id="215"/></Transfer>'
         root = ET.fromstring(autoText)
         visitor = root.find('visitor')
         visitor.set('id', visitor_id)
-
             #随机取到idle的id，赋值给ext
         random_idle_id = random.choice(Funcs.p['IDLE'])     #随机取到IDLE的id
         ext = root.find('ext')
         ext.set('id', random_idle_id)
         log('autoTransfer():', root)                         #应该是Transfer
+        log('来访者id:', root.find('visitor').attrib['id'])
+        log('转接分机id:', root.find('ext').attrib['id'])
         return root
 
     #根据attribute调用函数
