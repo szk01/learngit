@@ -7,7 +7,7 @@ import random
 
 class Funcs(Process_request):
     #类变量，所有的实例共享这个变量
-    res_header = '<? xml version="1.0" encoding="utf-8" ?>'
+    res_header = 'POST /xml HTTP/1.0\r\nContent-Type:text/xml\r\nContent-Length:120\r\n\r\n<? xml version="1.0" encoding="utf-8" ?>'
     p = {
             'BUSY': [],
             'IDLE': ['215'],
@@ -51,6 +51,8 @@ class Funcs(Process_request):
                 Funcs.p['ONLINE'].remove(id)
         log(Funcs.p)
 
+    def header(self):
+
 
     #对INVITE事件进行处理,接受invite请求
     def accept(self):
@@ -88,7 +90,7 @@ class Funcs(Process_request):
         log('autoTransfer():', root)                         #应该是Transfer
         log('来访者id:', root.find('visitor').attrib['id'])
         log('转接分机id:', root.find('ext').attrib['id'])
-        res_body = tostring(root, encoding='utf-8')
+        res_body = tostring(root, encoding='utf-8')          #res_body是bytes类型的数据
         log(type(res_body))
         res_body = res_body.decode('utf-8')
         res = Funcs.res_header + res_body
