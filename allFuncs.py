@@ -58,7 +58,8 @@ class Funcs(Process_request):
 
         #组成来电转分机请求
             #读取xml文件，并修改visitor的属性
-        root = ET.ElementTree(file='autoTransfer.xml')           #这一句有问题
+        autoText = '<?xml version="1.0" encoding="utf-8" ?><Transfer attribute="Connect"><visitor id="14" /><ext id="200"/></Transfer>'
+        root = ET.fromstring(autoText)           
         visitor = root.find('visitor')
         visitor.set('id', visitor_id)
 
