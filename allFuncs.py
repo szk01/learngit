@@ -98,7 +98,7 @@ class Funcs(Process_request):
             'OFFLINE': self.phone_status,
         }
         eventName = self.getEvent_name()
-        log('func:', eventName)
+        # log('func:', eventName)
         result = f.get(eventName, '未找到相应的函数处理')      #返回的是相应的函数地址
         if type(result) != str:
             res = result()                            #找到则调用这个函数
