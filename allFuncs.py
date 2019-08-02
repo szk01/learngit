@@ -61,7 +61,7 @@ class Funcs(Process_request):
         root = ET.fromstring(ap)
         visitor = root.find('visitor')
         visitor.set('id', visitor_id)
-        return root
+        return root.tostring()
 
 
     #对INCOMING事件进行处理,转到分机处理
@@ -82,7 +82,7 @@ class Funcs(Process_request):
         log('autoTransfer():', root)                         #应该是Transfer
         log('来访者id:', root.find('visitor').attrib['id'])
         log('转接分机id:', root.find('ext').attrib['id'])
-        return root
+        return root.tostring()
 
     #根据attribute调用函数
     def funcs(self):
