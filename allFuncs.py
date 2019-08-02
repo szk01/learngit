@@ -48,16 +48,17 @@ class Funcs(Process_request):
             if id in Funcs.p['ONLINE']:
                 Funcs.p['ONLINE'].remove(id)
         log(Funcs.p)
+
+
     #自动转分机功能
     def autoTransfer(self):
-
         event = self.getRoot()
         ext = event.find('visitor')
         visitor_id = ext.attrib['id']                 #访问者id
 
         #组成来电转分机请求
             #读取xml文件，并修改visitor的属性
-        root = ET.parse('autoTransfer.xml')
+        root = ET.ElementTree(file='autoTransfer.xml')           #这一句有问题
         visitor = root.find('visitor')
         visitor.set('id', visitor_id)
 
@@ -65,7 +66,7 @@ class Funcs(Process_request):
         random_idle_id = random.choice(Funcs.p['IDLE'])     #随机取到IDLE的id
         ext = root.find('ext')
         ext.set('id', random_idle_id)
-        log('autoTransfer():', root)                                #应该是Transfer
+        log('autoTransfer():', root)                         #应该是Transfer
         return root
 
     #根据attribute调用函数
