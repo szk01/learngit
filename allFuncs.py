@@ -50,7 +50,21 @@ class Funcs(Process_request):
         log(Funcs.p)
 
 
-    #自动转分机功能
+    #对INVITE事件进行处理,接受invite请求
+    def accept(self):
+    #获取来电id
+        event = self.getRoot()
+        ext = event.find('visitor')
+        visitor_id = ext.attrib['id']
+    #组成accept请求
+        ap = '<?xml version="1.0" encoding="utf-8" ?><Notify attribute="Accept"><visitor id="1"/></Notify>'
+        root = ET.fromstring(ap)
+        visitor = root.find('visitor')
+        visitor.set('id', visitor_id)
+        return root
+
+        
+    #对INCOMING事件进行处理,转到分机处理
     def autoTransfer(self):
         event = self.getRoot()
         ext = event.find('visitor')
@@ -59,7 +73,7 @@ class Funcs(Process_request):
         #组成来电转分机请求
             #读取xml文件，并修改visitor的属性
         autoText = '<?xml version="1.0" encoding="utf-8" ?><Transfer attribute="Connect"><visitor id="14" /><ext id="200"/></Transfer>'
-        root = ET.fromstring(autoText)           
+        root = ET.fromstring(autoText)
         visitor = root.find('visitor')
         visitor.set('id', visitor_id)
 
@@ -74,7 +88,8 @@ class Funcs(Process_request):
     def funcs(self):
         #可能少了一个判断root的tag
         f = {
-            'INVITE': self.autoTransfer,
+            'INCOMING':self.autoTransfer,
+            'INVITE': self.accept,
             'BUSY': self.phone_status,
             'IDLE': self.phone_status,
             'ONLINE': self.phone_status,
