@@ -24,7 +24,7 @@ class Funcs(Process_request):
         body_type = '<?xml version="1.0" encoding="utf-8" ?>\r\n'
             #计算出body的长度
         body_len = len(auth) + len(body_type) + len(body)
-        res_header = 'POST /xml HTTP/1.0\r\nContent-Type:text/xml\r\nContent-Length:{}\r\n\r\n'.format(body_len)
+        res_header = 'POST /xml HTTP/1.1\r\nContent-Type:text/xml\r\nContent-Length:{}\r\n\r\n'.format(body_len)
         res = res_header + body_type + auth + body
         return res
 
