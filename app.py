@@ -23,7 +23,7 @@ def log(*args, **kwargs):
 
 #给OM服务器发送一个POST请求
 def reqestOM(body):
-    url = 'http:180.175.33.122:2888/xml'
+    url = 'http://180.175.33.122:2888/xml'
     payload = body
     headers = {
         'content-type':'text/xml',
