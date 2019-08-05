@@ -14,7 +14,7 @@ def tcpsend(ip,port,xmlbw):
     #建立链接
     client.connect(address)
     xmllen = len(xmlbw)
-    sbw = ("POST /xml HTTP/1.1\r\nContent-Type:text/html\r\nHost:%s:%d\r\nContent-Length:%d\r\n\r\n%s") % (ip,port,xmllen,xmlbw)
+    sbw = ("POST /xml HTTP/1.0\r\nContent-Type:text/html\r\nContent-Length:%d\r\n\r\n%s") % (xmllen,xmlbw)
     by = sbw.encode('utf8')
     #发送报文
     client.send(by)
