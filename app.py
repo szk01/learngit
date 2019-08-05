@@ -28,7 +28,7 @@ def reqestOM(body):
     headers = {
         'content-type':'text/xml',
     }
-    requests.request("POST", url, data=payload, headers=headers)
+    requests.request("POST", url, data=payload, headers=headers, verify=False)
 
 
 @app.route('/test', methods=['GET'])
