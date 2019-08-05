@@ -16,17 +16,17 @@ class Funcs(Process_request):
 
     #加上请求头，组成完整请求
     def add_header(self, body):
-        # auth = '<Auth>\r\n' \
-        #              '<Timestamp>23</Timestamp>\r\n' \
-        #              '<nonce>23</nonce>\r\n' \
-        #              '<Signature>f42c335f75c1ea8577e98cbe3eeffbb3</Signature>\r\n' \
-        #              '</Auth>\r\n'
+        auth = '<Auth>\r\n' \
+                     '<Timestamp>23</Timestamp>\r\n' \
+                     '<nonce>23</nonce>\r\n' \
+                     '<Signature>f42c335f75c1ea8577e98cbe3eeffbb3</Signature>\r\n' \
+                     '</Auth>\r\n'
         body_type = '<?xml version="1.0" encoding="utf-8" ?>\r\n'
             #计算出body的长度
-        # body_len = len(auth) + len(body_type) + len(body)
-        body_len = len(body_type) + len(body)
+        body_len = len(auth) + len(body_type) + len(body)
+        # body_len = len(body_type) + len(body)
         res_header = 'POST /xml HTTP/1.1\r\nContent-Type:text/xml\r\nContent-Length:{}\r\n\r\n'.format(body_len)
-        res = res_header + body_type + body
+        res = res_header + body_type + auth + body
         return res
 
     #修改分机状态信息
