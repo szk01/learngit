@@ -65,7 +65,12 @@ class Funcs(Process_request):
                 Funcs.p['ONLINE'].remove(id)
         log(Funcs.p)
 
-
+    #查询语音文件
+    def Query_voice(self):
+        body = '<Manage attribute="Query" >\r\n<voicefile/>\r\n</Manage>'
+        response = self.add_header(body)
+        log('查询语音文件命令执行')
+        return response
 
     #对INCOMING事件进行处理,转到分机处理
     def autoTransfer(self):
@@ -98,7 +103,7 @@ class Funcs(Process_request):
     def funcs(self):
         #可能少了一个判断root的tag
         f = {
-            'INCOMING':self.autoTransfer,
+            'INCOMING':self.Query_voice,
             'INVITE': '',
             'BUSY': self.phone_status,
             'IDLE': self.phone_status,

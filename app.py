@@ -42,7 +42,7 @@ def ip_phone():
     log('请求数据:', xml)
     funct = Funcs(xml)
     res = funct.funcs()
-    log('返回的数据：', res)
+    log('发送给OM的请求：', res)
     return res
 
 
