@@ -16,12 +16,12 @@ class Funcs(Process_request):
 
     #加上请求头，组成完整请求
     def add_header(self, body):
-        auth = '<Auth>' \
-                     '<Timestamp>23</Timestamp>' \
-                     '<nonce>23</nonce>' \
-                     '<Signature>f42c335f75c1ea8577e98cbe3eeffbb3</Signature>' \
-                     '</Auth>'
-        body_type = '<?xml version="1.0" encoding="utf-8" ?>'
+        auth = '<Auth>\r\n' \
+                     '<Timestamp>23</Timestamp>\r\n' \
+                     '<nonce>23</nonce>\r\n' \
+                     '<Signature>f42c335f75c1ea8577e98cbe3eeffbb3</Signature>\r\n' \
+                     '</Auth>\r\n'
+        body_type = '<?xml version="1.0" encoding="utf-8" ?>\r\n'
             #计算出body的长度
         body_len = len(auth) + len(body_type) + len(body)
         res_header = 'POST /xml HTTP/1.0\r\nContent-Type:text/xml\r\nContent-Length:{}\r\n\r\n'.format(body_len)
@@ -74,7 +74,7 @@ class Funcs(Process_request):
         visitor_id = ext.attrib['id']                 #访问者id
         #组成来电转分机请求
             #读取xml文件，并修改visitor的属性
-        autoText = '<Transfer attribute="Connect"><visitor id="14"/><ext id="215"/></Transfer>'
+        autoText = '<Transfer attribute="Connect">\r\n<visitor id="14"/>\r\n<ext id="215"/>\r\n</Transfer>'
             #解析xml字符串
         root = ET.fromstring(autoText)
         visitor = root.find('visitor')
