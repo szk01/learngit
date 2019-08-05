@@ -100,12 +100,15 @@ class Funcs(Process_request):
         }
         eventName = self.getEvent_name()
         # log('func:', eventName)
-        result = f.get(eventName, '未找到相应的函数处理')      #返回的是相应的函数地址
-        if type(result) != str:
-            res = result()                            #找到则调用这个函数
-            return res
-        else:
-            log(result)                         #没有找到就打印,没有找到这个函数
+        try:
+            result = f.get(eventName, '未找到相应的函数处理')      #返回的是相应的函数地址
+            if type(result) != str:
+                res = result()                            #找到则调用这个函数
+                return res
+            else:
+                log(result)                         #没有找到就打印,没有找到这个函数
+        except:
+            log('应用服务器还未开发相应的api')
         # log('result:' ,result)
 
 
