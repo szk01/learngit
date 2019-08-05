@@ -14,6 +14,13 @@ class Funcs(Process_request):
             'ONLINE': ['215'],
             'OFFLINE': [],
         }
+
+    #加上请求头，组成完整请求
+    def add_header(self, len, body):
+        res_header = 'POST /xml HTTP/1.0\r\nContent-Type:text/xml\r\nContent-Length:{}\r\n\r\n<?xml version="1.0" encoding="utf-8" ?>'.format(len)
+        res = res_header + body
+        return res
+
     #修改分机状态信息
     def phone_status(self):
         log('phone_status()执行')
@@ -53,24 +60,6 @@ class Funcs(Process_request):
 
 
 
-    #对INVITE事件进行处理,接受invite请求
-    def accept(self):
-    #获取来电id
-        event = self.getRoot()
-        ext = event.find('visitor')
-        visitor_id = ext.attrib['id']
-    #组成accept请求
-        ap = '<Notify attribute="Accept"><visitor id="1"/></Notify>'
-        root = ET.fromstring(ap)
-        visitor = root.find('visitor')
-        visitor.set('id', visitor_id)
-        res_body = tostring(root, encoding='utf-8')
-        log(type(res_body))
-        res_body = res_body.decode('utf-8')
-        res = Funcs.res_header + res_body
-        # res.encode('utf-8')
-        return res
-
     #对INCOMING事件进行处理,转到分机处理
     def autoTransfer(self):
         event = self.getRoot()
@@ -79,7 +68,10 @@ class Funcs(Process_request):
         #组成来电转分机请求
             #读取xml文件，并修改visitor的属性
         autoText = '<Transfer attribute="Connect"><visitor id="14"/><ext id="215"/></Transfer>'
-        root = ET.fromstring(autoText)
+        contentLen = len(autoText)
+        res = self.add_header(contentLen, autoText)
+            #解析xml字符串
+        root = ET.fromstring(res)
         visitor = root.find('visitor')
         visitor.set('id', visitor_id)
             #随机取到idle的id，赋值给ext
@@ -91,17 +83,17 @@ class Funcs(Process_request):
         log('转接分机id:', root.find('ext').attrib['id'])
         res_body = tostring(root, encoding='utf-8')          #res_body是bytes类型的数据
         log(type(res_body))
-        res_body = res_body.decode('utf-8')
-        res = Funcs.res_header + res_body
+        response = res_body.decode('utf-8')                  #现在转成字符串utf-8类型
+        # res = Funcs.res_header + res_body
         # res.encode('utf-8')
-        return res
+        return response
 
     #根据attribute调用函数
     def funcs(self):
         #可能少了一个判断root的tag
         f = {
             'INCOMING':self.autoTransfer,
-            'INVITE': self.accept,
+            'INVITE': '',
             'BUSY': self.phone_status,
             'IDLE': self.phone_status,
             'ONLINE': self.phone_status,
