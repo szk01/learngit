@@ -57,7 +57,6 @@ if __name__ == '__main__':
         host='0.0.0.0',
         # host='192.168.101.39',
         port=80,
-        ssl_context='adhoc',
     )
     app.run(**config)
     # app.run() 开始运行服务器
