@@ -15,10 +15,17 @@ class Funcs(Process_request):
         }
 
     #加上请求头，组成完整请求
-    def add_header(self, len, body):
-        res_header = 'POST /xml HTTP/1.0\r\nContent-Type:text/xml\r\nContent-Length:{}\r\n\r\n'.format(len)
+    def add_header(self, body):
+        auth = '<Auth>' \
+                     '<Timestamp>23</Timestamp>' \
+                     '<nonce>23</nonce>' \
+                     '<Signature>f42c335f75c1ea8577e98cbe3eeffbb3</Signature>' \
+                     '</Auth>'
         body_type = '<?xml version="1.0" encoding="utf-8" ?>'
-        res = res_header + body_type + body
+            #计算出body的长度
+        body_len = len(auth) + len(body_type) + len(body)
+        res_header = 'POST /xml HTTP/1.0\r\nContent-Type:text/xml\r\nContent-Length:{}\r\n\r\n'.format(body_len)
+        res = res_header + body_type + auth + body
         return res
 
     #修改分机状态信息
@@ -67,12 +74,7 @@ class Funcs(Process_request):
         visitor_id = ext.attrib['id']                 #访问者id
         #组成来电转分机请求
             #读取xml文件，并修改visitor的属性
-        autoText =   '<Auth>' \
-                     '<Timestamp>23</Timestamp>' \
-                     '<nonce>23</nonce>' \
-                     '<Signature>f42c335f75c1ea8577e98cbe3eeffbb3</Signature>' \
-                     '</Auth>' \
-                     '<Transfer attribute="Connect"><visitor id="14"/><ext id="215"/></Transfer>'
+        autoText = '<Transfer attribute="Connect"><visitor id="14"/><ext id="215"/></Transfer>'
             #解析xml字符串
         root = ET.fromstring(autoText)
         visitor = root.find('visitor')
@@ -85,12 +87,9 @@ class Funcs(Process_request):
         log('来访者id:', root.find('visitor').attrib['id'])
         log('转接分机id:', root.find('ext').attrib['id'])
         res_body = tostring(root, encoding='utf-8')          #res_body是bytes类型的数据
-        log(type(res_body))
         res_body = res_body.decode('utf-8')                  #现在转成字符串utf-8类型
 
-        body_type = '<?xml version="1.0" encoding="utf-8" ?>'
-        contenLen = len(res_body) + len(body_type)
-        response = self.add_header(contenLen, res_body)
+        response = self.add_header(res_body)
         # res = Funcs.res_header + res_body
         # res.encode('utf-8')
         return response
