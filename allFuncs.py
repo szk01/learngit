@@ -16,7 +16,13 @@ class Funcs(Process_request):
 
     #加上请求头，组成完整请求
     def add_header(self, len, body):
-        res_header = 'POST /xml HTTP/1.0\r\nContent-Type:text/xml\r\nContent-Length:{}\r\n\r\n<?xml version="1.0" encoding="utf-8" ?>'.format(len)
+        res_header = 'POST /xml HTTP/1.0\r\nContent-Type:text/xml\r\nContent-Length:{}\r\n\r\n' \
+                     '<?xml version="1.0" encoding="utf-8" ?>' \
+                     '<Auth>' \
+                     '<Timestamp>23</Timestamp>' \
+                     '<nonce>23</nonce>' \
+                     '<Signature>f42c335f75c1ea8577e98cbe3eeffbb3</Signature>' \
+                     '</Auth>'.format(len)
         res = res_header + body
         return res
 
