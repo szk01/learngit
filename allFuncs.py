@@ -15,19 +15,11 @@ class Funcs(Process_request):
         }
 
     #加上请求头，组成完整请求
-    def add_header(self, body):
-        auth = '<Auth>\r\n' \
-                     '<Timestamp>23</Timestamp>\r\n' \
-                     '<nonce>23</nonce>\r\n' \
-                     '<Signature>f42c335f75c1ea8577e98cbe3eeffbb3</Signature>\r\n' \
-                     '</Auth>\r\n'
+    @staticmethod
+    def add_header(body):
         body_type = '<?xml version="1.0" encoding="utf-8" ?>\r\n'
-            #计算出body的长度
-        body_len = len(auth) + len(body_type) + len(body)
-        # body_len = len(body_type) + len(body)
-        res_header = 'POST /xml HTTP/1.1\r\nContent-Type:text/xml\r\nContent-Length:{}\r\n\r\n'.format(body_len)
-        res = res_header + body_type + auth + body
-        return res
+        req = body_type + body
+        return req
 
     #修改分机状态信息
     def phone_status(self):
@@ -73,7 +65,7 @@ class Funcs(Process_request):
         log('查询语音文件命令执行')
         return response
 
-    #对INCOMING事件进行处理,转到分机处理
+    #对INCOMING事件进行处理,转到分机处理返回请求数据
     def autoTransfer(self):
         event = self.getRoot()
         ext = event.find('visitor')
@@ -92,15 +84,13 @@ class Funcs(Process_request):
         log('autoTransfer():', root)                         #应该是Transfer
         log('来访者id:', root.find('visitor').attrib['id'])
         log('转接分机id:', root.find('ext').attrib['id'])
-        res_body = tostring(root, encoding='utf-8')          #res_body是bytes类型的数据
-        res_body = res_body.decode('utf-8')                  #现在转成字符串utf-8类型
+        req_body = tostring(root, encoding='utf-8')          #res_body是bytes类型的数据
+        req_body = req_body.decode('utf-8')                  #现在转成字符串utf-8类型
 
-        response = self.add_header(res_body)
-        # res = Funcs.res_header + res_body
-        # res.encode('utf-8')
-        return response
+        data = Funcs.add_header(req_body)
+        return data
 
-    #根据attribute调用函数
+    #根据attribute调用请求函数
     def funcs(self):
         #可能少了一个判断root的tag
         f = {

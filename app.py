@@ -3,16 +3,14 @@ from flask import (
     request,
 )
 
+import requests
 import time
 import json
-import xml.dom.minidom as xmldom
 from multiprocessing import Pool
 from allFuncs import Funcs
 # 先要初始化一个 Flask 实例
 app = Flask(__name__)
 
-# message_list 用来存储所有的 message
-message_list = []
 
 # 用 log 函数把所有输出写入到文件，这样就能很方便地掌控全局了
 # 即便你关掉程序，也能再次打开来查看，这就是个时光机
@@ -21,6 +19,16 @@ def log(*args, **kwargs):
     value = time.localtime(int(time.time()))
     dt = time.strftime(format, value)
     print(dt, *args, **kwargs)
+
+
+#给OM服务器发送一个POST请求
+def reqestOM(body):
+    url = 'http:180.175.33.122:2888/xml'
+    payload = body
+    headers = {
+        'content-type':'text/xml',
+    }
+    requests.request("POST", url, data=payload, headers=headers)
 
 
 @app.route('/test', methods=['GET'])
@@ -40,11 +48,13 @@ def ip_phone():
     #开始处理各种请求
     log('请求类型：',type(xml))
     log('请求数据:', xml)
+        #将OM的请求数据清洗出来访者id
     funct = Funcs(xml)
-    res = funct.funcs()
-    log('发送给OM的请求：', res)
-    return res
-
+    body = funct.funcs()
+    log('发送给OM的请求：', body)
+        #接收到一个请求之后，发送一个请求
+    reqestOM(body)
+    return 'App Server sucess receive!'
 
 
 
