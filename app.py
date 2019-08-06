@@ -46,14 +46,15 @@ def ip_phone():
     xml = request.data              #传过来的数据类型是byte类型
     xml = xml.decode('utf-8')
     #开始处理各种请求
-    log('请求类型：',type(xml))
     log('请求数据:', xml)
         #将OM的请求数据清洗出来访者id
     funct = Funcs(xml)
     body = funct.funcs()
     log('发送给OM的请求：', body)
         #接收到一个请求之后，发送一个请求
-    reqestOM(body)
+            #只要body不为空，说明有请求需要发送
+    if body != None:
+        reqestOM(body)
     return 'App Server sucess receive!'
 
 

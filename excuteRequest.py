@@ -27,7 +27,10 @@ class Process_request(object):
     #解析Event事件报告的attribute属性，根据这个属性分配不同的方法处理请求
     def getEvent_name(self):
         root = self.getRoot()
-        attriName = root.attrib['attribute']
-        log('getEvent_name():', attriName)
-        return attriName
+        try:
+            attriName = root.attrib['attribute']
+            log('getEvent_name():', attriName)
+            return attriName
+        except:
+            log('root为空，OM请求不是事件报告，暂时并不处理')
 

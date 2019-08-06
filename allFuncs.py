@@ -28,7 +28,7 @@ class Funcs(Process_request):
         event_name = self.getEvent_name()
 
         #拿到phone_id
-        id = event.find('ext').attrib('id')
+        id = event.find('ext').attrib['attrib']
         if event_name == 'ONLINE':
             Funcs.p[event_name].append(id)          #加入在线组
             Funcs.p['IDLE'].append(id)              # 加入空闲组
