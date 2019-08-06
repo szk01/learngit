@@ -18,10 +18,13 @@ class Process_request(object):
     def getRoot(self):                  #解析根节点
         # dom = xmldom.parse(self.xml)
         root = ET.fromstring(self.xml)
-        log('getRoot():', root)
-        return root
+        log('getRoot():', root.tag)
+        if root.tag == 'event':
+            return root
+        elif root.tag == 'Cdr':
+            log('暂不处理话单请求')
 
-    #解析Event的attribute属性，根据这个属性分配不同的方法处理请求
+    #解析Event事件报告的attribute属性，根据这个属性分配不同的方法处理请求
     def getEvent_name(self):
         root = self.getRoot()
         attriName = root.attrib['attribute']

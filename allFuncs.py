@@ -28,8 +28,7 @@ class Funcs(Process_request):
         event_name = self.getEvent_name()
 
         #拿到phone_id
-        ext = event.getElementsByTagName('ext')[0]
-        id = ext.getAttribute("id")
+        id = event.find('ext').attrib('id')
         if event_name == 'ONLINE':
             Funcs.p[event_name].append(id)          #加入在线组
             Funcs.p['IDLE'].append(id)              # 加入空闲组
@@ -117,5 +116,3 @@ class Funcs(Process_request):
 # dom = xmldom.parse('busy.xml')
 # funct = Funcs(dom)
 # funct.funcs()
-
-
