@@ -19,7 +19,7 @@ class Process_request(object):
         # dom = xmldom.parse(self.xml)
         root = ET.fromstring(self.xml)
         log('getRoot():', root.tag)
-        if root.tag == 'event':
+        if root.tag == 'Event':
             return root
         elif root.tag == 'Cdr':
             log('暂不处理话单请求')
