@@ -39,14 +39,14 @@ def test_connect():
     log('数据：\n',data)
     return 'test connect sucess! SZFY'
 
-
+#会使用到多线程，不同的进程处理不同的请求
 @app.route('/ip_phone', methods=['GET'])
 def ip_phone():
     log(request.method)
     xml = request.data              #传过来的数据类型是byte类型
     xml = xml.decode('utf-8')
     #开始处理各种请求
-    log('请求数据:', xml)
+    log('OM向应用服务器发送的请求数据:', xml)
         #将OM的请求数据清洗出来访者id
     funct = Funcs(xml)
     body = funct.funcs()

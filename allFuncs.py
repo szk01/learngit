@@ -94,7 +94,6 @@ class Funcs(Process_request):
         #可能少了一个判断root的tag
         f = {
             'INCOMING':self.autoTransfer,
-            'INVITE': '',
             'BUSY': self.phone_status,
             'IDLE': self.phone_status,
             'ONLINE': self.phone_status,
