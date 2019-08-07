@@ -1,15 +1,19 @@
 from flask import (
     Flask,
     request,
+    render_template,
 )
+from flask_socketio import SocketIO,emit
 
 import requests
 import time
-import json
 from multiprocessing import Pool
 from allFuncs import Funcs
-# 先要初始化一个 Flask 实例
+
+# 先要初始化一个 Flask 实例，并将Flask-SocketIO添加到Flask应用程序
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'secret'
+socketio = SocketIO(app)
 
 
 # 用 log 函数把所有输出写入到文件，这样就能很方便地掌控全局了
@@ -39,6 +43,7 @@ def test_connect():
     log('数据：\n',data)
     return 'test connect sucess! SZFY'
 
+
 #会使用到多线程，不同的进程处理不同的请求
 @app.route('/ip_phone', methods=['GET'])
 def ip_phone():
@@ -58,18 +63,34 @@ def ip_phone():
     return 'App Server sucess receive!'
 
 
+#使用webSocket协议，连接应用服务器和浏览器web
+@app.route('/')
+def index():
+    return render_template('test.html')
+
+
+@socketio.on('my event', namespace='/testWebSocket')
+def test_message():
+    emit('server_response',
+         {'data':"连接webSocket成功"},
+         namespace='/testWebSocket')        #emit()函数中有三个参数
+
+
 
 # 运行服务器
 if __name__ == '__main__':
     # debug 模式可以自动加载你对代码的变动, 所以不用重启程序
     # host 参数指定为 '0.0.0.0' 可以让别的机器访问你的代码
-    config = dict(
-        # debug=True,
-        host='0.0.0.0',
-        # host='192.168.101.39',
-        port=80,
-    )
-    app.run(**config)
+    # config = dict(
+    #     # debug=True,
+    #     host='0.0.0.0',
+    #     # local_host='106.15.44.224',
+    #     om_host='180.175.33.122',
+    #     # host='192.168.101.39',
+    #     port=80,
+    # )
+    # app.run(**config)
+    socketio.run(app)                   #socket添加到flask上
     # app.run() 开始运行服务器
     # 所以你访问下面的网址就可以打开网站了
     # http://127.0.0.1:2000/
