@@ -35,7 +35,7 @@ def reqestOM(body):
     requests.request("POST", url, data=payload, headers=headers, verify=False)
 
 
-@app.route('/test', methods=['GET'])
+@app.route('/testPhone', methods=['GET'])
 def test_connect():
     method = request.method
     data = request.data
@@ -64,7 +64,7 @@ def ip_phone():
 
 
 #使用webSocket协议，连接应用服务器和浏览器web
-@app.route('/')
+@app.route('/testWebSocket')
 def index():
     return render_template('test.html')
 
@@ -72,8 +72,8 @@ def index():
 @socketio.on('my event', namespace='/testWebSocket')
 def test_message():
     emit('server_response',
-         {'data':"连接webSocket成功"},
-         namespace='/testWebSocket')        #emit()函数中有三个参数
+         {'data':"连接webSocket成功"})        #emit()函数中有两个参数
+
 
 
 
@@ -81,16 +81,17 @@ def test_message():
 if __name__ == '__main__':
     # debug 模式可以自动加载你对代码的变动, 所以不用重启程序
     # host 参数指定为 '0.0.0.0' 可以让别的机器访问你的代码
-    # config = dict(
-    #     # debug=True,
-    #     host='0.0.0.0',
-    #     # local_host='106.15.44.224',
-    #     om_host='180.175.33.122',
-    #     # host='192.168.101.39',
-    #     port=80,
-    # )
-    # app.run(**config)
-    socketio.run(app)                   #socket添加到flask上
+    config = dict(
+        # debug=True,
+        host='0.0.0.0',
+        # local_host='106.15.44.224',
+        # om_host='180.175.33.122',
+        # host='192.168.101.39',
+        port=80,
+        app=app,
+    )
+    socketio.run(**config)
+    # socketio.run(app)                   #socket添加到flask上
     # app.run() 开始运行服务器
     # 所以你访问下面的网址就可以打开网站了
     # http://127.0.0.1:2000/

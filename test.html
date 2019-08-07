@@ -11,7 +11,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
         namespace = '/testWebSocket';
-        var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + namespace);
+        var socket = io.connect("http://" + config.server.ip + ":" + config.serverport + namespace);
         socket.on('server_response', function(res) {
             var t = res.data;
             $("#t").text(t);
