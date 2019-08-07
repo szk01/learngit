@@ -64,7 +64,7 @@ def ip_phone():
 
 
 #使用webSocket协议，连接应用服务器和浏览器web
-@app.route('/testWebSocket')
+@app.route('/testWeb')
 def index():
     return render_template('test.html')
 
