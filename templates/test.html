@@ -14,7 +14,7 @@
         var socket = io.connect("http://106.15.44.224/myevent");
         socket.on('server_response', function(res) {
             var t = res.data;
-            alert(t);
+            alert('webSocket被执行', t);
             $("#t").text(t);
         });
 
