@@ -69,7 +69,7 @@ def index():
     return render_template('test.html')
 
 
-@socketio.on('my event', namespace='/testWebSocket')
+@socketio.on('myevent', namespace='/testWebSocket')
 def test_message():
     emit('server_response',
          {'data':"连接webSocket成功"})        #emit()函数中有两个参数
