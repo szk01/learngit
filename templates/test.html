@@ -14,6 +14,7 @@
         var socket = io.connect("http://106.15.44.224/myevent");
         socket.on('server_response', function(res) {
             var t = res.data;
+            console.log('服务器传过来的数据是：', t)
             $("#t").text(t);
         });
 
