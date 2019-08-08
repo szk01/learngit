@@ -14,9 +14,9 @@
         console.log(url);
         var socket = io.connect(url);
         socket.on('connect', function() {
-            socket.emit('login', {data: '客户端主动发送请求成功'});
+            socket.emit('login', {data: 'client send message sucessfully!'});
         });                                                          // 这些都是套路函数
-                                                                    
+
     });
 </script>
 </body>
