@@ -9,15 +9,14 @@
 <body>
 <h2 id="t"></h2>
 <script type="text/javascript">
-    $(document).ready(function() {
-        namespace = '/testWebSocket';
-        var socket = io.connect("http://106.15.44.224/myevent");
-        socket.on('server_response', function(res) {
-            var t = res;
-            alert('webSocket被执行', t);
-            $("#t").text(t);
-        });
-
+    $(function() {
+        var url = "http://106.15.44.224:80";
+        console.log(url);
+        var socket = io.connect(url);
+        socket.on('connect', function() {
+            socket.emit('login', {data: '客户端主动发送请求成功'});
+        });                                                          // 这些都是套路函数
+                                                                    
     });
 </script>
 </body>
