@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>用户登录</title>
+		<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css">
+		<script src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+		<script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="static/css/style.css" />
+	</head>
+	<body>						
+			<div class="mycenter">
+				<div class="col-lg-11 text-center text-info">
+					<h2>请登录</h2>
+				</div>
+				<form action="/login" method="post">		<!-- action='/login'是submit之后跳转的URL -->
+					<div class="col-lg-10">
+						<input type="text" class="form-control" name="username" placeholder="请输入账户名" required autofocus/>
+					</div>
+					
+					<div class="col-lg-10">
+						<input type="password" class="form-control" name="password" placeholder="请输入密码" required autofocus/>
+					</div>
+					
+					<div class="col-lg-10 mycheckbox checkbox">
+						<input type="checkbox" class="col-lg-1">记住密码</input>
+					</div>
+					<div class="col-lg-10">
+						{{result}}
+					</div>>
+					<div class="col-lg-10">
+						<button type="submit" class="btn btn-success col-lg-12">登录</button>
+					</div>
+				</form>
+			</div>
+	</body>
+</html>
