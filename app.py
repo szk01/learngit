@@ -3,7 +3,7 @@ from flask import (
 )
 import time
 from flask_socketio import SocketIO
-from .routes.test import test_bp
+from routes.test import test_bp
 
 # 先要初始化一个 Flask 实例，并将Flask-SocketIO添加到Flask应用程序
 app = Flask(__name__)
