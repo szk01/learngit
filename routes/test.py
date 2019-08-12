@@ -6,10 +6,10 @@ from flask import (
 
 from app import log
 
-main1 = Blueprint('test', __name__)
+main = Blueprint('test', __name__)
 
 
-@main1.route('/testPhone', methods=['GET'])
+@main.route('/testPhone', methods=['GET'])
 def test_connect():
     method = request.method
     data = request.data
@@ -18,6 +18,6 @@ def test_connect():
     return 'test connect sucess! SZFY'
 
 # 使用webSocket协议，连接应用服务器和浏览器web
-@main1.route('/testWeb')
+@main.route('/testWeb')
 def index():
     return render_template('test.html')

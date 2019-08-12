@@ -7,10 +7,10 @@ from flask import (
 )
 from flask_socketio import SocketIO
 
-from routes.login import main1 as todo_index
+from routes.login import main as todo_index
 from routes.OM import main as todo_OM
 from routes.index import main as todo_login
-from routes.test import main1 as todo_test
+from routes.test import main as todo_test
 
 import requests
 import time

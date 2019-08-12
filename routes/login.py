@@ -5,7 +5,7 @@ from flask import (
 )
 from models.user import User
 
-main1 = Blueprint('login', __name__)
+main = Blueprint('login', __name__)
 
 # 做一个用户和密码的判断
 @main.route('/login', methods=['POST'])
