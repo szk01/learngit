@@ -7,10 +7,10 @@ from flask import (
 )
 from flask_socketio import SocketIO
 
-from flaskWeb.routes.login import main as todo_index
-from routes.OM import main as todo_OM
-from routes.index import main as todo_login
-from routes.test import main as todo_test
+from routes.login import main
+from routes.OM import *
+from routes.index import bp as todo_login
+from routes.test import *
 
 import requests
 import time
@@ -32,10 +32,11 @@ def log(*args, **kwargs):
     print(dt, *args, **kwargs)
 
 
-app.register_blueprint(todo_index, url_prefix='/index')
-app.register_blueprint(todo_OM, url_prefix='/OM')
+# 测试蓝图注册
+app.register_blueprint(bp, url_prefix='/test')
+app.register_blueprint(main, url_prefix='/index')
+app.register_blueprint(main, url_prefix='/OM')
 app.register_blueprint(todo_login, url_prefix='/login')
-app.register_blueprint(todo_test, url_prefix='/test')
 
 
 # 接收客户端发送过来的消息

@@ -3,9 +3,9 @@ from flask import (
 )
 from app import app
 
-main = Blueprint('login', __name__)
+bp = Blueprint('login', __name__)
 
 
-@main.route('/index', method=['GET'])
+@bp.route('/index', method=['GET'])
 def index():
     pass
