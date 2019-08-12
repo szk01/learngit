@@ -4,7 +4,7 @@ from flask import (
 from flask_socketio import SocketIO
 
 import sys
-sys.path.append('../routes/test')
+sys.path.append('../routes/test.py')
 import bp
 import time
 
