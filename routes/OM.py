@@ -1,22 +1,12 @@
 from flask import (
     request,
-    Blueprint
+    Blueprint,
 )
 import requests
-import time
-from multiprocessing import Pool
+from utils import log
 from allFuncs import Funcs
 
 main = Blueprint('OM', __name__)
-
-
-# 用 log 函数把所有输出写入到文件，这样就能很方便地掌控全局了
-# 即便你关掉程序，也能再次打开来查看，这就是个时光机
-def log(*args, **kwargs):
-    format = '%Y/%m/%d %H:%M:%S'
-    value = time.localtime(int(time.time()))
-    dt = time.strftime(format, value)
-    print(dt, *args, **kwargs)
 
 
 # 给OM服务器发送一个POST请求

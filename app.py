@@ -1,30 +1,25 @@
 from flask import (
     Flask,
 )
-import time
+from utils import log
 from flask_socketio import SocketIO
-import sys
 
-sys.path.append("/root/learngit/routes")  # Linux上加载
-from test import test_bp
+from routes.index import main as index_routes
+# from routes.login import main as login_routes
+from routes.OM import main as OM_routes
+from routes.test import main as test_routes
 
 # 先要初始化一个 Flask 实例，并将Flask-SocketIO添加到Flask应用程序
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret'
+app.secret_key = 'test for good'
+
 socketio = SocketIO(app)
 
-
-def log(*args, **kwargs):
-    format = '%Y/%m/%d %H:%M:%S'
-    value = time.localtime(int(time.time()))
-    dt = time.strftime(format, value)
-    print(dt, *args, **kwargs)
-
-
 # 测试蓝图注册
-app.register_blueprint(test_bp, url_prefix='/test')
-
-
+app.register_blueprint(index_routes, url_prefix='/index')
+app.register_blueprint(test_routes, url_prefix='/test')
+# app.register_blueprint(login_routes, url_prefix='/login')
+app.register_blueprint(OM_routes, url_prefix='/OM')
 # 接收客户端发送过来的消息
 @socketio.on('login')
 def test_message(data):
@@ -45,4 +40,4 @@ if __name__ == '__main__':
         app=app,
     )
     socketio.run(**config)
-    # app.run() 开始运行服务器
+    # app.run() #开始运行服务器

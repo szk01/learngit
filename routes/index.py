@@ -1,11 +1,11 @@
 from flask import (
-    Blueprint
+    Blueprint,
 )
-from app import app
-
-bp = Blueprint('login', __name__)
 
 
-@bp.route('/index', method=['GET'])
+main = Blueprint('index', __name__)
+
+
+@main.route('/index', methods=['GET'])
 def index():
     pass
