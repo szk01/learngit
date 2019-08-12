@@ -5,8 +5,8 @@ import time
 from flask_socketio import SocketIO
 import sys
 
-sys.path.append("/root/learngit/routes/test")  # Linux上加载
-import test_bp
+sys.path.append("/root/learngit/routes")  # Linux上加载
+from test import test_bp
 
 # 先要初始化一个 Flask 实例，并将Flask-SocketIO添加到Flask应用程序
 app = Flask(__name__)
