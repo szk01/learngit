@@ -5,9 +5,9 @@ from flask_socketio import SocketIO
 
 import sys
 sys.path.append('../routes/test')
+import bp
 import time
-import testImport
-from routes.test import bp
+
 
 # 先要初始化一个 Flask 实例，并将Flask-SocketIO添加到Flask应用程序
 app = Flask(__name__)
