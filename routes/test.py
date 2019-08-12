@@ -6,15 +6,10 @@ from flask import (
 
 from app import log
 
-bp = Blueprint('test', __name__)
+test_bp = Blueprint('test', __name__)       # 第二个参数指定了该蓝图所在的模块名
 
 
-class testImport(object):
-    def test(self):
-        log('test')
-
-
-@bp.route('/testPhone', methods=['GET'])
+@test_bp.route('/testPhone', methods=['GET'])
 def test_connect():
     method = request.method
     data = request.data
@@ -23,6 +18,6 @@ def test_connect():
     return 'test connect sucess! SZFY'
 
 # 使用webSocket协议，连接应用服务器和浏览器web
-@bp.route('/testWeb')
+@test_bp.route('/testWeb')
 def index():
     return render_template('test.html')
