@@ -2,6 +2,9 @@
   <dictionary name="Dracula">
     <words>
       <w>eeffbb</w>
+      <w>myevent</w>
+      <w>serverport</w>
+      <w>socketio</w>
       <w>sucess</w>
       <w>szfy</w>
       <w>xmldom</w>
