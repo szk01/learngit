@@ -1,14 +1,15 @@
 from flask import (
-    Flask,
     request,
     render_template,
+    Blueprint
 )
 from app import app
 from models.user import User
 
+main = Blueprint('login', __name__)
 
 # 做一个用户和密码的判断
-@app.route('/login', methods=['POST'])
+@main.route('/login', methods=['POST'])
 def login():
     form = request.form
     name = form['username']

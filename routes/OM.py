@@ -1,13 +1,13 @@
 from flask import (
-    Flask,
     request,
-    render_template,
+    Blueprint
 )
-from app import app
 import requests
 import time
 from multiprocessing import Pool
 from allFuncs import Funcs
+
+main = Blueprint('OM', __name__)
 
 
 # 用 log 函数把所有输出写入到文件，这样就能很方便地掌控全局了
@@ -30,7 +30,7 @@ def reqestOM(body):
 
 
 # 会使用到多线程，不同的进程处理不同的请求
-@app.route('/ip_phone', methods=['GET'])
+@main.route('/ip_phone', methods=['GET'])
 def ip_phone():
     log(request.method)
     xml = request.data  # 传过来的数据类型是byte类型
