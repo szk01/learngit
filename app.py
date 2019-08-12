@@ -5,7 +5,7 @@ from flask import (
     Blueprint,
 
 )
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO
 
 from routes.login import main as todo_index
 from routes.OM import main as todo_OM
@@ -36,15 +36,6 @@ app.register_blueprint(todo_index, url_prefix='/index')
 app.register_blueprint(todo_OM, url_prefix='/OM')
 app.register_blueprint(todo_login, url_prefix='/login')
 app.register_blueprint(todo_test, url_prefix='/test')
-
-
-@app.route('/testPhone', methods=['GET'])
-def test_connect():
-    method = request.method
-    data = request.data
-    log('请求方法：', method)
-    log('数据：\n', data)
-    return 'test connect sucess! SZFY'
 
 
 # 使用webSocket协议，连接应用服务器和浏览器web

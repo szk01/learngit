@@ -3,7 +3,6 @@ from flask import (
     render_template,
     Blueprint
 )
-from app import app
 from models.user import User
 
 main = Blueprint('login', __name__)
