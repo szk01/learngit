@@ -7,10 +7,10 @@ from flask import (
 )
 from flask_socketio import SocketIO
 
-from routes.login import main as todo_index
+from routes.login import main1 as todo_index
 from routes.OM import main as todo_OM
 from routes.index import main as todo_login
-from routes.test import main as todo_test
+from routes.test import main1 as todo_test
 
 import requests
 import time
@@ -36,12 +36,6 @@ app.register_blueprint(todo_index, url_prefix='/index')
 app.register_blueprint(todo_OM, url_prefix='/OM')
 app.register_blueprint(todo_login, url_prefix='/login')
 app.register_blueprint(todo_test, url_prefix='/test')
-
-
-# 使用webSocket协议，连接应用服务器和浏览器web
-@app.route('/testWeb')
-def index():
-    return render_template('test.html')
 
 
 # 接收客户端发送过来的消息
