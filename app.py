@@ -6,9 +6,9 @@ from flask_socketio import SocketIO
 from routes.test import test_bp
 import sys
 
-sys.path.append("/root/learngit")  # Linux上加载
+sys.path.append("/root/learngit/routes/test")  # Linux上加载
 
-from routes.test import test_bp
+import test_bp
 
 # 先要初始化一个 Flask 实例，并将Flask-SocketIO添加到Flask应用程序
 app = Flask(__name__)
