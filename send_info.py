@@ -13,7 +13,7 @@ headers = {
     'postman-token': "92214f1d-c5b8-edc4-23b3-14fc316105cc"
     }
 
-#构造一个查询请求
+# 构造一个查询请求
 response = requests.request("POST", url, data=payload, headers=headers, verify=False)
 
 print(response.text)

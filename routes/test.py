@@ -9,6 +9,11 @@ from app import log
 bp = Blueprint('test', __name__)
 
 
+class testImport(object):
+    def test(self):
+        log('test')
+
+
 @bp.route('/testPhone', methods=['GET'])
 def test_connect():
     method = request.method

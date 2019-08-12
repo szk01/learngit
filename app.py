@@ -3,15 +3,10 @@ from flask import (
 )
 from flask_socketio import SocketIO
 
-from routes.login import main
-from routes.OM import *
-from routes.index import bp as todo_login
-from routes.test import *
-
-import requests
 import time
-from multiprocessing import Pool
-from allFuncs import Funcs
+from routes.test import testImport
+from routes.test import bp
+
 
 # 先要初始化一个 Flask 实例，并将Flask-SocketIO添加到Flask应用程序
 app = Flask(__name__)
@@ -19,8 +14,6 @@ app.config['SECRET_KEY'] = 'secret'
 socketio = SocketIO(app)
 
 
-# 用 log 函数把所有输出写入到文件，这样就能很方便地掌控全局了
-# 即便你关掉程序，也能再次打开来查看，这就是个时光机
 def log(*args, **kwargs):
     format = '%Y/%m/%d %H:%M:%S'
     value = time.localtime(int(time.time()))
@@ -30,9 +23,6 @@ def log(*args, **kwargs):
 
 # 测试蓝图注册
 app.register_blueprint(bp, url_prefix='/test')
-app.register_blueprint(main, url_prefix='/index')
-app.register_blueprint(main, url_prefix='/OM')
-app.register_blueprint(todo_login, url_prefix='/login')
 
 
 # 接收客户端发送过来的消息
@@ -55,7 +45,4 @@ if __name__ == '__main__':
         app=app,
     )
     socketio.run(**config)
-    # socketio.run(app)                   #socket添加到flask上
     # app.run() 开始运行服务器
-    # 所以你访问下面的网址就可以打开网站了
-    # http://127.0.0.1:2000/
