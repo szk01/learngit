@@ -15,7 +15,7 @@ def test_connect():
     data = request.data
     log('请求方法：', method)
     log('数据：\n', data)
-    return 'test connect sucess! SZFY'
+    return '<h2>test connect sucess! SZFY</h2>'
 
 # 使用webSocket协议，连接应用服务器和浏览器web
 @main.route('/testWeb')

@@ -5,11 +5,11 @@ from flask import (
 )
 from models.user import User
 
-main = Blueprint('log-in', __name__)
+main = Blueprint('login', __name__)
 
 # 做一个用户和密码的判断
-@main.route('/login', methods=['POST'])
-def login111():
+@main.route('/index', methods=['POST'])
+def index():
     form = request.form
     name = form['username']
     pwd = form['password']
