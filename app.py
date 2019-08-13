@@ -60,6 +60,7 @@ def ip_phone():
             log('分机下线')
             socketio.emit(event="idle", data=body)
         else:
+            log('发送来电转分机请求')
             reqestOM(body)
     return 'App Server sucess receive!'
 
