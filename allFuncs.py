@@ -88,10 +88,19 @@ class Funcs(Process_request):
         data = Funcs.add_header(req_body)
         return data
 
+    # 对（来电转分机触发）振铃事件RING进行处理
+    def alterWin(self):
+        event = self.getRoot()
+        mes = event.find('visitor')
+        number = mes.attrib['from']  # 来电id
+        log('来电号码', number)
+        return number
+
     # 根据attribute调用请求函数
     def funcs(self):
         # 可能少了一个判断root的tag
         f = {
+            'RING': self.alterWin,
             'INCOMING': self.autoTransfer,
             'BUSY': self.phone_status,
             'IDLE': self.phone_status,

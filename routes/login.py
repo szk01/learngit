@@ -20,6 +20,6 @@ main = Blueprint('login', __name__)
 #         return render_template("login.html", status="用户名或者密码错误")    # 登录失败
 
 
-@main.route('/om-sigin', methods=['POST'])
+@main.route('/omsingin', methods=['POST'])
 def index():
     pass

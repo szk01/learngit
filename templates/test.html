@@ -7,7 +7,7 @@
     <script type="text/javascript" src="https://cdn.bootcss.com/socket.io/1.5.1/socket.io.min.js"></script>
 </head>
 <body>
-<h2 id="t"></h2>
+<h2>使用webSocket协议</h2>
 <script type="text/javascript">
     $(function() {
         var url = "http://106.15.44.224:80";
@@ -15,7 +15,11 @@
         var socket = io.connect(url);
         socket.on('connect', function() {
             socket.emit('login', {data: 'client send message sucessfully!'});
-        });                                                          // 这些都是套路函数
+        });                                                          // 这些都是套路函数，建立通道，发送提示消息
+
+        socket.on("number", function(data) {                         //接收来电号码消息
+            alter(data+'来电')
+        });
 
     });
 </script>

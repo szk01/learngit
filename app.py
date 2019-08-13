@@ -1,7 +1,6 @@
 from flask import (
     Flask,
 )
-from utils import log
 from flask_socketio import SocketIO
 
 from routes.index import main as index_routes
@@ -20,10 +19,6 @@ app.register_blueprint(index_routes, url_prefix='/index')
 app.register_blueprint(test_routes, url_prefix='/test')
 app.register_blueprint(login_routes, url_prefix='/login')
 app.register_blueprint(OM_routes, url_prefix='/OM')
-# 接收客户端发送过来的消息
-@socketio.on('login')
-def test_message(data):
-    log('服务端接收的消息成功', data)
 
 
 # 运行服务器
