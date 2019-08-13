@@ -52,9 +52,9 @@ class Funcs(Process_request):
             if id in Funcs.p['BUSY']:
                 Funcs.p['BUSY'].remove(id)  # 移出忙组
             if id in Funcs.p['IDLE']:
-                Funcs.p['IDLE'].remove(id)
+                Funcs.p['IDLE'].remove(id)  # 移出空闲组
             if id in Funcs.p['ONLINE']:
-                Funcs.p['ONLINE'].remove(id)
+                Funcs.p['ONLINE'].remove(id)    # 移出在线组
         log(Funcs.p)
 
     # 查询语音文件
@@ -77,7 +77,7 @@ class Funcs(Process_request):
         visitor = root.find('visitor')
         visitor.set('id', visitor_id)
         # 随机取到idle的id，赋值给ext
-        random_idle_id = random.choice(Funcs.p['IDLE'])  # 随机取到IDLE的id
+        random_idle_id = random.choice(list(Funcs.p['IDLE']))  # 随机取到IDLE的id
         ext = root.find('ext')
         ext.set('id', random_idle_id)
         log('autoTransfer():', root)  # 应该是Transfer
