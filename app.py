@@ -5,7 +5,7 @@ from utils import log
 from flask_socketio import SocketIO
 
 from routes.index import main as index_routes
-# from routes.login import main as login_routes
+from routes.login import main as login_routes
 from routes.OM import main as OM_routes
 from routes.test import main as test_routes
 
@@ -18,7 +18,7 @@ socketio = SocketIO(app)
 # 测试蓝图注册
 app.register_blueprint(index_routes, url_prefix='/index')
 app.register_blueprint(test_routes, url_prefix='/test')
-# app.register_blueprint(login_routes, url_prefix='/login')
+app.register_blueprint(login_routes, url_prefix='/login')
 app.register_blueprint(OM_routes, url_prefix='/OM')
 # 接收客户端发送过来的消息
 @socketio.on('login')
