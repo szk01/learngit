@@ -52,12 +52,8 @@ def ip_phone():
     log('发送给OM的请求：', body)
     # 接收到一个请求之后，发送一个请求
     # 只要body不为空，说明有请求需要发送。判断一下请求会发送给OM还是js客户端
-    if len(body) == 13 and '1' in body:             # 如果是电话号码，发送给客户端
-        socketio.emit(event='number', data=body)
-    elif body is not None:
+    if body is not None:
         reqestOM(body)
-    else:
-        pass
     return 'App Server sucess receive!'
 
 
