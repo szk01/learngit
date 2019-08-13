@@ -8,10 +8,10 @@ import random
 class Funcs(Process_request):
     # 类变量，所有的实例共享这个变量
     p = {
-        'BUSY': [],
-        'IDLE': ['215'],
-        'ONLINE': ['215'],
-        'OFFLINE': [],
+        'BUSY': set(),
+        'IDLE': set(),
+        'ONLINE': set(),
+        'OFFLINE': set(),
     }
 
     # 加上请求头，组成完整请求
@@ -28,26 +28,27 @@ class Funcs(Process_request):
         event_name = self.getEvent_name()
 
         # 拿到phone_id
+        # 分机上线
         id = event.find('ext').attrib['id']
         if event_name == 'ONLINE':
-            Funcs.p[event_name].append(id)  # 加入在线组
-            Funcs.p['IDLE'].append(id)  # 加入空闲组
-            # p['OFFLINE'].remove(id)         #移出离线组
+            Funcs.p[event_name].add(id)             # 加入在线组
+            Funcs.p['IDLE'].add(id)                 # 加入空闲组
+            Funcs.p['OFFLINE'].discard(id)          # 移出离线组
 
         # 忙事件报告
         if event_name == 'BUSY':
             log('phone_status:', event_name)
-            Funcs.p[event_name].append(id)  # 加入忙组
-            # Funcs.p['IDLE'].remove(id)  # 移出空闲组
+            Funcs.p[event_name].add(id)  # 加入忙组
+            Funcs.p['IDLE'].discard(id)  # 移出空闲组
 
         # 空闲事件报告
         if event_name == 'IDLE':
-            Funcs.p[event_name].append(id)  # 加入空闲组
-            Funcs.p['BUSY'].remove(id)  # 移出忙组
+            Funcs.p[event_name].add(id)  # 加入空闲组
+            Funcs.p['BUSY'].remove(id)   # 移出忙组
 
         # 离线事件报告
         if event_name == 'OFFLINE':
-            Funcs.p[event_name].append(id)  # 加入离线组
+            Funcs.p[event_name].add(id)  # 加入离线组
             if id in Funcs.p['BUSY']:
                 Funcs.p['BUSY'].remove(id)  # 移出忙组
             if id in Funcs.p['IDLE']:
@@ -96,6 +97,19 @@ class Funcs(Process_request):
         log('来电号码', number)
         return number
 
+    # 空闲事件推送时候，给客户端发送一个状态phone idle
+    def excute_idle(self):
+        log('phone_status()执行')
+        event = self.getRoot()
+        event_name = self.getEvent_name()
+
+        # 空闲事件报告
+        if event_name == 'IDLE':
+            Funcs.p[event_name].add(id)  # 加入空闲组
+            Funcs.p['BUSY'].remove(id)  # 移出忙组
+
+        return 'phone idle'
+
     # 根据attribute调用请求函数
     def funcs(self):
         # 可能少了一个判断root的tag
@@ -103,7 +117,7 @@ class Funcs(Process_request):
             'RING': self.alterWin,
             'INCOMING': self.autoTransfer,
             'BUSY': self.phone_status,
-            'IDLE': self.phone_status,
+            'IDLE': self.excute_idle,
             'ONLINE': self.phone_status,
             'OFFLINE': self.phone_status,
         }

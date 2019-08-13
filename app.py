@@ -56,6 +56,9 @@ def ip_phone():
         if '177' in body:
             log(body)
             socketio.emit(event="number", data=body)
+        if body == 'phone idle':
+            log('分机下线')
+            socketio.emit(event="idle", data=body)
         else:
             reqestOM(body)
     return 'App Server sucess receive!'

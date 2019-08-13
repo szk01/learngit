@@ -7,7 +7,43 @@
     <script type="text/javascript" src="https://cdn.bootcss.com/socket.io/1.5.1/socket.io.min.js"></script>
 </head>
 <body>
-<h2>使用webSocket协议</h2>
+    <style type="text/css">
+        #note {
+            width: 300px;
+            height: 100px;
+            position: fixed;
+            margin: 0 auto;
+            background-color: white;
+            border: 1px solid #000;
+            display: none;
+        }
+
+        .text {
+            width: 150px;
+            height: 50px;
+            position: absolution;
+            left: 20px;
+
+        }
+
+        .bt {
+            background-color: #008CBA; /* Blue */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+    </style>
+    <h2>使用webSocket协议</h2>
+    <div id="note">
+        <div class="num-text"></div>
+        <button class="bt">关闭</button>
+    </div>
 <script type="text/javascript">
     $(function() {
         var url = "http://106.15.44.224:80";
@@ -17,11 +53,22 @@
             socket.emit('login', {data: 'client send message sucessfully!'});
         });                                                          // 这些都是套路函数，建立通道，发送提示消息
 
-        socket.on("number", function(data) {                         //接收来电号码消息
-            alert(data+'来电')
-            console.log(data)
+        socket.on("number", function(data) {                         // 接收来电号码消息
+            alert(data+'来电');
+            $('.num-text').text('来电号码'+data)
+            $('#note').show();
         });
 
+        socket.on("idle", function(data) {                          // 分机忙碌转空闲，显示通话状态
+            if (data === 'phone idle') {
+                $('.num-text').text('通话已关闭');
+            }
+        });
+
+        // 点击关闭显示框
+        $(".bt").click(function(){
+            $('#note').hide();
+        });
     });
 </script>
 </body>
