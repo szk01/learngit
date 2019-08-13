@@ -24,7 +24,7 @@ app.register_blueprint(login_routes, url_prefix='/login')
 
 # 给OM服务器发送一个POST请求
 def reqestOM(body):
-    url = 'https://zhidi.sfyf.cn:1888/xml'
+    url = 'https://180.162.154.155:1888/xml'
     payload = body
     headers = {
         'content-type': 'text/xml',
@@ -56,6 +56,8 @@ def ip_phone():
         socketio.emit(event='number', data=body)
     elif body is not None:
         reqestOM(body)
+    else:
+        pass
     return 'App Server sucess receive!'
 
 
