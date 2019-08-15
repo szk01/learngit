@@ -9,10 +9,15 @@ from routes.index import main as index_routes
 from routes.login import main as login_routes
 from routes.test import main as test_routes
 from allFuncs import Funcs
+from models.user import db
+from models import config
 
 # 先要初始化一个 Flask 实例，并将Flask-SocketIO添加到Flask应用程序
 app = Flask(__name__)
 app.secret_key = 'test for good'
+app.config.from_object(config)
+db.init_app(app)
+
 
 socketio = SocketIO(app)
 
@@ -24,7 +29,7 @@ app.register_blueprint(login_routes, url_prefix='/login')
 
 # 给OM服务器发送一个POST请求
 def reqestOM(body):
-    url = 'https://180.162.154.155:1888/xml'
+    url = 'https://180.174.1.213.155:1888/xml'
     payload = body
     headers = {
         'content-type': 'text/xml',
@@ -65,15 +70,20 @@ def ip_phone():
     return 'App Server sucess receive!'
 
 
+@app.route('/test')
+def test():
+    return 'test sucess'
+
+
 # 运行服务器
 if __name__ == '__main__':
     # debug 模式可以自动加载你对代码的变动, 所以不用重启程序
     # host 参数指定为 '0.0.0.0' 可以让别的机器访问你的代码
     config = dict(
-        # debug=True,
-        host='0.0.0.0',
+        debug=True,
+        # host='127.0.0.1',
         # local_host='106.15.44.224',
-        # om_host='180.175.33.122',
+        # host='0.0.0.0',
         # host='192.168.101.39',
         port=80,
         app=app,
