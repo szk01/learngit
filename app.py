@@ -88,7 +88,7 @@ if __name__ == '__main__':
         # local_host='106.15.44.224',
         host='0.0.0.0',
         # host='192.168.101.39',
-        port=1888,
+        port=80,
         app=app,
     )
     socketio.run(**config)
