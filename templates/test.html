@@ -115,6 +115,7 @@
         socket.on("end", function(data) {                          // 分机或者来访者挂断，显示状态
             if (data === 'END') {
                 $('.status').text('通话已结束');
+
             }
         });
 
