@@ -61,14 +61,7 @@
         </li>
     </ul>
 
-<!--计时器-->
-<script></script>
-    var time = 0;
-    function timeCount() {
-        $('.time').value = time
-        time = time + 1
-        setTimeout("timeCount()", 1000)
-    }
+
 <script type="text/javascript">
     $(function() {
         var url = "http://106.15.44.224:80";
@@ -89,7 +82,7 @@
             if (data === 'ANWSER') {
                 $('.status').text('通话已建立');
 
-                //开始计时
+                <!--计时器-->
                 var count = 0
 	            var timeshow = '00:00'
  	            function timedCount() {
