@@ -2,47 +2,64 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>测试webSocket</title>
+    <title>来电通知</title>
     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.bootcss.com/socket.io/1.5.1/socket.io.min.js"></script>
-</head>
-<body>
     <style type="text/css">
-        #note {
-            width: 300px;
-            height: 100px;
-            position: fixed;
-            margin: 0 auto;
-            background-color: white;
-            border: 1px solid #000;
+        * {
+            margin: 0;
         }
-
-        .text {
-            width: 150px;
-            height: 50px;
-            position: absolution;
-            left: 20px;
+        #phone-note {
+            margin: 10px 5px;                 /* 上下 左右 */
+            height: 60px;
+            /*border: 1px solid #000;*/
+            background-color: #EEE9E9;
 
         }
 
+        ul li {
+            list-style: none;
+            float: left;
+            margin: 20px 10px;
+            width: 200px;
+        }
+        .cdr {
+            font-weight: bold;
+        }
+        .number {
+            /*width: 200px;*/
+            /*border: 1px solid #000;*/
+
+        }
+        .status {
+            /*width: 200px;*/
+            /*border: 1px solid #000;*/
+        }
+        .time {
+            /*width: 200px;*/
+            /*border: 1px solid #000;*/
+        }
         .bt {
-            background-color: #008CBA; /* Blue */
-            border: none;
-            color: white;
-            padding: 15px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
+            font-size: 15px;
             cursor: pointer;
+            background-color: #008CBA;     /* 蓝色*/
+            color: white;                  /* 文字颜色*/
         }
     </style>
+</head>
+<body>
     <h2>使用webSocket协议</h2>
-    <div id="note">
-        <div class="num-text"></div>
-        <button class="bt">关闭</button>
-    </div>
+
+    <ul id="phone-note">
+        <li class="cdr">通话记录</li>
+        <li class="number"><em>来电号码</em></li>
+        <li class="status">呼叫中...</li>
+        <li class="time">呼叫时长</li>
+        <li>
+            <button class="bt">关闭</button>
+        </li>
+    </ul>
+
 <script type="text/javascript">
     $(function() {
         var url = "http://106.15.44.224:80";
@@ -54,19 +71,22 @@
 
         socket.on("number", function(data) {                         // 接收来电号码消息
             alert(data+'来电');
-            $('.num-text').text('来电号码'+data)
-            $('#note').show();
+            $('.number').text('来电号码'+data)
+            $('#phone-note').show();
         });
 
         socket.on("idle", function(data) {                          // 分机忙碌转空闲，显示通话状态
             if (data === 'phone idle') {
                 $('.num-text').text('通话已关闭');
             }
+            if (data === 'answer') {
+                $('.status').text('呼叫已应答')
+            }
         });
 
         // 点击关闭显示框
         $(".bt").click(function(){
-            $('#note').hide();
+            $('#phone-note').hide();
         });
     });
 </script>
