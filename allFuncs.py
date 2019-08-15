@@ -89,7 +89,7 @@ class Funcs(Process_request):
         data = Funcs.add_header(req_body)
         return data
 
-    # 对（来电转分机触发）振铃事件RING进行处理
+    # 对（来电转分机触发）振铃事件RING 进行处理，发送客户端的号码
     def alterWin(self):
         event = self.getRoot()
         mes = event.find('visitor')
@@ -97,27 +97,24 @@ class Funcs(Process_request):
         log('来电号码', number)
         return number
 
-    # 空闲事件推送时候，给客户端发送一个状态phone idle
-    def excute_idle(self):
-        log('phone_status()执行')
-        event = self.getRoot()
-        event_name = self.getEvent_name()
+    # 对ANWSER事件处理，分机应答后，发送状态
+    def status_change(self):
+        return 'ANWSER'
 
-        # 空闲事件报告
-        if event_name == 'IDLE':
-            Funcs.p[event_name].add(id)  # 加入空闲组
-            Funcs.p['BUSY'].remove(id)  # 移出忙组
-
-        return 'phone idle'
+    # 通话结束后，发送状态
+    def call_end(self):
+        return 'END'
 
     # 根据attribute调用请求函数
     def funcs(self):
         # 可能少了一个判断root的tag
         f = {
-            'RING': self.alterWin,
+            'BYE': self.call_end,                    # 来电和分机通话结束，通话结束
+            'ANSWER': self.status_change,            # 来电转分机分机应答，通话建立
+            'RING': self.alterWin,                   # 来电 弹窗显示号码，正在呼叫
             'INCOMING': self.autoTransfer,
             'BUSY': self.phone_status,
-            'IDLE': self.excute_idle,
+            'IDLE': self.phone_status,
             'ONLINE': self.phone_status,
             'OFFLINE': self.phone_status,
         }

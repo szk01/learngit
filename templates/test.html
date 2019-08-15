@@ -14,6 +14,7 @@
             height: 60px;
             /*border: 1px solid #000;*/
             background-color: #EEE9E9;
+            display: none;
 
         }
 
@@ -70,19 +71,24 @@
         });                                                          // 这些都是套路函数，建立通道，发送提示消息
 
         socket.on("number", function(data) {                         // 接收来电号码消息
-            alert(data+'来电');
-            $('.number').text('来电号码'+data)
+            <!--alert(data+'来电');-->
             $('#phone-note').show();
+            $('.number').text('来电'+data)
+
         });
 
-        socket.on("idle", function(data) {                          // 分机忙碌转空闲，显示通话状态
-            if (data === 'phone idle') {
-                $('.num-text').text('通话已关闭');
-            }
-            if (data === 'answer') {
-                $('.status').text('呼叫已应答')
+        socket.on("anwser", function(data) {                          // 分机应答，显示状态
+            if (data === 'ANWSER') {
+                $('.status').text('通话已建立');
             }
         });
+
+        socket.on("end", function(data) {                          // 分机或者来访者挂断，显示状态
+            if (data === 'END') {
+                $('.status').text('通话已结束');
+            }
+        });
+
 
         // 点击关闭显示框
         $(".bt").click(function(){

@@ -61,9 +61,12 @@ def ip_phone():
         if '177' in body:
             log(body)
             socketio.emit(event="number", data=body)
-        if body == 'phone idle':
-            log('分机下线')
-            socketio.emit(event="idle", data=body)
+        elif body == 'ANWSER':
+            log('通话建立')
+            socketio.emit(event="anwser", data=body)
+        elif body == 'END':
+            log('通话结束')
+            socketio.emit(event='end', data=body)
         else:
             log('发送来电转分机请求')
             reqestOM(body)
