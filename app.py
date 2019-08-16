@@ -54,7 +54,6 @@ def ip_phone():
     # 将OM的请求数据清洗出来访者id
     funct = Funcs(xml)
     body = funct.funcs()
-    log('发送给OM的请求：', body)
     # 接收到一个请求之后，发送一个请求
     # 只要body不为空，说明有请求需要发送。判断一下请求会发送给OM还是js客户端
     if body is not None:
@@ -68,7 +67,7 @@ def ip_phone():
             log('通话结束')
             socketio.emit(event='end', data=body)
         else:
-            log('发送来电转分机请求')
+            log('发送给OM来电转分机请求')
             reqestOM(body)
     return 'App Server sucess receive!'
 
