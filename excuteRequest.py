@@ -22,14 +22,15 @@ class Process_request(object):
         if root.tag == 'Event':
             return root
         elif root.tag == 'Cdr':
-            log('暂不处理话单请求')
+            log('处理话单请求')
+            return root
 
     # 解析Event事件报告的attribute属性，根据这个属性分配不同的方法处理请求
     def getEvent_name(self):
         root = self.getRoot()
-        try:
+        if root.tag == 'Event':
             attriName = root.attrib['attribute']
             log('getEvent_name():', attriName)
             return attriName
-        except:
-            log('root为空，OM请求不是事件报告，暂时并不处理')
+        elif root.tag == 'Cdr':
+            return 'Cdr'

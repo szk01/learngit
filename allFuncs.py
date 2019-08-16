@@ -105,10 +105,19 @@ class Funcs(Process_request):
     def call_end(self):
         return 'END'
 
+    # 拿到录音的相对路径
+    def recording(self):
+        event = self.getRoot()
+        record_path = event.find('Record')
+        path = record_path.text
+        log(path)
+        return path
+
     # 根据attribute调用请求函数
     def funcs(self):
         # 可能少了一个判断root的tag
         f = {
+            'Cdr': self.recording,
             'BYE': self.call_end,                    # 来电和分机通话结束，通话结束
             'ANSWER': self.status_change,            # 来电转分机分机应答，通话建立
             'RING': self.alterWin,                   # 来电 弹窗显示号码，正在呼叫
