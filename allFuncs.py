@@ -112,7 +112,7 @@ class Funcs(Process_request):
         record_path = event.find('Recording')
         path = record_path.text
         log(path)
-        url = 'http://http://180.174.1.213:2888/mcc/Recorder/'
+        url = 'http://180.174.1.213:2888/mcc/Recorder/'
         competePath = url + path
         response = requests.get(competePath)
         log(response)  # 应该是语音文件
