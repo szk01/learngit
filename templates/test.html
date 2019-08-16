@@ -83,17 +83,6 @@
                 timeshow = min.toString()+':'+sec.toString()
             }
         }
-        if (status == 'start') {
-            var interval = setInterval(function() {
-                count += 1
-                show(count)
-                console.log(timeshow)
-                $('.time').text(timeshow)
-                }, 1000);               /*每隔一秒就执行一次*/
-        }
-        if (status == 'end')
-            clearInterval(interval);
-            console.log('通话已结束')
     }
 
         var url = "http://106.15.44.224:80";
@@ -114,16 +103,21 @@
             if (data === 'ANWSER') {
                 $('.status').text('通话已建立');
                 <!--计时器-->
-                timeing('start')
-                return ''                                  // 开始计时
+                var interval = setInterval(function() {
+                    count += 1
+                    show(count)
+                    console.log(timeshow)
+                    $('.time').text(timeshow)
+                }, 1000);
+                                                 // 开始计时
             }
         });
 
         socket.on("end", function(data) {                             // 分机或者来访者挂断，显示状态
             if (data === 'END') {
                 $('.status').text('通话已结束');
-                timeing('end')                            // 停止计时
-                console.log('停止计时')
+                clearInterval(interval);
+                console.log('通话已结束')                           // 停止计时
             }
         });
 
