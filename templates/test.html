@@ -63,41 +63,39 @@
 
 
 <script type="text/javascript">
-    $(function() {
-            function timeing(status) {                                              // 计时器函数
-                var count = 0
-                var timeshow = '00:00'
-                var interval = null
-                function timedCount() {
-                    count += 1
-                    show(count)
-                    console.log(timeshow)
-                    $('.time').text(timeshow)
-                }
-                function show(count) {
-                    if (count < 60 ) {
-                        timeshow = '00:'+count.toString()
-                    }
-                    if (count > 60 || count === 60) {
-                        var min = count / 60
-                        var sec = count % 60
-                        min = Math.floor(min)                       /*小数取整*/
-                        timeshow = min.toString()+':'+sec.toString()
-                    }
-                }
-                if (status == 'start') {
-                     if(interval!=null){                            //判断计时器是否为空
-					    clearInterval(interval);
-					    interval=null;
-				     }
-                     interval = setInterval(timedCount, 1000)               /*每隔一秒就执行一次*/
-                }
-                if (status == 'end')
-                     clearInterval(interval);
-				     interval = null;
-				     console.log('通话已结束')
-
+    function timeing(status) {                                              // 计时器函数
+        var count = 0
+        var timeshow = '00:00'
+        var interval = null
+        function timedCount() {
+            count += 1
+            show(count)
+            console.log(timeshow)
+            $('.time').text(timeshow)
+        }
+        function show(count) {
+            if (count < 60 ) {
+                timeshow = '00:'+count.toString()
             }
+            if (count > 60 || count === 60) {
+                var min = count / 60
+                var sec = count % 60
+                min = Math.floor(min)                       /*小数取整*/
+                timeshow = min.toString()+':'+sec.toString()
+            }
+        }
+        if (status == 'start') {
+             if(interval!=null){                            //判断计时器是否为空
+                clearInterval(interval);
+                interval=null;
+             }
+             interval = setInterval(timedCount, 1000)               /*每隔一秒就执行一次*/
+        }
+        if (status == 'end')
+             clearInterval(interval);
+             interval = null;
+             console.log('通话已结束')
+    }
 
         var url = "http://106.15.44.224:80";
         console.log(url);
@@ -134,7 +132,6 @@
         $(".bt").click(function(){
             $('#phone-note').hide();
         });
-    });
 </script>
 </body>
 </html>
