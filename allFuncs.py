@@ -3,6 +3,7 @@ from excuteRequest import log
 import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import tostring
 import random
+import requests
 
 
 class Funcs(Process_request):
@@ -31,9 +32,9 @@ class Funcs(Process_request):
         # 分机上线
         id = event.find('ext').attrib['id']
         if event_name == 'ONLINE':
-            Funcs.p[event_name].add(id)             # 加入在线组
-            Funcs.p['IDLE'].add(id)                 # 加入空闲组
-            Funcs.p['OFFLINE'].discard(id)          # 移出离线组
+            Funcs.p[event_name].add(id)  # 加入在线组
+            Funcs.p['IDLE'].add(id)  # 加入空闲组
+            Funcs.p['OFFLINE'].discard(id)  # 移出离线组
 
         # 忙事件报告
         if event_name == 'BUSY':
@@ -44,7 +45,7 @@ class Funcs(Process_request):
         # 空闲事件报告
         if event_name == 'IDLE':
             Funcs.p[event_name].add(id)  # 加入空闲组
-            Funcs.p['BUSY'].remove(id)   # 移出忙组
+            Funcs.p['BUSY'].remove(id)  # 移出忙组
 
         # 离线事件报告
         if event_name == 'OFFLINE':
@@ -54,7 +55,7 @@ class Funcs(Process_request):
             if id in Funcs.p['IDLE']:
                 Funcs.p['IDLE'].remove(id)  # 移出空闲组
             if id in Funcs.p['ONLINE']:
-                Funcs.p['ONLINE'].remove(id)    # 移出在线组
+                Funcs.p['ONLINE'].remove(id)  # 移出在线组
         log(Funcs.p)
 
     # 查询语音文件
@@ -111,16 +112,19 @@ class Funcs(Process_request):
         record_path = event.find('Recording')
         path = record_path.text
         log(path)
-        return path
+        url = 'http://http://180.174.1.213:2888/mcc/Recorder'
+        competePath = url + path
+        response = requests.get(competePath)
+        log(response)  # 应该是语音文件
 
     # 根据attribute调用请求函数
     def funcs(self):
         # 可能少了一个判断root的tag
         f = {
             'Cdr': self.recording,
-            'BYE': self.call_end,                    # 来电和分机通话结束，通话结束
-            'ANSWER': self.status_change,            # 来电转分机分机应答，通话建立
-            'RING': self.alterWin,                   # 来电 弹窗显示号码，正在呼叫
+            'BYE': self.call_end,  # 来电和分机通话结束，通话结束
+            'ANSWER': self.status_change,  # 来电转分机分机应答，通话建立
+            'RING': self.alterWin,  # 来电 弹窗显示号码，正在呼叫
             'INCOMING': self.autoTransfer,
             'BUSY': self.phone_status,
             'IDLE': self.phone_status,
@@ -130,11 +134,11 @@ class Funcs(Process_request):
         eventName = self.getEvent_name()
         # log('func:', eventName)
         result = f.get(eventName, '未找到相应的函数处理')  # 返回的是相应的函数地址
-        if type(result) != str:
-            res = result()  # 找到则调用这个函数
+        try:
+            res = result()  # 调用这个函数
             return res
-        else:
-            log(result)  # 没有找到就打印,没有找到这个函数
+        except Exception as e:
+            log(e)  # 没有找到就打印,没有找到这个函数
 
         # log('result:' ,result)
 
