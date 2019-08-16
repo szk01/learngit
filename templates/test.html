@@ -46,6 +46,13 @@
             background-color: #008CBA;     /* 蓝色*/
             color: white;                  /* 文字颜色*/
         }
+
+        .time {
+            font-size: 15px;
+            cursor: pointer;
+            background-color: #008CBA;     /* 蓝色*/
+            color: white;                  /* 文字颜色*/
+        }
     </style>
 </head>
 <body>
@@ -107,6 +114,8 @@
                 $('.status').text('通话已建立');
                 <!--计时器-->
                 var interval = setInterval(function() {
+                    var count = 0
+                    var timeshow = '00:00'
                     count += 1
                     show(count)
                     console.log(timeshow)
@@ -119,8 +128,7 @@
         socket.on("end", function(data) {                             // 分机或者来访者挂断，显示状态
             if (data === 'END') {
                 $('.status').text('通话已结束');
-                clearInterval(interval);
-                console.log('通话已结束')                           // 停止计时
+                $('.time').hide()                           // 停止计时
             }
         });
 
@@ -129,6 +137,7 @@
         $(".bt").click(function(){
             $('#phone-note').hide();
         });
+
         $(".time").click(function(){
             clearInterval(interval);
             console.log('点击停止计时按钮')
