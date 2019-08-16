@@ -59,6 +59,9 @@
         <li>
             <button class="bt">关闭</button>
         </li>
+        <li>
+            <button class="time">停止计时</button>
+        </li>
     </ul>
 
 
@@ -126,6 +129,10 @@
         $(".bt").click(function(){
             $('#phone-note').hide();
         });
+        $(".time").click(function(){
+            clearInterval(interval);
+        });
+
 </script>
 </body>
 </html>
