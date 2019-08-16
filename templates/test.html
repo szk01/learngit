@@ -75,7 +75,7 @@
             <!--alert(data+'来电');-->
             $('#phone-note').show();
             $('.number').text('来电'+data)
-            $(.time).text('00:00')
+            $('.time').text('00:00')
         });
 
         socket.on("anwser", function(data) {                          // 分机应答，显示状态
