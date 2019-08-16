@@ -64,14 +64,15 @@
 
 <script type="text/javascript">
     $(function() {
-            function timeing() {                                              // 计时器函数
+            function timeing(status) {                                              // 计时器函数
                 var count = 0
                 var timeshow = '00:00'
+                var interval
                 function timedCount() {
                     count += 1
                     show(count)
                     console.log(timeshow)
-                    $('#txt').text(timeshow)
+                    $('.time').text(timeshow)
                 }
                 function show(count) {
                     if (count < 60 ) {
@@ -84,7 +85,11 @@
                         timeshow = min.toString()+':'+sec.toString()
                     }
                 }
-                var interval = setInterval(timedCount, 1000)               /*每隔一秒就执行一次*/
+                if (status == 'start') {
+                     interval = setInterval(timedCount, 1000)               /*每隔一秒就执行一次*/
+                }
+                if (status == 'end')
+                    clearInterval(interval)
             }
 
         var url = "http://106.15.44.224:80";
@@ -105,14 +110,14 @@
             if (data === 'ANWSER') {
                 $('.status').text('通话已建立');
                 <!--计时器-->
-                timeing()
+                timeing('start')                                      // 开始计时
             }
         });
 
-        socket.on("end", function(data) {                          // 分机或者来访者挂断，显示状态
+        socket.on("end", function(data) {                             // 分机或者来访者挂断，显示状态
             if (data === 'END') {
                 $('.status').text('通话已结束');
-                clearInterval(interval)                            // 停止计时
+                timeing('end')                            // 停止计时
             }
         });
 
