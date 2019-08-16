@@ -82,14 +82,12 @@
                 timeshow = min.toString()+':'+sec.toString()
             }
         }
-        if (status == 'start') {
-            while(true) {
-                setTimeout("timedCount()", 1000)               /*每隔一秒就执行一次*/
-                console.log(timeshow)
-            }
+        while(status == 'start') {
+            setTimeout(timedCount, 1000);               /*每隔一秒就执行一次*/
+            console.log(timeshow)
         }
-        else if (status == 'end')
-             console.log('通话已结束')
+        if (status == 'end')
+            console.log('通话已结束')
     }
 
         var url = "http://106.15.44.224:80";
