@@ -108,7 +108,7 @@ class Funcs(Process_request):
     # 拿到录音的相对路径
     def recording(self):
         event = self.getRoot()
-        record_path = event.find('Record')
+        record_path = event.find('Recording')
         path = record_path.text
         log(path)
         return path
