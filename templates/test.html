@@ -83,7 +83,7 @@
                 timeshow = min.toString()+':'+sec.toString()
             }
         }
-        if (status == 'start') {
+        while (status == 'start') {
             setTimeout(timedCount, 1000);               /*每隔一秒就执行一次*/
         }
         if (status == 'end')
