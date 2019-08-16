@@ -83,10 +83,13 @@
                 timeshow = min.toString()+':'+sec.toString()
             }
         }
-        while (status == 'start') {
-            setTimeout(timedCount, 1000);               /*每隔一秒就执行一次*/
+        if (status == 'start') {
+            var interval = setTimeout(function() {
+                    timeCount()
+                }, 1000);               /*每隔一秒就执行一次*/
         }
         if (status == 'end')
+            clearInterval(interval);
             console.log('通话已结束')
     }
 
