@@ -47,7 +47,7 @@
             color: white;                  /* 文字颜色*/
         }
 
-        .time {
+        .bt-time {
             font-size: 15px;
             cursor: pointer;
             background-color: #008CBA;     /* 蓝色*/
@@ -67,13 +67,12 @@
             <button class="bt">关闭</button>
         </li>
         <li>
-            <button class="time">停止计时</button>
+            <button class="bt-time">停止计时</button>
         </li>
     </ul>
 
 
-<script type="text/javascript">
-    function timeing(status) {                                              // 计时器函数
+<script type="text/javascript">                                             // 计时器函数
         var count = 0
         var timeshow = '00:00'
         function timedCount() {
@@ -93,7 +92,6 @@
                 timeshow = min.toString()+':'+sec.toString()
             }
         }
-    }
 
         var url = "http://106.15.44.224:80";
         console.log(url);
@@ -138,7 +136,7 @@
             $('#phone-note').hide();
         });
 
-        $(".time").click(function(){
+        $(".bt-time").click(function(){
             clearInterval(interval);
             console.log('点击停止计时按钮')
         });
