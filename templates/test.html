@@ -66,11 +66,9 @@
     function timeing(status) {                                              // 计时器函数
         var count = 0
         var timeshow = '00:00'
-        var interval = null
         function timedCount() {
             count += 1
             show(count)
-            console.log(timeshow)
             $('.time').text(timeshow)
         }
         function show(count) {
@@ -85,15 +83,12 @@
             }
         }
         if (status == 'start') {
-             if(interval!=null){                            //判断计时器是否为空
-                clearInterval(interval);
-                interval=null;
-             }
-             interval = setInterval(timedCount, 1000)               /*每隔一秒就执行一次*/
+            while(True) {
+                setTimeout("timedCount()", 1000)               /*每隔一秒就执行一次*/
+                console.log(timeshow)
+            }
         }
-        if (status == 'end')
-             clearInterval(interval);
-             interval = null;
+        else if (status == 'end')
              console.log('通话已结束')
     }
 
