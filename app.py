@@ -47,15 +47,13 @@ def send(data):
 @app.route('/ip_phone', methods=['GET'])
 def ip_phone():
     log(request.method)
-    xml = request.data  # 传过来的数据类型是byte类型
+    xml = request.data                                  # 传过来的数据类型是byte类型
     xml = xml.decode('utf-8')
     # 开始处理各种请求
     log('OM向应用服务器发送的请求数据:', xml)
     # 将OM的请求数据清洗出来访者id
     funct = Funcs(xml)
     body = funct.funcs()
-    # 接收到一个请求之后，发送一个请求
-    # 只要body不为空，说明有请求需要发送。判断一下请求会发送给OM还是js客户端
     if body is not None:
         if len(body) == 12:                             # 来电号码
             log(body)
@@ -66,6 +64,9 @@ def ip_phone():
         elif body == 'END':
             log('通话结束')
             socketio.emit(event='end', data=body)
+        elif 'http' in body:
+            log('下载的录音网址')
+            socketio.emit(event='record', data=body)
         else:
             log('发送给OM来电转分机请求')
             reqestOM(body)

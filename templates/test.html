@@ -63,6 +63,7 @@
         <li class="number"><em>来电号码</em></li>
         <li class="status">呼叫中...</li>
         <li class="time">呼叫时长</li>
+        <li ><a href="#" class="record">录音</a></li>
         <li>
             <button class="bt">关闭</button>
         </li>
@@ -129,6 +130,9 @@
             }
         });
 
+         socket.on("record", function(data) {                             // 加上录音文件的地址
+            $('.record').attr('href', data);
+        })
 
         // 点击关闭显示框
         $(".bt").click(function(){

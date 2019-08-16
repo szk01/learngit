@@ -117,6 +117,7 @@ class Funcs(Process_request):
         log('完整路径：', competePath)
         response = requests.get(competePath)
         log(response)  # 应该是语音文件
+        return competePath
 
     # 根据attribute调用请求函数
     def funcs(self):
