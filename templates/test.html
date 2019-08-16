@@ -84,7 +84,7 @@
                         timeshow = min.toString()+':'+sec.toString()
                     }
                 }
-                setInterval("timedCount()", 1000)               /*每隔一秒就执行一次*/
+                var interval = setInterval(timedCount, 1000)               /*每隔一秒就执行一次*/
             }
 
         var url = "http://106.15.44.224:80";
@@ -112,7 +112,7 @@
         socket.on("end", function(data) {                          // 分机或者来访者挂断，显示状态
             if (data === 'END') {
                 $('.status').text('通话已结束');
-                
+                clearInterval(interval)                            // 停止计时
             }
         });
 
