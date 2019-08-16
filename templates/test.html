@@ -95,6 +95,7 @@
                 if (status == 'end')
                      clearInterval(interval);
 				     interval = null;
+				     console.log('通话已结束')
 
             }
 
@@ -124,6 +125,7 @@
             if (data === 'END') {
                 $('.status').text('通话已结束');
                 timeing('end')                            // 停止计时
+                console.log('停止计时')
             }
         });
 
