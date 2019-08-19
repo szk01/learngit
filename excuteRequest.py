@@ -33,4 +33,4 @@ class Process_request(object):
             log('getEvent_name():', attriName)
             return attriName
         elif root.tag == 'Cdr':
-            return 'Cdr'
+            return root
