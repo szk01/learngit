@@ -55,6 +55,7 @@ def ip_phone():
     funct = Funcs(xml)
     body = funct.funcs()
     if body is not None:
+        log(body)
         if body["status"] == "RING":                             # 有电话接入call-in
             log(body["number"])
             socketio.emit(event="ring", data=body)
