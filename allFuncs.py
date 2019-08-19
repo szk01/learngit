@@ -119,20 +119,20 @@ class Funcs(Process_request):
     # 拿到录音的相对路径，下载录音到服务器上
     def recording(self):
         event = self.getRoot()
-        number = event.find('CPN')
+        number = event.find('CPN').text
         log('recording()', number)
         record_path = event.find('Recording')
         path = record_path.text
         log('输出相对路径', path)
         url = 'http://180.174.1.213:2888/mcc/Recorder/'
-        competePath = url + path                     # 下载地址
-        log('完整路径：', competePath)
+        competeUrl = url + path                     # 下载地址
+        log('完整路径：', competeUrl)
 
         linux_path = '/root/learngit/audio'
-        cmd = 'wget -P %s %s' % (competePath, linux_path)
+        cmd = ' /usr/bin/wget  -P %s %s' % (competeUrl, linux_path)
         subprocess.call(cmd, shell=True)             # 将录音文件下载到服务器的指定文件夹中
 
-        res = {"play": path, "downPath": competePath, "status": "Cdr", "number": number}
+        res = {"play": path, "downPath": competeUrl, "status": "Cdr", "number": number}
         return res
 
     # 根据attribute调用请求函数
