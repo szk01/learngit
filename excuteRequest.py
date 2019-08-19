@@ -26,6 +26,7 @@ class Process_request(object):
             return root
 
     # 解析Event事件报告的attribute属性，根据这个属性分配不同的方法处理请求
+
     def getEvent_name(self):
         root = self.getRoot()
         if root.tag == 'Event':
@@ -33,4 +34,4 @@ class Process_request(object):
             log('getEvent_name():', attriName)
             return attriName
         elif root.tag == 'Cdr':
-            return root
+            return 'Cdr'
