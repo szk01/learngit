@@ -18,7 +18,6 @@ app.secret_key = 'test for good'
 app.config.from_object(config)
 db.init_app(app)
 
-
 socketio = SocketIO(app)
 
 # 测试蓝图注册
@@ -47,7 +46,7 @@ def send(data):
 @app.route('/ip_phone', methods=['GET'])
 def ip_phone():
     log(request.method)
-    xml = request.data                                  # 传过来的数据类型是byte类型
+    xml = request.data  # 传过来的数据类型是byte类型
     xml = xml.decode('utf-8')
     # 开始处理各种请求
     log('OM向应用服务器发送的请求数据:', xml)
@@ -56,18 +55,19 @@ def ip_phone():
     body = funct.funcs()
     log('测试一下body:', body)
     if body is not None:
-        if body["status"] == "RING":                             # 有电话接入call-in
-            log(body["number"])
-            socketio.emit(event="ring", data=body)
-        elif body == 'ANWSER':                                   # 分机应答
-            log('通话建立')
-            socketio.emit(event="anwser", data=body)
-        elif body["status"] == 'Cdr':                            # 通话结束，发送Cdr话单，包含录音文件的路径
-            log('下载的录音网址')
-            socketio.emit(event='record', data=body)
-        else:
+        if isinstance(body, str):
             log('发送给OM来电转分机请求')
             reqestOM(body)
+        if isinstance(body, dict):
+            if body["status"] == "RING":  # 有电话接入call-in
+                log(body["number"])
+                socketio.emit(event="ring", data=body)
+            elif body == 'ANWSER':  # 分机应答
+                log('通话建立')
+                socketio.emit(event="anwser", data=body)
+            elif body["status"] == 'Cdr':  # 通话结束，发送Cdr话单，包含录音文件的路径
+                log('下载的录音网址')
+                socketio.emit(event='record', data=body)
     return 'App Server sucess receive!'
 
 
