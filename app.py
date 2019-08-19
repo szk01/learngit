@@ -56,16 +56,18 @@ def ip_phone():
     log('测试一下body:', body)
     if body is not None:
         if isinstance(body, str):
-            log('发送给OM来电转分机请求')
-            reqestOM(body)
-        if isinstance(body, dict):
-            if body["status"] == "RING":  # 有电话接入call-in
-                log(body["number"])
-                socketio.emit(event="ring", data=body)
-            elif body == 'ANWSER':  # 分机应答
+            if body == 'ANWSER':                                    # 分机应答
                 log('通话建立')
                 socketio.emit(event="anwser", data=body)
-            elif body["status"] == 'Cdr':  # 通话结束，发送Cdr话单，包含录音文件的路径
+            else:
+                log('发送给OM来电转分机请求')
+                reqestOM(body)
+        if isinstance(body, dict):
+            if body["status"] == "RING":                             # 有电话接入call-in
+                log(body["number"])
+                socketio.emit(event="ring", data=body)
+
+            elif body["status"] == 'Cdr':                             # 通话结束，发送Cdr话单，包含录音文件的路径
                 log('下载的录音网址')
                 socketio.emit(event='record', data=body)
     return 'App Server sucess receive!'

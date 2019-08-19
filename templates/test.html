@@ -150,17 +150,16 @@
         $('.call-note-container').show();
         $('.call-number').text('来电'+data["number"])
         $('.status').text('呼叫中')
+        console.log('有来电')
 
     });
 
     socket.on("anwser", function(data) {                          // 分机应答，显示状态
-        if (data === 'ANWSER') {
             $('.status').text('通话已建立')
             <!--计时器-->
             var d = timing('start');
             window.inter = d["i"]                                   // 将inter声明为全局变量
             console.log('开始计时')
-        }
     });
 
     socket.on("record", function(data) {                             // 分机或者来访者挂断
