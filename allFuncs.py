@@ -4,6 +4,7 @@ import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import tostring
 import random
 import requests
+import subprocess  # 用来调用命令行shell
 
 
 class Funcs(Process_request):
@@ -96,37 +97,56 @@ class Funcs(Process_request):
         mes = event.find('visitor')
         number = mes.attrib['from']  # 来电id
         log('来电号码', number)
-        return number
+        res = {"number": number, "status": "RING"}
+        return res
 
     # 对ANWSER事件处理，分机应答后，发送状态
     def status_change(self):
         return 'ANWSER'
 
-    # 通话结束后，发送状态
+    # 通话结束后，返回来电号码
     def call_end(self):
-        return 'END'
+        event = self.getRoot()
+        visitor = event.find('visitor')
+        if visitor:                                # 来电挂断情况
+            number = visitor.attrib['from']        # 来电id
+        else:                                      # 分机挂断情况
+            outer = event.find('outer')
+            number = outer.attrib['to']
+        res = {"status": "BYE", "number": number}
+        return res
 
-    # 拿到录音的相对路径
+    # 拿到录音的相对路径，下载录音到服务器上
     def recording(self):
         event = self.getRoot()
+        visitor = event.find('visitor')
+        if visitor:                                 # 来电挂断情况
+            number = visitor.attrib['from']         # 来电id
+        else:                                       # 分机挂断情况
+            outer = event.find('outer')
+            number = outer.attrib['to']
         record_path = event.find('Recording')
         path = record_path.text
         log('输出相对路径', path)
         url = 'http://180.174.1.213:2888/mcc/Recorder/'
-        competePath = url + path
+        competePath = url + path                     # 下载地址
         log('完整路径：', competePath)
-        response = requests.get(competePath)
-        log(response)  # 应该是语音文件
-        return competePath
+
+        linux_path = '/root/learngit/audio'
+        cmd = 'wget -P %s %s' % (competePath, linux_path)
+        subprocess.call(cmd, shell=True)             # 将录音文件下载到服务器的指定文件夹中
+
+        res = {"play": path, "downPath": competePath, "status": "Cdr", "number": number}
+        return res
 
     # 根据attribute调用请求函数
     def funcs(self):
         # 可能少了一个判断root的tag
         f = {
-            'Cdr': self.recording,
-            'BYE': self.call_end,  # 来电和分机通话结束，通话结束
+            'Cdr': self.recording,  # 话单请求，返回两个录音文件路径
+            # 'BYE': self.call_end,   # 来电和分机通话结束，返回来电号码
             'ANSWER': self.status_change,  # 来电转分机分机应答，通话建立
-            'RING': self.alterWin,  # 来电 弹窗显示号码，正在呼叫
+            'RING': self.alterWin,         # 来电 弹窗显示号码，正在呼叫
             'INCOMING': self.autoTransfer,
             'BUSY': self.phone_status,
             'IDLE': self.phone_status,

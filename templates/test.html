@@ -9,12 +9,13 @@
         * {
             margin: 0;
         }
-        #phone-note {
+
+        /*通话记录*/
+        .phone-note {
             margin: 10px 5px;                 /* 上下 左右 */
             height: 60px;
             /*border: 1px solid #000;*/
             background-color: #EEE9E9;
-            display: none;
 
         }
 
@@ -22,127 +23,174 @@
             list-style: none;
             float: left;
             margin: 20px 10px;
-            width: 200px;
+            width: 150px;
         }
         .cdr {
             font-weight: bold;
         }
-        .number {
-            /*width: 200px;*/
-            /*border: 1px solid #000;*/
-
+        .record {
+            text-decoration: none;
         }
-        .status {
-            /*width: 200px;*/
-            /*border: 1px solid #000;*/
+        .record:visited {
+            color: red;
+        }
+        .play {
+            text-decoration: none;
+        }
+        .play:visited {
+            color: red;
+        }
+
+        /*来电通知*/
+        .call-note-container {
+            height: 80px;
+            background-color: orange;
+            display: none;
+        }
+        .call-number {
+            font-size: 20px;
+            color:red;
+            display: inline-block;
+            margin: 30px 30px;
         }
         .time {
-            /*width: 200px;*/
-            /*border: 1px solid #000;*/
+            display: inline-block;
         }
-        .bt {
-            font-size: 15px;
-            cursor: pointer;
-            background-color: #008CBA;     /* 蓝色*/
-            color: white;                  /* 文字颜色*/
-        }
-
-        .bt-time {
-            font-size: 15px;
-            cursor: pointer;
-            background-color: #008CBA;     /* 蓝色*/
-            color: white;                  /* 文字颜色*/
+        .status {
+            display: inline-block;
         }
     </style>
 </head>
 <body>
     <h2>使用webSocket协议</h2>
+    <div class="call-note-container">
+        <div class="call-number">来电号码</div>
+        <div class="time">通话时间</div>
+        <div class="status">状态</div>
+        <button class="bt-startTime">开始计时</button>
+        <button class="bt-stopTime">停止计时</button>
+    </div>
 
-    <ul id="phone-note">
-        <li class="cdr">通话记录</li>
-        <li class="number"><em>来电号码</em></li>
-        <li class="status">呼叫中...</li>
-        <li class="time">呼叫时长</li>
-        <li ><a href="#" class="record">录音</a></li>
-        <li>
-            <button class="bt">关闭</button>
-        </li>
-        <li>
-            <button class="bt-time">停止计时</button>
-        </li>
-    </ul>
+    <div id="call-record-container">
+        <ul class="phone-note">
+            <li class="cdr">通话记录</li>
+            <li class="number"><em>来电号码</em></li>
+            <li class="all-time">通话时长</li>
+            <li ><a href="#" class="record">录音</a></li>
+            <li ><a href="#" class="play">播放</a></li>
+        </ul>
+    </div>
 
 
 <script type="text/javascript">                                             // 计时器函数
-        var count = 0
-        var timeshow = "00:00"
-        function timedCount() {
-            count += 1
-            show(count)
-            console.log(timeshow)
-            $('.time').text(timeshow)
-        }
-
-        function show(count) {                              // 格式化显示时间
-            if (count < 60 ) {
+    function show(count) {
+        var timeshow = "00:00";                           // 格式化显示时间
+        if (count < 60 ) {
+            if (count < 10) {                              /*小数取整*/
+                timeshow = '00'+':'+'0'+count.toString()
+            }
+            else {
                 timeshow = '00:'+count.toString()
             }
-            if (count > 60 || count === 60) {
-                var min = count / 60
-                var sec = count % 60
-                min = Math.floor(min)                       /*小数取整*/
+        }
+        if (count > 60 || count === 60) {
+            var min = count / 60
+            var sec = count % 60
+            if (sec < 10) {
+                min = Math.floor(min)                        /*小数取整*/
+                timeshow = min.toString()+':'+'0'+sec.toString()
+            }
+            else {
+                min = Math.floor(min)                        /*小数取整*/
                 timeshow = min.toString()+':'+sec.toString()
             }
+
         }
+        $('.time').text(timeshow);
+        return timeshow
+    }
 
-        var url = "http://106.15.44.224:80";
-        console.log(url);
-        var socket = io.connect(url);
-        socket.on('connect', function() {
-            socket.emit('login', {data: 'client send message sucessfully!'});
-        });                                                          // 这些都是套路函数，建立通道，发送提示消息
+    function timing(status) {
+        var interval = null;
+         window.count = 0;
+        if (status == 'start') {
+            console.log('开始计时')
+            interval = setInterval(function() {
+                count = count + 1
+                console.log(count);
+                show(count);
+            }, 1000)
+        }
+        var d = {"i":interval, "count":count}              /* 返回多个值*/
+        return d
+    }
 
-        socket.on("number", function(data) {                         // 有电话拨打进来，显示来电号码
-            <!--alert(data+'来电');-->
-            $('#phone-note').show();
-            $('.number').text('来电'+data)
-            $('.time').text('00:00')
-        });
+    function template(number, alltme, recordUrl, audioUrl) {
+        var t = `
+        <ul class="phone-note">
+            <li class="cdr">通话记录</li>
+            <li class="number"><em>${number}</em></li>
+            <li class="all-time">${alltme}</li>
+            <li ><a href="${recordUrl}" class="record">录音</a></li>
+            <li ><a href="${audioUrl}" class="play">播放</a></li>
+        </ul>
+        `
+        return t
+    }
 
-        socket.on("anwser", function(data) {                          // 分机应答，显示状态
-            if (data === 'ANWSER') {
-                $('.status').text('通话已建立');
-                <!--计时器-->
-                var interval = setInterval(function() {
-                    count += 1
-                    show(count)
-                    console.log(timeshow)
-                    $('.time').text(timeshow)
-                }, 1000);
-                console.log(interval)                                 // 开始计时
-            }
-        });
+    var url = "http://106.15.44.224:80";
+    console.log(url);
+    var socket = io.connect(url);
+    socket.on('connect', function() {
+        socket.emit('login', {data: 'client send message sucessfully!'});
+    });                                                          // 这些都是套路函数，建立通道，发送提示消息
 
-        socket.on("end", function(data) {                             // 分机或者来访者挂断，显示状态
-            if (data === 'END') {
-                $('.status').text('通话已结束');
-                $('.time').hide()                           // 停止计时
-            }
-        });
+    socket.on("ring", function(data) {                         // 有电话拨打进来，显示来电号码
+        <!--alert(data+'来电');-->
+        $('.call-note-container').show();
+        $('.call-number').text('来电'+data["number"])
+        $('.status').text('呼叫中')
 
-         socket.on("record", function(data) {                             // 加上录音文件的地址
-            $('.record').attr('href', data);
-        })
+    });
 
-        // 点击关闭显示框
-        $(".bt").click(function(){
-            $('#phone-note').hide();
-        });
+    socket.on("anwser", function(data) {                          // 分机应答，显示状态
+        if (data === 'ANWSER') {
+            $('.status').text('通话已建立')
+            <!--计时器-->
+            var d = timing('start');
+            window.inter = d["i"]                                   // 将inter声明为全局变量
+            console.log('开始计时')
+        }
+    });
 
-        $(".bt-time").click(function(){
-            clearInterval(interval);
+    socket.on("record", function(data) {                             // 分机或者来访者挂断
+        if (data["status"] === 'Cdr') {
+            $('.status').text('通话已结束');
+            $('.call-note-container').hide()                           // 停止计时
+            clearInterval(inter)
+            var s = show(count)
+            console.log(s)
+            var r = template(data["number"], s, data["downPath"], data["play"])
+            $("#call-record-container").append(r)
             console.log('点击停止计时按钮')
-        });
+        }
+    });
+
+    // 点击关闭显示框
+   $(".bt-startTime").click(function(){                // 点击按钮开始计时
+    var d  = timing('start');                 // 将inter声明为全局变量
+    window.inter = d["i"]
+    console.log('点击开始计时')
+    });
+
+    $(".bt-stopTime").click(function(){                // 点击按钮停止计时
+        clearInterval(inter)
+        var s = show(count)
+        console.log(s)
+        var r = template(17730273676, s, 3, 4)
+        $("#call-record-container").append(r)
+        console.log('点击停止计时按钮')
+    })
 
 </script>
 </body>

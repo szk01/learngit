@@ -55,16 +55,13 @@ def ip_phone():
     funct = Funcs(xml)
     body = funct.funcs()
     if body is not None:
-        if len(body) == 12:                             # 来电号码
-            log(body)
-            socketio.emit(event="number", data=body)
-        elif body == 'ANWSER':
+        if body["status"] == "RING":                             # 有电话接入call-in
+            log(body["number"])
+            socketio.emit(event="ring", data=body)
+        elif body == 'ANWSER':                                   # 分机应答
             log('通话建立')
             socketio.emit(event="anwser", data=body)
-        elif body == 'END':
-            log('通话结束')
-            socketio.emit(event='end', data=body)
-        elif 'http' in body:
+        elif body["status"] == 'Cdr':                            # 通话结束，发送Cdr话单，包含录音文件的路径
             log('下载的录音网址')
             socketio.emit(event='record', data=body)
         else:
