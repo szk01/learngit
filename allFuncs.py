@@ -119,13 +119,8 @@ class Funcs(Process_request):
     # 拿到录音的相对路径，下载录音到服务器上
     def recording(self):
         event = self.getRoot()
-        visitor = event.find('visitor')
-        log('recording()', visitor)
-        if visitor:                                 # 来电挂断情况
-            number = visitor.attrib['from']         # 来电id
-        else:                                       # 分机挂断情况
-            outer = event.find('outer')
-            number = outer.attrib['to']
+        number = event.find('CPN')
+        log('recording()', number)
         record_path = event.find('Recording')
         path = record_path.text
         log('输出相对路径', path)
