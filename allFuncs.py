@@ -3,7 +3,7 @@ from excuteRequest import log
 import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import tostring
 import random
-import requests
+import time
 import subprocess  # 用来调用命令行shell
 
 
@@ -132,7 +132,7 @@ class Funcs(Process_request):
         cmd = '/usr/bin/wget -P %s %s' % (linux_path, competeUrl)
         log('执行shell', cmd)
         subprocess.call(cmd, shell=True)             # 将录音文件下载到服务器的指定文件夹中
-
+        time.sleep(1)
         res = {"play": path, "downPath": competeUrl, "status": "Cdr", "number": number}
         return res
 
