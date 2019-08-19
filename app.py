@@ -54,8 +54,8 @@ def ip_phone():
     # 将OM的请求数据清洗出来访者id
     funct = Funcs(xml)
     body = funct.funcs()
+    log('测试一下body:', body)
     if body is not None:
-        log(body)
         if body["status"] == "RING":                             # 有电话接入call-in
             log(body["number"])
             socketio.emit(event="ring", data=body)
