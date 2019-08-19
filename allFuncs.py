@@ -120,6 +120,7 @@ class Funcs(Process_request):
     def recording(self):
         event = self.getRoot()
         visitor = event.find('visitor')
+        log('recording()', visitor)
         if visitor:                                 # 来电挂断情况
             number = visitor.attrib['from']         # 来电id
         else:                                       # 分机挂断情况
