@@ -120,11 +120,9 @@ class Funcs(Process_request):
     def recording(self):
         event = self.getRoot()
         number = event.find('CPN').text
-        ip_phone_list = ['215']
-        # ip分机为
-        ip = event.find('CDPN').text
-        if ip in ip_phone_list:                         # 只处理ip分机的话单
-            log('recording()', number, ip)
+        cdr_type = event.find('Type').text
+        if cdr_type == 'IN':                         # 只处理类型为IN的话单
+            log('recording()', number)
             record_path = event.find('Recording')
             path = record_path.text
             log('输出相对路径', path)
