@@ -130,6 +130,7 @@ class Funcs(Process_request):
 
         linux_path = '/root/learngit/audio'
         cmd = '/usr/bin/wget -P %s %s' % (competeUrl, linux_path)
+        log('执行shell', cmd)
         subprocess.call(cmd, shell=True)             # 将录音文件下载到服务器的指定文件夹中
 
         res = {"play": path, "downPath": competeUrl, "status": "Cdr", "number": number}
