@@ -120,21 +120,25 @@ class Funcs(Process_request):
     def recording(self):
         event = self.getRoot()
         number = event.find('CPN').text
-        log('recording()', number)
-        record_path = event.find('Recording')
-        path = record_path.text
-        log('输出相对路径', path)
-        url = 'http://180.174.1.213:2888/mcc/Recorder/'
-        competeUrl = url + path                     # 下载地址
-        log('完整路径：', competeUrl)
+        ip_phone_list = ['215']
+        # ip分机为
+        ip = event.find('CDPN').text
+        if ip in ip_phone_list:                         # 只处理ip分机的话单
+            log('recording()', number, ip)
+            record_path = event.find('Recording')
+            path = record_path.text
+            log('输出相对路径', path)
+            url = 'http://180.174.1.213:2888/mcc/Recorder/'
+            competeUrl = url + path                     # 下载地址
+            log('完整路径：', competeUrl)
 
-        linux_path = '/root/learngit/audio'
-        cmd = '/usr/bin/wget -P %s %s' % (linux_path, competeUrl)
-        log('执行shell', cmd)
-        subprocess.call(cmd, shell=True)             # 将录音文件下载到服务器的指定文件夹中
-        time.sleep(1)                                # 等待1s, OM下载完录音通话
-        res = {"play": path, "downPath": competeUrl, "status": "Cdr", "number": number}
-        return res
+            linux_path = '/root/learngit/audio'
+            cmd = '/usr/bin/wget -P %s %s' % (linux_path, competeUrl)
+            log('执行shell', cmd)
+            subprocess.call(cmd, shell=True)             # 将录音文件下载到服务器的指定文件夹中
+            time.sleep(1)                                # 等待1s, OM下载完录音通话
+            res = {"play": path, "downPath": competeUrl, "status": "Cdr", "number": number}
+            return res
 
     # 根据attribute调用请求函数
     def funcs(self):
