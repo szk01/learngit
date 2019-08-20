@@ -9,14 +9,17 @@ from routes.index import main as index_routes
 from routes.login import main as login_routes
 from routes.test import main as test_routes
 from allFuncs import Funcs
-from models.user import db
+from models.user import db, login_manager
 from models import config
+
 
 # 先要初始化一个 Flask 实例，并将Flask-SocketIO添加到Flask应用程序
 app = Flask(__name__)
 app.secret_key = 'test for good'
 app.config.from_object(config)
-db.init_app(app)
+db.init_app(app)                        # mysql数据库和app连接
+
+login_manager.init_app(app)              # login_manager模块和app连接
 
 socketio = SocketIO(app)
 

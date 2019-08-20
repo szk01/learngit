@@ -104,24 +104,12 @@ class Funcs(Process_request):
     def status_change(self):
         return 'ANWSER'
 
-    # 通话结束后，返回来电号码
-    def call_end(self):
-        event = self.getRoot()
-        visitor = event.find('visitor')
-        if visitor:                                # 来电挂断情况
-            number = visitor.attrib['from']        # 来电id
-        else:                                      # 分机挂断情况
-            outer = event.find('outer')
-            number = outer.attrib['to']
-        res = {"status": "BYE", "number": number}
-        return res
-
-    # 拿到录音的相对路径，下载录音到服务器上
+    # 通话结束后，拿到录音的相对路径，下载录音到服务器上，返回来电号码
     def recording(self):
         event = self.getRoot()
         number = event.find('CPN').text
         cdr_type = event.find('Type').text
-        if cdr_type == 'IN':                         # 只处理类型为IN的话单
+        if cdr_type == 'LO':                         # 只处理类型为LO的话单
             log('recording()', number)
             record_path = event.find('Recording')
             path = record_path.text
@@ -132,9 +120,9 @@ class Funcs(Process_request):
 
             linux_path = '/root/learngit/audio'
             cmd = '/usr/bin/wget -P %s %s' % (linux_path, competeUrl)
-            log('执行shell', cmd)
+            log('执行shell命令，5s之后下载录音...', cmd)
+            time.sleep(5)  # 5s之后下载录音
             subprocess.call(cmd, shell=True)             # 将录音文件下载到服务器的指定文件夹中
-            time.sleep(1)                                # 等待1s, OM下载完录音通话
             res = {"play": path, "downPath": competeUrl, "status": "Cdr", "number": number}
             return res
 
