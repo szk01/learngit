@@ -6,7 +6,7 @@ import requests
 from flask_socketio import SocketIO
 from utils import log
 from routes.index import main as index_routes
-from routes.login import main as login_routes
+from routes.login import main as login_routes, room
 from routes.test import main as test_routes
 from allFuncs import Funcs
 from models.user import db, login_manager
@@ -40,10 +40,15 @@ def reqestOM(body):
 
 
 # 接收客户端发送过来的消息，确认通道连接
-@socketio.on('phone')
+@socketio.on('login')
 def send(data):
     log('use webScoket receive sucessful', data)
+    sid = request.sid                              # io的客户端，用来标识唯一客户端。也是会话id
+    pid = data["data"]
+    room[pid] = sid
+    socketio.emit(event='test_room', data={"message": "test_room"}, room=room.get('215'))
 
+# 发送给指定的客户端
 
 # 会使用到多线程，不同的进程处理不同的请求
 @app.route('/ip_phone', methods=['GET'])

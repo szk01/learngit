@@ -1,4 +1,4 @@
-from . import db  # 相对引用，db变量存在于models/__init__.py文件中
+from . import db            # 相对引用，db变量存在于models/__init__.py文件中
 from . import login_manager
 from flask_login import UserMixin
 
