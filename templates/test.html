@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -63,6 +64,7 @@
 </head>
 <body>
     <h2>使用webSocket协议</h2>
+    <h3 class="id">{{ip}}</h3>
     <div class="call-note-container">
         <div class="call-number">来电号码</div>
         <div class="time">通话时间</div>
@@ -137,14 +139,18 @@
         `
         return t
     }
-
-    var url = "http://106.15.44.224:80";
+    var url = "http://106.15.44.224:80"
+<!--    var url = "http://127.0.0.1:80";-->
     console.log(url);
     var socket = io.connect(url);
     socket.on('connect', function() {
-        socket.emit('login', {data: 'client send message sucessfully!'});
+        var id = $('.id').text()
+        socket.emit('login', {data: id});
     });                                                          // 这些都是套路函数，建立通道，发送提示消息
 
+    socket.on("test_room", function(data) {
+        console.log(data)
+    });
     socket.on("ring", function(data) {                         // 有电话拨打进来，显示来电号码
         <!--alert(data+'来电');-->
         $('.call-note-container').show();
