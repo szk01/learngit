@@ -26,7 +26,7 @@ socketio = SocketIO(app)
 # 测试蓝图注册
 app.register_blueprint(index_routes, url_prefix='/index')
 app.register_blueprint(test_routes, url_prefix='/test')
-app.register_blueprint(login_routes, url_prefix='/login')
+app.register_blueprint(login_routes, url_prefix='')
 
 
 # 给OM服务器发送一个POST请求
@@ -46,6 +46,7 @@ def send(data):
     sid = request.sid                              # io的客户端，用来标识唯一客户端。也是会话id
     pid = data["data"]
     room[pid] = sid
+    log(room)
     socketio.emit(event='test_room', data={"message": "test_room"}, room=room.get('215'))
 
 # 发送给指定的客户端
