@@ -8,7 +8,7 @@ class User(db.Model, UserMixin):
     # 如：UserModel => user_model
     # 指定表名
     # 下面的这些字段都是类字段
-    __tablename__ = 'user'
+    __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(30))
     number = db.Column(db.String(255), unique=True)
