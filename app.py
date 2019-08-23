@@ -25,7 +25,7 @@ socketio = SocketIO(app)
 
 # 测试蓝图注册
 app.register_blueprint(index_routes, url_prefix='/index')
-app.register_blueprint(test_routes, url_prefix='/test')
+app.register_blueprint(test_routes, url_prefix='')
 app.register_blueprint(login_routes, url_prefix='')
 
 

@@ -64,6 +64,7 @@
     socket.on("test_room", function(data) {
         console.log(data)
     });
+
     socket.on("ring", function(data) {                         // 有电话拨打进来，显示来电号码
         <!--alert(data+'来电');-->
         $('.call-note-container').show();
