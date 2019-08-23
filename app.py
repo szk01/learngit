@@ -31,7 +31,7 @@ app.register_blueprint(login_routes, url_prefix='')
 
 # 给OM服务器发送一个POST请求
 def reqestOM(body):
-    url = 'https://180.174.1.213:1888/xml'
+    url = 'https://fanyuan.tpddns.cn:1888/xml'
     payload = body
     headers = {
         'content-type': 'text/xml',

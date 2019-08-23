@@ -29,3 +29,8 @@ def index():
     else:
         return redirect('/login')
     return '成功'
+
+
+@main.route('/record')
+def record():
+    return render_template('record.html')
