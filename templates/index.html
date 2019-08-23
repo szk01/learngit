@@ -9,67 +9,74 @@
 	<script type="text/javascript" src="static/js/jquery.min.js"></script>
 	<script type="text/javascript" src="static/js/nav.js"></script>
 	<script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="https://cdn.bootcss.com/socket.io/1.5.1/socket.io.min.js"></script>
+	<style type="text/css">
+		.nav {
+			position : float;
+		}
+	</style>
 </head>
 <body>
-
-<div class="nav">
-	<div class="nav-top">
-		<div id="mini" style="border-bottom:1px solid rgba(255,255,255,.1)"><img src="images/mini.png" ></div>
+	<div class="nav">
+		<div class="nav-top">
+			<div id="mini" style="border-bottom:1px solid rgba(255,255,255,.1)"><img src="images/mini.png" ></div>
+		</div>
+		<ul>
+			<li class="nav-item">
+				<a href="javascript:;"><i class="my-icon nav-icon icon_1"></i><span>用户中心</span><i class="my-icon nav-more"></i></a>
+				<ul>
+					<li><a href="javascript:;"><span>添加账号</span></a></li>
+					<li><a href="javascript:;"><span>修改账号信息</span></a></li>
+					<li><a href="javascript:;"><span>删除账号</span></a></li>
+				</ul>
+			</li>
+			<li class="nav-item">
+				<a href="javascript:;"><i class="my-icon nav-icon icon_2"></i><span>客户管理</span><i class="my-icon nav-more"></i></a>
+				<ul>
+					<li><a href="javascript:;"><span>添加客户信息</span></a></li>
+					<li><a href="javascript:;"><span>修改客户信息</span></a></li>
+					<li><a href="javascript:;"><span>删除客户信息</span></a></li>
+				</ul>
+			</li>
+			<li class="nav-item">
+				<a href="javascript:;"><i class="my-icon nav-icon icon_3"></i><span>数据统计</span><i class="my-icon nav-more"></i></a>
+				<ul>
+					<li><a href="javascript:;"><span>订单列表</span></a></li>
+					<li><a href="javascript:;"><span>待完善</span></a></li>
+					<li><a href="javascript:;"><span>待完善</span></a></li>
+				</ul>
+			</li>
+			<li class="nav-item">
+				<a href="javascript:;"><i class="my-icon nav-icon icon_4"></i><span>话务中心</span><i class="my-icon nav-more"></i></a>
+				<ul>
+					<li class="record"><a href="javascript:;"><span>通话记录</span></a></li>
+					<li><a href="javascript:;"><span>分机管理</span></a></li>
+					<li><a href="javascript:;"><span>通话录音</span></a></li>
+				</ul>
+			</li>
+			<li class="nav-item">
+				<a href="javascript:;"><i class="my-icon nav-icon icon_4"></i><span>系统管理</span><i class="my-icon nav-more"></i></a>
+				<ul>
+					<li><a href="javascript:;"><span>订单列表</span></a></li>
+					<li><a href="javascript:;"><span>待完善</span></a></li>
+					<li><a href="javascript:;"><span>待完善</span></a></li>
+				</ul>
+			</li>
+		</ul>
 	</div>
-	<ul>
-		<li class="nav-item">
-			<a href="javascript:;"><i class="my-icon nav-icon icon_1"></i><span>用户中心</span><i class="my-icon nav-more"></i></a>
-			<ul>
-				<li><a href="javascript:;"><span>添加账号</span></a></li>
-				<li><a href="javascript:;"><span>修改账号信息</span></a></li>
-				<li><a href="javascript:;"><span>删除账号</span></a></li>
-			</ul>
-		</li>
-		<li class="nav-item">
-			<a href="javascript:;"><i class="my-icon nav-icon icon_2"></i><span>客户管理</span><i class="my-icon nav-more"></i></a>
-			<ul>
-				<li><a href="javascript:;"><span>添加客户信息</span></a></li>
-				<li><a href="javascript:;"><span>修改客户信息</span></a></li>
-				<li><a href="javascript:;"><span>删除客户信息</span></a></li>
-			</ul>
-		</li>
-		<li class="nav-item">
-			<a href="javascript:;"><i class="my-icon nav-icon icon_3"></i><span>数据统计</span><i class="my-icon nav-more"></i></a>
-			<ul>
-				<li><a href="javascript:;"><span>订单列表</span></a></li>
-				<li><a href="javascript:;"><span>待完善</span></a></li>
-				<li><a href="javascript:;"><span>待完善</span></a></li>
-			</ul>
-		</li>
-		<li class="nav-item">
-			<a href="javascript:;"><i class="my-icon nav-icon icon_4"></i><span>话务中心</span><i class="my-icon nav-more"></i></a>
-			<ul>
-				<li class="record"><a href="javascript:;"><span>通话记录</span></a></li>
-				<li><a href="javascript:;"><span>分机管理</span></a></li>
-				<li><a href="javascript:;"><span>通话录音</span></a></li>
-			</ul>
-		</li>
-		<li class="nav-item">
-			<a href="javascript:;"><i class="my-icon nav-icon icon_4"></i><span>系统管理</span><i class="my-icon nav-more"></i></a>
-			<ul>
-				<li><a href="javascript:;"><span>订单列表</span></a></li>
-				<li><a href="javascript:;"><span>待完善</span></a></li>
-				<li><a href="javascript:;"><span>待完善</span></a></li>
-			</ul>
-		</li>
-	</ul>
-</div>
 
-<div id="content">
-	<div style="text-align:center;margin:-650px 0; font:normal 24px 'MicroSoft YaHei';">
-		<p>欢迎{{name}}来到深圳泛远</p>
-	</div>
+
+<div id="content" style="text-align:center;margin:-650px 0; font:normal 24px 'MicroSoft YaHei';">
+
 </div>
 	<script>
-	$("ul .record").on("click","li",function() {
-		document.getElementById("content").innerHTML = '<object type="text/html" data="record.html" width="100%" height="100%"></object>';
-		console.log('测试')
-	});
+		$(".record").on("li, click", function() {					//写一个ajax请求
+			console.log('li测试')
+			$.get("http://127.0.0.1/test/testWeb", function(data, status) {
+			console.log(data)
+			$("#content").append(data)
+		})
+	})
 	</script>
 </body>
 </html>

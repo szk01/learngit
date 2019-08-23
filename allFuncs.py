@@ -11,8 +11,8 @@ class Funcs(Process_request):
     # 类变量，所有的实例共享这个变量
     p = {
         'BUSY': set(),
-        'IDLE': {'215'},
-        'ONLINE': {'215'},
+        'IDLE': {'2'},
+        'ONLINE': {'2'},
         'OFFLINE': set(),
     }
 
@@ -85,8 +85,8 @@ class Funcs(Process_request):
         log('autoTransfer():', root)  # 应该是Transfer
         log('来访者id:', root.find('visitor').attrib['id'])
         log('转接分机id:', root.find('ext').attrib['id'])
-        req_body = tostring(root, encoding='utf-8')  # res_body是bytes类型的数据
-        req_body = req_body.decode('utf-8')  # 现在转成字符串utf-8类型
+        req_body = tostring(root, encoding='utf-8')     # res_body是bytes类型的数据
+        req_body = req_body.decode('utf-8')             # 现在转成字符串utf-8类型
 
         data = Funcs.add_header(req_body)
         return data
