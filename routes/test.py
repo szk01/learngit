@@ -27,7 +27,7 @@ def index():
 # 传输音频wav文件
 @main.route('/audio/<name>')
 def audio(name):
-    path = 'root/learngit/audio/' + name  # 音频所在的路径
+    path = '/root/learngit/audio/' + name  # 音频所在的路径
 
     def gen_audio():                    # 这是一个生成器
         with open(path, 'rb') as wav:
