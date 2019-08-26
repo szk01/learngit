@@ -114,7 +114,7 @@ class Funcs(Process_request):
             record_path = event.find('Recording')
             path = record_path.text
             log('输出相对路径', path)
-            url = 'http://180.174.1.213:2888/mcc/Recorder/'
+            url = 'http://fanyuan.tpddns.cn:2888/mcc/Recorder/'
             competeUrl = url + path                     # 下载地址
             log('完整路径：', competeUrl)
 
