@@ -52,8 +52,8 @@
         `
         return t
     }
-//  var url = "http://106.15.44.224:80"
-    var url = "http://127.0.0.1:80"
+  var url = "http://106.15.44.224:80"
+//    var url = "http://127.0.0.1:80"
     console.log(url);
     var socket = io.connect(url);
     socket.on('connect', function() {
