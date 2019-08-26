@@ -111,18 +111,21 @@ class Funcs(Process_request):
         cdr_type = event.find('Type').text
         if cdr_type == 'LO':                         # 只处理类型为LO的话单
             log('recording()', number)
-            record_path = event.find('Recording')
-            path = record_path.text
-            log('输出相对路径', path)
-            url = 'http://fanyuan.tpddns.cn:2888/mcc/Recorder/'
-            competeUrl = url + path                     # 下载地址
-            log('完整路径：', competeUrl)
+            # record_path = event.find('Recording')
+            # path = record_path.text
+            # log('输出相对路径', path)
+            # url = 'http://fanyuan.tpddns.cn:2888/mcc/Recorder/'
+            # competeUrl = url + path                     # 下载地址
+            # log('完整路径：', competeUrl)
+            #
+            # linux_path = '/root/learngit/audio'
+            # cmd = '/usr/bin/wget -P %s %s' % (linux_path, competeUrl)
+            # log('执行shell命令，5s之后下载录音...', cmd)
+            # time.sleep(5)  # 5s之后下载录音
+            # subprocess.call(cmd, shell=True)             # 将录音文件下载到服务器的指定文件夹中
 
-            linux_path = '/root/learngit/audio'
-            cmd = '/usr/bin/wget -P %s %s' % (linux_path, competeUrl)
-            log('执行shell命令，5s之后下载录音...', cmd)
-            time.sleep(5)  # 5s之后下载录音
-            subprocess.call(cmd, shell=True)             # 将录音文件下载到服务器的指定文件夹中
+            path = ''
+            competeUrl = ''
             res = {"play": path, "downPath": competeUrl, "status": "Cdr", "number": number}
             return res
 
