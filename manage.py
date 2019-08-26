@@ -16,5 +16,6 @@ manager.add_command('db', MigrateCommand)
 if __name__ == '__main__':
     manager.run()
 
+# 根据mysql数据库中的表生成orm代码
 # flask-sqlacodegen mysql+pymysql://root:123456@localhost:3306/nonghao --outfile models.py --flask
 
