@@ -1,5 +1,5 @@
-    function show(count) {
-        var timeshow = "00:00";                           // 格式化显示时间
+    function show(count) {                                  // 格式化显示时间
+        var timeshow = "00:00";
         if (count < 60 ) {
             if (count < 10) {                              /*小数取整*/
                 timeshow = '00'+':'+'0'+count.toString()
@@ -27,7 +27,7 @@
 
     function timing(status) {
         var interval = null;
-         window.count = 0;
+        window.count = 0;
         if (status == 'start') {
             console.log('开始计时')
             interval = setInterval(function() {

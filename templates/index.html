@@ -3,7 +3,6 @@
 <head>
 <meta charset="utf-8">
 <title>首页</title>
-
 	<link rel="stylesheet" type="text/css" href="static/css/nav.css">
 	<link rel="stylesheet" type="text/css" href="static/font/iconfont.css">
 	<script type="text/javascript" src="static/js/jquery.min.js"></script>
@@ -12,7 +11,10 @@
 	<script type="text/javascript" src="https://cdn.bootcss.com/socket.io/1.5.1/socket.io.min.js"></script>
 	<style type="text/css">
 		.nav {
-			position : float;
+			float: left;
+		}
+		#content {
+			float: left;
 		}
 	</style>
 </head>
@@ -66,17 +68,17 @@
 	</div>
 
 
-<div id="content" style="text-align:center;margin:-650px 0; font:normal 24px 'MicroSoft YaHei';">
+	<div id="content">
 
-</div>
+	</div>
 	<script>
 		$(".record").on("li, click", function() {					//写一个ajax请求
 			console.log('li测试')
-			$.get("http://127.0.0.1/test/testWeb", function(data, status) {
-			console.log(data)
-			$("#content").append(data)
-		})
-	})
+			$.get("http://127.0.0.1/testWeb", function(data, status) {
+				console.log(data)
+				$("#content").append(data)
+			});
+		});
 	</script>
 </body>
 </html>

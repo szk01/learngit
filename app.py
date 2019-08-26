@@ -47,7 +47,7 @@ def send(data):
     pid = data["data"]
     room[pid] = sid
     log(room)
-    socketio.emit(event='test_room', data={"message": "test_room"}, room=room.get('215'))
+    socketio.emit(event='test_room', data={"message": "test_room"}, room=room.get('2'))
 
 # 发送给指定的客户端
 
