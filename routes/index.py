@@ -30,7 +30,13 @@ def index():
         return redirect('/login')
     return '成功'
 
-
-@main.route('/record')
+# 通话记录
+@main.route('/call_record')
 def record():
-    return render_template('record.html')
+    return render_template('callRecord.html')
+
+
+# 录音记录
+@main.route('/voice_record')
+def record():
+    return render_template('voiceRecord.html')

@@ -53,9 +53,9 @@
 			<li class="nav-item">
 				<a href="javascript:;"><i class="my-icon nav-icon icon_4"></i><span>话务中心</span><i class="my-icon nav-more"></i></a>
 				<ul>
-					<li class="record"><a href="javascript:;"><span>通话记录</span></a></li>
+					<li class="call_record"><a href="javascript:;"><span>通话记录</span></a></li>
 					<li><a href="javascript:;"><span>分机管理</span></a></li>
-					<li><a href="javascript:;"><span>通话录音</span></a></li>
+					<li><a href="voice_record;"><span>通话录音</span></a></li>
 				</ul>
 			</li>
 			<li class="nav-item">
@@ -75,11 +75,15 @@
 
 	</div>
 	<script>
-		$(".record").on("li, click", function() {					//写一个ajax请求
-			console.log('li测试')
-			$.get("http://127.0.0.1/testWeb", function(data, status) {
-				console.log(data)
-				$("#content").append(data)
+		$(".call_record").on("li, click", function() {					//点击改变到不同的iframe页面
+			console.log('通话记录的li测试')
+			$('#iframe').attr('src', 'http://106.15.44.224/call_record')
+			});
+		});
+
+		$(".voice_record").on("li, click", function() {					//点击改变到不同的iframe页面
+			console.log('录音记录的li测试')
+			$('#iframe').attr('src', 'http://106.15.44.224/voice_record')
 			});
 		});
 	</script>

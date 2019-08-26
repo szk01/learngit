@@ -113,6 +113,7 @@ class Funcs(Process_request):
             log('recording()', number)
             # record_path = event.find('Recording')
             # path = record_path.text
+            # play_path = "http://106.15.44.224/audio/"+path
             # log('输出相对路径', path)
             # url = 'http://fanyuan.tpddns.cn:2888/mcc/Recorder/'
             # competeUrl = url + path                     # 下载地址
@@ -121,12 +122,12 @@ class Funcs(Process_request):
             # linux_path = '/root/learngit/audio'
             # cmd = '/usr/bin/wget -P %s %s' % (linux_path, competeUrl)
             # log('执行shell命令，5s之后下载录音...', cmd)
-            # time.sleep(5)  # 5s之后下载录音
+            # time.sleep(10)  # 5s之后下载录音
             # subprocess.call(cmd, shell=True)             # 将录音文件下载到服务器的指定文件夹中
 
-            path = ''
+            play_path = ''
             competeUrl = ''
-            res = {"play": path, "downPath": competeUrl, "status": "Cdr", "number": number}
+            res = {"play": play_path, "downPath": competeUrl, "status": "Cdr", "number": number}
             return res
 
     # 根据attribute调用请求函数
