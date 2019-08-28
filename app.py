@@ -4,7 +4,7 @@ from flask import (
 )
 import requests
 from flask_socketio import SocketIO
-from utils import log, config
+from utils import log, om_config
 from routes.index import main as index_routes
 from routes.login import main as login_routes
 from routes.test import main as test_routes
@@ -30,7 +30,7 @@ app.register_blueprint(login_routes, url_prefix='')
 
 # 给OM服务器发送一个POST请求
 def reqestOM(body):
-    url = config['om_url']
+    url = om_config['om_url']
     payload = body
     headers = {
         'content-type': 'text/xml',
@@ -59,7 +59,7 @@ def extcute_body(body):
             log('通话建立')
             socketio.emit(event="anwser", data=body)
             # socketio.emit(event='anwser', data=body, room=ws.get(data))
-           
+
         else:
             log('发送给OM来电转分机请求')
             reqestOM(body)

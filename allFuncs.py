@@ -5,7 +5,7 @@ from xml.etree.ElementTree import tostring
 import random
 import time
 import subprocess  # 用来调用命令行shell
-from utils import config
+from utils import om_config
 
 
 class Funcs(Process_request):
@@ -119,18 +119,17 @@ class Funcs(Process_request):
         cdr_type = event.find('Type').text
         if cdr_type == 'LO':                # 只处理类型为LO的话单，来电转分机是 内部互拨，分机呼叫分机
             log('recording()', number)
-            # pid = event.find('')
-            # recording = event.find('Recording')
-            # record_name = recording.text
-            # play_path = config['app_server_url'] + record_name
-            # log('输出相对路径', path)
-            # competeUrl = config['om_record_url'] + record_name                     # 下载地址
-            # log('完整路径：', competeUrl)
-            #
-            # cmd = '/usr/bin/wget -P %s %s' % (config['linux_path'], competeUrl)
-            # log('执行shell命令，5s之后下载录音...', cmd)
-            # time.sleep(10)  # 5s之后下载录音
-            # subprocess.call(cmd, shell=True)             # 将录音文件下载到服务器的指定文件夹中
+            recording = event.find('Recording')
+            record_name = recording.text
+            play_path = om_config['app_server_url'] + record_name
+            log('输出相对路径', play_path)
+            competeUrl = om_config['om_record_url'] + record_name                     # 下载地址
+            log('完整路径：', competeUrl)
+
+            cmd = '/usr/bin/wget -P %s %s' % (om_config['linux_path'], competeUrl)
+            log('执行shell命令，5s之后下载录音...', cmd)
+            time.sleep(10)  # 5s之后下载录音
+            subprocess.call(cmd, shell=True)             # 将录音文件下载到服务器的指定文件夹中
 
             play_path = ''
             competeUrl = ''
