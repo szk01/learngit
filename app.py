@@ -31,6 +31,7 @@ app.register_blueprint(login_routes, url_prefix='')
 # 给OM服务器发送一个POST请求
 def reqestOM(body):
     url = om_config['om_url']
+    print(url)
     payload = body
     headers = {
         'content-type': 'text/xml',
