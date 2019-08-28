@@ -3,8 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>录音记录</title>
+    <style>
+        ul li {
+            list-style: none;
+            float: left;
+            margin: 10px 20px;
+            width: 150px;
+    }
+    </style>
+
 </head>
 <body>
-        录音名   下载    播放
+    <div id="callRecord-container">
+        <ul class="call-record">
+            <li class="number">录音记录</li>
+            <li class="name"><em>017730523795</em></li>
+            <li>2</li>                                              <!--分机号-->
+            <li class="moment"><a href="">下载地址</a></li>
+            <li class="duration"><a href="">播放</a></li>
+        </ul>
+    </div>
 </body>
 </html>

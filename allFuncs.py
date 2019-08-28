@@ -5,6 +5,7 @@ from xml.etree.ElementTree import tostring
 import random
 import time
 import subprocess  # 用来调用命令行shell
+from utils import config
 
 
 class Funcs(Process_request):
@@ -85,8 +86,8 @@ class Funcs(Process_request):
         log('autoTransfer():', root)  # 应该是Transfer
         log('来访者id:', root.find('visitor').attrib['id'])
         log('转接分机id:', root.find('ext').attrib['id'])
-        req_body = tostring(root, encoding='utf-8')     # res_body是bytes类型的数据
-        req_body = req_body.decode('utf-8')             # 现在转成字符串utf-8类型
+        req_body = tostring(root, encoding='utf-8')  # res_body是bytes类型的数据
+        req_body = req_body.decode('utf-8')  # 现在转成字符串utf-8类型
 
         data = Funcs.add_header(req_body)
         return data
@@ -109,18 +110,16 @@ class Funcs(Process_request):
         event = self.getRoot()
         number = event.find('CPN').text
         cdr_type = event.find('Type').text
-        if cdr_type == 'LO':                         # 只处理类型为LO的话单
+        if cdr_type == 'LO':  # 只处理类型为LO的话单
             log('recording()', number)
-            # record_path = event.find('Recording')
-            # path = record_path.text
-            # play_path = "http://106.15.44.224/audio/"+path
+            # recording = event.find('Recording')
+            # record_name = recording.text
+            # play_path = config['app_server_url'] + record_name
             # log('输出相对路径', path)
-            # url = 'http://fanyuan.tpddns.cn:2888/mcc/Recorder/'
-            # competeUrl = url + path                     # 下载地址
-            # log('完整路径：', competeUrl)
+            # competeUrl = config['om_record_url'] + record_name                     # 下载地址
+             # log('完整路径：', competeUrl)
             #
-            # linux_path = '/root/learngit/audio'
-            # cmd = '/usr/bin/wget -P %s %s' % (linux_path, competeUrl)
+            # cmd = '/usr/bin/wget -P %s %s' % (config['linux_path'], competeUrl)
             # log('执行shell命令，5s之后下载录音...', cmd)
             # time.sleep(10)  # 5s之后下载录音
             # subprocess.call(cmd, shell=True)             # 将录音文件下载到服务器的指定文件夹中
@@ -137,7 +136,7 @@ class Funcs(Process_request):
             'Cdr': self.recording,  # 话单请求，返回两个录音文件路径
             # 'BYE': self.call_end,   # 来电和分机通话结束，返回来电号码
             'ANSWER': self.status_change,  # 来电转分机分机应答，通话建立
-            'RING': self.alterWin,         # 来电 弹窗显示号码，正在呼叫
+            'RING': self.alterWin,  # 来电 弹窗显示号码，正在呼叫
             'INCOMING': self.autoTransfer,
             'BUSY': self.phone_status,
             'IDLE': self.phone_status,

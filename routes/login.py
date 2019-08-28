@@ -8,11 +8,6 @@ from models.user import User
 
 main = Blueprint('login', __name__)
 
-room = {
-    "215": None,
-    "216": None
-}
-
 
 # 做一个用户和密码的判断
 @main.route('/index', methods=['GET', 'POST'])

@@ -55,7 +55,7 @@
 				<ul>
 					<li class="call_record"><a href="javascript:;"><span>通话记录</span></a></li>
 					<li><a href="javascript:;"><span>分机管理</span></a></li>
-					<li><a href="voice_record;"><span>通话录音</span></a></li>
+					<li class="voice_record"><a href="javascript:;"><span>通话录音</span></a></li>
 				</ul>
 			</li>
 			<li class="nav-item">
@@ -75,16 +75,16 @@
 
 	</div>
 	<script>
-		$(".call_record").on("li, click", function() {					//点击改变到不同的iframe页面
+		$('.call_record').on("li, click", function() {					//点击改变到通话记录页面
 			console.log('通话记录的li测试')
-			$('#iframe').attr('src', 'http://106.15.44.224/call_record')
-			});
+			//$('#iframe').attr('src', 'http://106.15.44.224/call_record')
+			$('#iframe').attr('src', 'http://127.0.0.1/call_record')
 		});
 
-		$(".voice_record").on("li, click", function() {					//点击改变到不同的iframe页面
+		$(".voice_record").on("li, click", function() {					//点击改变到录音记录页面
 			console.log('录音记录的li测试')
-			$('#iframe').attr('src', 'http://106.15.44.224/voice_record')
-			});
+			//$('#iframe').attr('src', 'http://106.15.44.224/voice_record')
+			$('#iframe').attr('src', 'http://127.0.0.1/voice_record')
 		});
 	</script>
 </body>

@@ -4,22 +4,21 @@ from flask import (
 )
 import requests
 from flask_socketio import SocketIO
-from utils import log
+from utils import log, config
 from routes.index import main as index_routes
-from routes.login import main as login_routes, room
+from routes.login import main as login_routes
 from routes.test import main as test_routes
 from allFuncs import Funcs
 from models.user import db, login_manager
 from models import config
 
-
 # 先要初始化一个 Flask 实例，并将Flask-SocketIO添加到Flask应用程序
 app = Flask(__name__)
 app.secret_key = 'test for good'
 app.config.from_object(config)
-db.init_app(app)                        # mysql数据库和app连接
+db.init_app(app)  # mysql数据库和app连接
 
-login_manager.init_app(app)              # login_manager模块和app连接
+login_manager.init_app(app)  # login_manager模块和app连接
 
 socketio = SocketIO(app)
 
@@ -31,7 +30,7 @@ app.register_blueprint(login_routes, url_prefix='')
 
 # 给OM服务器发送一个POST请求
 def reqestOM(body):
-    url = 'https://fanyuan.tpddns.cn:1888/xml'
+    url = config['om_url']
     payload = body
     headers = {
         'content-type': 'text/xml',
@@ -39,17 +38,42 @@ def reqestOM(body):
     requests.request("POST", url, data=payload, headers=headers, verify=False)
 
 
-# 接收客户端发送过来的消息，确认通道连接
-@socketio.on('login')
-def send(data):
-    log('use webScoket receive sucessful', data)
-    sid = request.sid                              # io的客户端，用来标识唯一客户端。也是会话id
-    pid = data["data"]
-    room[pid] = sid
-    log(room)
-    socketio.emit(event='test_room', data={"message": "test_room"}, room=room.get('2'))
+ws = {
+    'cid': 'sid',
+    '123': sid1,
+}
 
-# 发送给指定的客户端
+
+# 接收客户端的消息，
+@socketio.on('login')
+def send(data, send_data):
+    log('use webScoket receive sucessful', data)
+    sid = request.sid  # io的客户端，用来标识唯一客户端。也是会话id
+    ws[data] = sid
+    socketio.emit(event='test_room', data=send_data, room=ws.get(data))  # 私聊的功能
+
+
+# 处理各种不同的body
+def extcute_body(body):
+    if isinstance(body, str):
+        if body == 'ANWSER':                                                    # 分机应答，让计时器开始计时
+            log('通话建立')
+            socketio.emit(event="anwser", data=body)
+            # socketio.emit(event='anwser', data=body, room=ws.get(data))
+            send(body)
+        else:
+            log('发送给OM来电转分机请求')
+            reqestOM(body)
+    if isinstance(body, dict):
+        if body["status"] == "RING":                                            # 有电话接入call-in，客户端显示页面
+            log(body["number"])
+            socketio.emit(event="ring", data=body)
+            # socketio.emit(event='ring', data=body, room=ws.get(cid))
+        elif body["status"] == 'Cdr':                                           # 通话结束，发送Cdr话单，包含录音文件的路径
+            log('通话结束，发送给客户端网页消息')
+            socketio.emit(event='record', data=body)
+            # socketio.emit(event='ring', data=body, room=ws.get(cid))
+
 
 # 会使用到多线程，不同的进程处理不同的请求
 @app.route('/ip_phone', methods=['GET'])
@@ -64,21 +88,7 @@ def ip_phone():
     body = funct.funcs()
     log('测试一下body:', body)
     if body is not None:
-        if isinstance(body, str):
-            if body == 'ANWSER':                                    # 分机应答
-                log('通话建立')
-                socketio.emit(event="anwser", data=body)
-            else:
-                log('发送给OM来电转分机请求')
-                reqestOM(body)
-        if isinstance(body, dict):
-            if body["status"] == "RING":                             # 有电话接入call-in
-                log(body["number"])
-                socketio.emit(event="ring", data=body)
-
-            elif body["status"] == 'Cdr':                             # 通话结束，发送Cdr话单，包含录音文件的路径
-                log('下载的录音网址')
-                socketio.emit(event='record', data=body)
+        extcute_body(body)
     return 'App Server sucess receive!'
 
 

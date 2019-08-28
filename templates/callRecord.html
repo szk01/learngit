@@ -3,8 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <title>通话记录</title>
+    <style>
+        ul li {
+            list-style: none;
+            width: 150px;
+            height: 60px;
+        }
+
+        ul.description li {                                <!-- 记录说明-->
+            list-style: none;
+            float: left;
+            font-weight: 700;
+        }
+
+        ul.call-record li {                                 <!--记录-->
+            list-style: none;
+            float: left;
+            width: 150px;
+        }
+
+        ul {
+            width: 1000px;
+        }
+    </style>
 </head>
 <body>
-        来电号码  姓名(null)   来电时间   通话时长   状态（漏接）
+    <ul class="description">
+        <li>号码</li>
+        <li>姓名</li>
+        <li>打入时间</li>
+        <li>接通时间</li>
+        <li>结束时间</li>
+        <li>记录类型</li>
+    </ul>
+
+<!--    <div id="callRecord-container">-->
+<!--        <ul class="call-record">-->
+<!--            <li class="number">通话记录</li>-->
+<!--            <li class="name"><em>017730523795</em></li>-->
+<!--            <li class="moment">2019/8/26/09:23:11</li>-->
+<!--            <li class="duration">18</li>-->
+<!--            <li class="status">接通</li>-->
+<!--        </ul>-->
+
+        {% for call in call_records %}
+        <ul class="call-record">
+            <li class="number">{{call.phone}}</li>
+            <li class="name"><em>{{call.name}}</em></li>
+            <li class="moment">{{call.start_time}}</li>
+            <li >{{call.on_time}}</li>
+            <li class="end_moment">{{call.end_time}}</li>
+            <li class="status">{{call.type}}</li>
+        </ul>
+        {% endfor %}
+    </div>
+
 </body>
 </html>
