@@ -48,8 +48,8 @@ ws = {
 def send(data):
     log('use webScoket receive sucessful', data)
     sid = request.sid  # io的客户端，用来标识唯一客户端。也是会话id
-    ws[data] = sid
-    socketio.emit(event='test_room', data='test_room', room=ws.get(data))  # 私聊的功能
+    ws['data'] = sid
+    socketio.emit(event='test_room', data='test_room', room=ws.get('data'))  # 私聊的功能
 
 
 # 处理各种不同的body
