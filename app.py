@@ -45,11 +45,11 @@ ws = {
 
 # 接收客户端的消息，
 @socketio.on('login')
-def send(data, send_data):
+def send(data):
     log('use webScoket receive sucessful', data)
     sid = request.sid  # io的客户端，用来标识唯一客户端。也是会话id
     ws[data] = sid
-    socketio.emit(event='test_room', data=send_data, room=ws.get(data))  # 私聊的功能
+    socketio.emit(event='test_room', data='test_room', room=ws.get(data))  # 私聊的功能
 
 
 # 处理各种不同的body
