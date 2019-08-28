@@ -12,8 +12,8 @@ class Funcs(Process_request):
     # 类变量，所有的实例共享这个变量
     p = {
         'BUSY': set(),
-        'IDLE': {'2'},
-        'ONLINE': {'2'},
+        'IDLE': {'212'},
+        'ONLINE': {'212'},
         'OFFLINE': set(),
     }
 
@@ -92,32 +92,40 @@ class Funcs(Process_request):
         data = Funcs.add_header(req_body)
         return data
 
-    # 对（来电转分机触发）振铃事件RING 进行处理，发送客户端的号码
+    # 对（来电转分机触发）振铃事件RING 进行处理，发送客户端的号码。显示弹窗
     def alterWin(self):
         event = self.getRoot()
         mes = event.find('visitor')
         number = mes.attrib['from']  # 来电id
+        pid = mes.attrib['to']
         log('来电号码', number)
-        res = {"number": number, "status": "RING"}
+        log('被呼叫的分机号码:', pid)
+        res = {"number": number, "pid": pid, "status": "RING"}
         return res
 
-    # 对ANWSER事件处理，分机应答后，发送状态
+    # 对ANWSER事件处理，分机应答后，发送状态，计时器开始计数
     def status_change(self):
-        return 'ANWSER'
+        event = self.getRoot()
+        mes = event.find['visitor']
+        pid = mes.attrib['to']          # 被呼叫的分机号码
+        log('被呼叫的分机号码: ', pid)
+        res = {"pid": pid, "status": "ANWSER"}
+        return res
 
     # 通话结束后，拿到录音的相对路径，下载录音到服务器上，返回来电号码
     def recording(self):
         event = self.getRoot()
         number = event.find('CPN').text
         cdr_type = event.find('Type').text
-        if cdr_type == 'LO':  # 只处理类型为LO的话单
+        if cdr_type == 'LO':                # 只处理类型为LO的话单，来电转分机是 内部互拨，分机呼叫分机
             log('recording()', number)
+            # pid = event.find('')
             # recording = event.find('Recording')
             # record_name = recording.text
             # play_path = config['app_server_url'] + record_name
             # log('输出相对路径', path)
             # competeUrl = config['om_record_url'] + record_name                     # 下载地址
-             # log('完整路径：', competeUrl)
+            # log('完整路径：', competeUrl)
             #
             # cmd = '/usr/bin/wget -P %s %s' % (config['linux_path'], competeUrl)
             # log('执行shell命令，5s之后下载录音...', cmd)
@@ -133,10 +141,10 @@ class Funcs(Process_request):
     def funcs(self):
         # 可能少了一个判断root的tag
         f = {
-            'Cdr': self.recording,  # 话单请求，返回两个录音文件路径
-            # 'BYE': self.call_end,   # 来电和分机通话结束，返回来电号码
-            'ANSWER': self.status_change,  # 来电转分机分机应答，通话建立
-            'RING': self.alterWin,  # 来电 弹窗显示号码，正在呼叫
+            'Cdr': self.recording,              # 话单请求，返回两个录音文件路径            2.6.2/LO
+            # 'BYE': self.call_end,             # 来电和分机通话结束，返回来电号码
+            'ANSWER': self.status_change,       # 来电转分机分机应答，通话建立              2.5.3
+            'RING': self.alterWin,              # 来电 弹窗显示号码，正在呼叫               2.5.3
             'INCOMING': self.autoTransfer,
             'BUSY': self.phone_status,
             'IDLE': self.phone_status,
