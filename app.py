@@ -59,7 +59,7 @@ def extcute_body(body):
             log('通话建立')
             socketio.emit(event="anwser", data=body)
             # socketio.emit(event='anwser', data=body, room=ws.get(data))
-            send(body)
+           
         else:
             log('发送给OM来电转分机请求')
             reqestOM(body)
