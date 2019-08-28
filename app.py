@@ -40,7 +40,6 @@ def reqestOM(body):
 
 ws = {
     'cid': 'sid',
-    '123': sid1,
 }
 
 
