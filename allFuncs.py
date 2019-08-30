@@ -2,7 +2,7 @@ from excuteRequest import Process_request
 from excuteRequest import log
 import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import tostring
-import random, wget
+import random
 import time
 import subprocess  # 用来调用命令行shell
 from utils import om_config
