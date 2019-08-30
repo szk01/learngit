@@ -52,8 +52,8 @@
         `
         return t
     }
-  var url = "http://106.15.44.224:80"
-//    var url = "http://127.0.0.1:80"
+//  var url = "http://106.15.44.224:80"
+    var url = "http://127.0.0.1:80"
     console.log(url);
     var socket = io.connect(url);
     socket.on('connect', function() {
@@ -89,7 +89,7 @@
             clearInterval(inter)
             var s = show(count)
             console.log(s)
-            var r = template(data["number"], s, data["downPath"], data["play"])
+            var r = template(data["number"], s, data["downPath"], data["play_path"])
             $("#call-record-container").append(r)
             console.log('点击停止计时按钮')
         }

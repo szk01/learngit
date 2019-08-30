@@ -24,13 +24,15 @@ def test_connect():
 def index():
     return render_template('test.html')
 
+
 # 传输音频wav文件
 @main.route('/audio/<name>')
 def audio(name):
-    path = '/root/learngit/audio/' + name  # 音频所在的路径
+    # path = '/root/learngit/audio/' + name  # 音频所在的路径
+    win_path = 'C:/Users/86177/Documents/GitHub/flaskWeb/audio/' + name
 
-    def gen_audio():                    # 这是一个生成器
-        with open(path, 'rb') as wav:
+    def gen_audio():  # 这是一个生成器
+        with open(win_path, 'rb') as wav:
             data = wav.read(1024)
             while data:
                 yield data

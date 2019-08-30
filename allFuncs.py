@@ -2,10 +2,12 @@ from excuteRequest import Process_request
 from excuteRequest import log
 import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import tostring
-import random
+import random, wget
 import time
 import subprocess  # 用来调用命令行shell
 from utils import om_config
+from models.record import Call_record, Voice_record
+from models import session
 
 
 class Funcs(Process_request):
@@ -23,6 +25,21 @@ class Funcs(Process_request):
         body_type = '<?xml version="1.0" encoding="utf-8" ?>\r\n'
         req = body_type + body
         return req
+
+    # 添加通话记录到mysql数据库
+    @staticmethod
+    def sql_addCallRecord(cr):
+        call_record = Call_record(phone=cr['number'], name=cr['name'], type=1, start_time=1566877020)
+        session.add(call_record)
+        session.commit()
+
+    # 添加录音记录到mysql数据库
+    @staticmethod
+    def sql_addVoiceRecord(vr):
+        voice_record = Voice_record(name=vr['name'], url=vr['url'], play_count=vr['play_count'],
+                                    down_count=vr['down_count'])
+        session.add(voice_record)
+        session.commit()
 
     # 修改分机状态信息
     def phone_status(self):
@@ -63,7 +80,7 @@ class Funcs(Process_request):
     # 查询语音文件
     def Query_voice(self):
         body = '<Manage attribute="Query" >\r\n<voicefile/>\r\n</Manage>'
-        response = self.add_header(body)
+        response = Funcs.add_header(body)
         log('查询语音文件命令执行')
         return response
 
@@ -105,9 +122,10 @@ class Funcs(Process_request):
 
     # 对ANWSER事件处理，分机应答后，发送状态，计时器开始计数
     def status_change(self):
+        log('执行函数status_change()')
         event = self.getRoot()
-        mes = event.find['visitor']
-        pid = mes.attrib['to']          # 被呼叫的分机号码
+        mes = event.find('ext')
+        pid = mes.attrib['id']  # 被呼叫的分机号码
         log('被呼叫的分机号码: ', pid)
         res = {"pid": pid, "status": "ANWSER"}
         return res
@@ -117,33 +135,51 @@ class Funcs(Process_request):
         event = self.getRoot()
         number = event.find('CPN').text
         cdr_type = event.find('Type').text
-        if cdr_type == 'LO':                # 只处理类型为LO的话单，来电转分机是 内部互拨，分机呼叫分机
+        if cdr_type == 'LO':  # 只处理类型为LO的话单，来电转分机是 内部互拨，分机呼叫分机
             log('recording()', number)
             recording = event.find('Recording')
-            record_name = recording.text
-            play_path = om_config['app_server_url'] + record_name
+            record_name = recording.text                           # 语音文件名字
+            pid = event.find('CDPN').text                          # 分机号
+            play_path = om_config['app_record_url'] + record_name
             log('输出相对路径', play_path)
-            competeUrl = om_config['om_record_url'] + record_name                     # 下载地址
-            log('完整路径：', competeUrl)
+            omUrl = om_config['om_record_url'] + record_name       # 存储在om上的录音文件地址
+            log('完整路径：', omUrl)
 
-            cmd = '/usr/bin/wget -P %s %s' % (om_config['linux_path'], competeUrl)
-            log('执行shell命令，5s之后下载录音...', cmd)
-            time.sleep(10)  # 5s之后下载录音
-            subprocess.call(cmd, shell=True)             # 将录音文件下载到服务器的指定文件夹中
+            cmd = 'wget -P %s %s' % (om_config['win_path'], omUrl)
+            log('执行shell命令，10s之后下载录音...', cmd)
+            time.sleep(10)  # 10s之后下载录音
+            subprocess.call(cmd, shell=True)  # 将录音文件下载到服务器的指定文件夹中
 
-            play_path = ''
-            competeUrl = ''
-            res = {"play": play_path, "downPath": competeUrl, "status": "Cdr", "number": number}
-            return res
+            cr = {                           # 通话记录
+               "phone": number,
+                "name": "未知",
+                "type": 1,
+            }
+
+            vr = {                            # 录音记录
+                "name": "未知",
+                "url": play_path,
+                "play_count": 0,
+                "down_count": 0,
+            }
+
+            ws = {                            # 发送给ws客户端的消息
+                "number": number,
+                "downPath": omUrl,
+                "play": play_path,
+            }
+            Funcs.sql_addCallRecord(cr)       # 添加通话记录
+            Funcs.sql_addVoiceRecord(vr)
+            return ws
 
     # 根据attribute调用请求函数
     def funcs(self):
         # 可能少了一个判断root的tag
         f = {
-            'Cdr': self.recording,              # 话单请求，返回两个录音文件路径            2.6.2/LO
+            'Cdr': self.recording,  # 话单请求，返回两个录音文件路径            2.6.2/LO
             # 'BYE': self.call_end,             # 来电和分机通话结束，返回来电号码
-            'ANSWER': self.status_change,       # 来电转分机分机应答，通话建立              2.5.3
-            'RING': self.alterWin,              # 来电 弹窗显示号码，正在呼叫               2.5.3
+            'ANSWER': self.status_change,  # 来电转分机分机应答，通话建立              2.5.3
+            'RING': self.alterWin,  # 来电 弹窗显示号码，正在呼叫               2.5.3
             'INCOMING': self.autoTransfer,
             'BUSY': self.phone_status,
             'IDLE': self.phone_status,

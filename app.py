@@ -56,14 +56,8 @@ def send(data):
 # 处理各种不同的body
 def extcute_body(body):
     if isinstance(body, str):
-        if body == 'ANWSER':                                                    # 分机应答，让计时器开始计时
-            log('通话建立')
-            socketio.emit(event="anwser", data=body)
-            # socketio.emit(event='anwser', data=body, room=ws.get(data))
-
-        else:
-            log('发送给OM来电转分机请求')
-            reqestOM(body)
+        log('发送给OM来电转分机请求')
+        reqestOM(body)
     if isinstance(body, dict):
         if body["status"] == "RING":                                            # 有电话接入call-in，客户端显示页面
             log(body["number"])
@@ -73,6 +67,10 @@ def extcute_body(body):
             log('通话结束，发送给客户端网页消息')
             socketio.emit(event='record', data=body)
             # socketio.emit(event='ring', data=body, room=ws.get(cid))
+        elif body["status"] == 'ANWSER':                                                    # 分机应答，让计时器开始计时
+            log('通话建立')
+            socketio.emit(event="anwser", data=body)
+            # socketio.emit(event='anwser', data=body, room=ws.get(data))
 
 
 # 会使用到多线程，不同的进程处理不同的请求

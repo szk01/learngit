@@ -38,14 +38,23 @@ def formatted(cs):
 def call_record():
     content = {}
     call_records = Call_record.query.all()  # 拿到call_records中的所有数据
-    formatted(call_records)     # 格式化时间戳
-    # allTime = duration(call_records)      # 得出总时长
+    formatted(call_records)  # 格式化时间戳
+    # allTime = duration(call_records)                      # 得出总时长
     # content['allTime'] = allTime
     content['call_records'] = call_records  # 加入到content中，将content传到前端页面，让jingjia2模板使用
     return render_template('callRecord.html', **content)
 
 
+def v_format(vs):
+    for v in vs:
+        v.name = v.name[:-7]
+
+
 # 录音记录
 @main.route('/voice_record')
 def voice_record():
-    return render_template('voiceRecord.html')
+    content = {}
+    voice_records = Voice_record.query.all()
+    v_format(voice_records)
+    content['voice_records'] = voice_records
+    return render_template('voiceRecord.html', **content)

@@ -3,25 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <title>录音记录</title>
-    <style>
-        ul li {
-            list-style: none;
-            float: left;
-            margin: 10px 20px;
-            width: 150px;
-    }
-    </style>
 
+    <style>
+        * {
+            margin: 0;
+            /*padding: 0;*/
+        }
+        table {
+            border: thin solid black;
+            margin: 0 auto;                             /*让表格居中*/
+            border-collapse: collapse;
+        }
+        th {
+            background-color: #999;
+        }
+
+        td, th {                         /*逗号连接,同时匹配td,th所有元素*/
+            border: thin solid black;
+            padding: 5px;
+            width: 400px;
+            height: 45px;
+            text-align: center;         /*让内容居中*/
+        }
+
+        table, td, th, tr {
+            border: 0;
+        }
+
+    </style>
 </head>
 <body>
-    <div id="callRecord-container">
-        <ul class="call-record">
-            <li class="number">录音记录</li>
-            <li class="name"><em>017730523795</em></li>
-            <li>2</li>                                              <!--分机号-->
-            <li class="moment"><a href="">下载地址</a></li>
-            <li class="duration"><a href="">播放</a></li>
-        </ul>
-    </div>
-</body>
+    <table>
+        <caption>
+            通话记录
+        </caption>
+        <tr>   											<!--th标签里面是表头-->
+            <th>操作</th>
+            <th>下载地址（年月日/来电号码_分机号...）</th>
+            <th>在线播放</th>
+        </tr>
+        {% for voice in voice_records %}
+        <tr>
+            <td class="do"></td>
+            <td ><a href="http://106.15.44.224/audio/{{voice.url}}">{{voice.name}}</a></td>
+            <td ><button>播放</button></td>
+        </tr>
+        {% endfor %}
+    </table>>
+
 </html>

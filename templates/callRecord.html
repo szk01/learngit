@@ -4,59 +4,64 @@
     <meta charset="UTF-8">
     <title>通话记录</title>
     <style>
-        ul li {
-            list-style: none;
-            width: 150px;
-            height: 60px;
+        * {
+            margin: 0;
+            /*padding: 0;*/
+        }
+        table {
+            border: thin solid black;
+            margin: 0 auto;
+            border-collapse: collapse;
         }
 
-        ul.description li {                                <!-- 记录说明-->
-            list-style: none;
-            float: left;
-            font-weight: 700;
+        th {
+            background-color: #999;
         }
 
-        ul.call-record li {                                 <!--记录-->
-            list-style: none;
-            float: left;
-            width: 150px;
+        td, th {                         /*逗号连接,同时匹配td,th所有元素*/
+            border: thin solid black;
+            padding: 5px;
+            width: 200px;
+            height: 50px;
+            text-align: center;         /*让内容居中*/
         }
 
-        ul {
-            width: 1000px;
+
+        .cell-color {
+            background-color: lightblue;
         }
+
+        table, td, th, tr {
+            border: 0;
+        }
+
     </style>
 </head>
 <body>
-    <ul class="description">
-        <li>号码</li>
-        <li>姓名</li>
-        <li>打入时间</li>
-        <li>接通时间</li>
-        <li>结束时间</li>
-        <li>记录类型</li>
-    </ul>
-
-<!--    <div id="callRecord-container">-->
-<!--        <ul class="call-record">-->
-<!--            <li class="number">通话记录</li>-->
-<!--            <li class="name"><em>017730523795</em></li>-->
-<!--            <li class="moment">2019/8/26/09:23:11</li>-->
-<!--            <li class="duration">18</li>-->
-<!--            <li class="status">接通</li>-->
-<!--        </ul>-->
-
+    <table>
+        <caption>
+            通话记录
+        </caption>
+        <tr>   											<!--th标签里面是表头-->
+            <th>号码</th>
+            <th>姓名</th>
+            <th>打入时间</th>
+            <th>接通时间</th>
+            <th>结束时间</th>
+            <th>记录类型</th>
+        </tr>
         {% for call in call_records %}
-        <ul class="call-record">
-            <li class="number">{{call.phone}}</li>
-            <li class="name"><em>{{call.name}}</em></li>
-            <li class="moment">{{call.start_time}}</li>
-            <li >{{call.on_time}}</li>
-            <li class="end_moment">{{call.end_time}}</li>
-            <li class="status">{{call.type}}</li>
-        </ul>
+        <tr class="call-record">
+            <td class="number">{{call.phone}}</td>
+            <td class="name"><em>{{call.name}}</em></td>
+            <td class="moment">{{call.start_time}}</td>
+            <td >{{call.on_time}}</td>
+            <td class="end_moment">{{call.end_time}}</td>
+            <td class="status">{{call.type}}</td>
+        </tr>
         {% endfor %}
-    </div>
+    </table>>
+
 
 </body>
 </html>

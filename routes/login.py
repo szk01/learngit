@@ -29,8 +29,9 @@ def index():
 # 传输图片
 @main.route('/images/<name>')
 def img_stream(name):
-    path = '/root/learngit/images/' + name
-    with open(path, 'rb') as img:
+    win_path = 'C:/Users/86177/Documents/GitHub/flaskWeb/images/'+ name
+    # path = '/root/learngit/images/' + name
+    with open(win_path, 'rb') as img:
         data = img.read()
         print('传递图片...')
     return data
