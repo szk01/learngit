@@ -69,7 +69,7 @@
 		</ul>
 	</div>
 
-	<iframe src="http://127.0.0.1/testWeb" width="82.5%" height="100%" frameborder="0" scrolling="no" id="iframe"></iframe>
+	<iframe src="/testWeb" width="82.5%" height="100%" frameborder="0" scrolling="no" id="iframe"></iframe>
 
 	<div id="content">
 
@@ -78,13 +78,13 @@
 		$('.call_record').on("li, click", function() {					//点击改变到通话记录页面
 			console.log('通话记录的li测试')
 			//$('#iframe').attr('src', 'http://106.15.44.224/call_record')
-			$('#iframe').attr('src', 'http://127.0.0.1/call_record')
+			$('#iframe').attr('src', '/call_record')
 		});
 
 		$(".voice_record").on("li, click", function() {					//点击改变到录音记录页面
 			console.log('录音记录的li测试')
 			//$('#iframe').attr('src', 'http://106.15.44.224/voice_record')
-			$('#iframe').attr('src', 'http://127.0.0.1/voice_record')
+			$('#iframe').attr('src', '/voice_record')					//写的是相对路径
 		});
 	</script>
 </body>

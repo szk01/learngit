@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>录音记录</title>
-
+    <link rel="stylesheet" type="text/css" href="static/css/call_note.css">
+	<script type="text/javascript" src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/socket.io/1.5.1/socket.io.min.js"></script>
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/js/om.js"></script>
     <style>
         * {
             margin: 0;
@@ -23,7 +27,7 @@
             padding: 5px;
             width: 400px;
             height: 45px;
-            text-align: center;         /*让内容居中*/
+            text-align: center;         /*让文字左右居中*/
         }
 
         table, td, th, tr {
@@ -33,22 +37,111 @@
     </style>
 </head>
 <body>
+    <div class="call-note-container">
+        <div class="call-number">来电号码</div>
+        <div class="time">通话时间</div>
+        <div class="status">状态</div>
+        <button class="bt-startTime">开始计时</button>
+        <button class="bt-stopTime">停止计时</button>
+    </div>
+
     <table>
         <caption>
-            通话记录
+            通话记录（删除后刷新页面）
         </caption>
-        <tr>   											<!--th标签里面是表头-->
-            <th>操作</th>
-            <th>下载地址（年月日/来电号码_分机号...）</th>
+        <tr>
+        	<th class="choice" style="width: 100px;"><input type="checkbox" id="checkbox">全选   <button id="remove">删除</button> </th><!--th标签里面是表头-->
             <th>在线播放</th>
+            <th>下载地址（年月日/来电号码_分机号...）</th>
+            <th>操作/删除</th>
         </tr>
         {% for voice in voice_records %}
         <tr>
-            <td class="do"></td>
-            <td ><a href="http://106.15.44.224/audio/{{voice.url}}">{{voice.name}}</a></td>
-            <td ><button>播放</button></td>
+        	<td><input type="checkbox" class="check" id={{voice.id}}></td>
+            <td> <audio controls src="{{voice.url}}" preload="auto">
+
+                 </audio>
+            </td>
+            <td  ><a href="{{voice.url}}">{{voice.name}}</a></td>
+            <td ><button id={{voice.id}} class="bt">删除</button></td>
         </tr>
         {% endfor %}
-    </table>>
+    </table>
 
+<script type="text/javascript">
+
+	var url = 'http://127.0.0.1/remove'				//请求的url
+
+	$('.bt').click(function() {									//点击单独的删除按钮，直接删除
+		var c = confirm('确定删除这条记录吗？');
+		if (c == true) {
+			alert('删除这条记录')
+			var ids = []
+			var id = this.id
+			ids.push(id)
+			var j = {'data': ids}
+			var d = JSON.stringify(j)
+			var data = {'data': d}
+			console.log(d)
+			$.post(url, data, function(status) {				//发送post请求
+				if (status == 'sucess') {
+					alert('删除成功')
+				}
+			})                                     //发送ajax请求删除这个记录
+		} else {
+			alert('逗我玩？')
+		}
+	})
+
+
+	$('#checkbox').click(function() {					//全选框只要被选择，那么就会被全选
+		var c = $('.check');
+		var isChecked = $('#checkbox').prop('checked') ? c.prop("checked", true) : c.prop("checked", false);
+	})
+
+
+	$('.check').click(function(){						//每一个选择框，只要有一个没有选择，那么全选框为false
+		var i = 0;
+		var c = $('#checkbox');
+		$('.check').each(function(){
+			if($(this).prop('checked') == false){
+				i = 1;
+			}
+		})
+		if(i == 1){
+			c.prop('checked',false)
+		}else{
+			c.prop('checked',true)
+		}
+	})
+
+
+	$('#remove').click(function() {						//全选删除按钮，点击就会删除选择的记录
+		var i = 0;
+		var ids = [];
+		$('.check').each(function(){
+			if($(this).prop('checked') == true){			//$(this)是当前所选中的check
+				i = i + 1;
+				var id = this.id                            //用原生js的this 获取id
+				ids.push(id)
+			}
+		})
+		if (i > 0) {
+			var c = confirm('确定删除所选记录吗？');//点击确认删除按钮弹出对话框
+			if(c == true){
+				var d = JSON.stringify({'data': ids})
+				console.log(d)
+				var data = {'data': d}
+				$.post(url, data, function(status) {				//发送post请求
+					if (status == 'sucess') {
+						alert('删除成功')
+					}
+				})
+			}
+		}
+	})
+
+</script>
+</body>
 </html>
+

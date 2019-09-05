@@ -1,0 +1,18 @@
+/*来电通知*/
+.call-note-container {
+    height: 80px;
+    background-color: orange;
+    display: none;
+}
+.call-number {
+    font-size: 20px;
+    color:red;
+    display: inline-block;
+    margin: 30px 30px;
+}
+.time {
+    display: inline-block;
+}
+.status {
+    display: inline-block;
+}

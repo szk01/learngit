@@ -26,7 +26,7 @@ def index():
 
 
 # 传输音频wav文件
-@main.route('/audio/<name>')
+@main.route('/audio/20190904/<name>')
 def audio(name):
     # path = '/root/learngit/audio/' + name  # 音频所在的路径
     win_path = 'C:/Users/86177/Documents/GitHub/flaskWeb/audio/' + name
@@ -36,7 +36,8 @@ def audio(name):
             data = wav.read(1024)
             while data:
                 yield data
-                log('不断传输1024字节文件...')
+
                 data = wav.read(1024)
 
+    log('传输音频文件完成...')
     return Response(gen_audio(), mimetype="audio/mpeg3")

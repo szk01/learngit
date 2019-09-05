@@ -14,36 +14,36 @@
             margin: 0;
         }
 
-        /*通话记录*/
-        .phone-note {
-            margin: 10px 5px;                 /* 上下 左右 */
-            height: 60px;
-            /*border: 1px solid #000;*/
-            background-color: #EEE9E9;
+<!--        /*通话记录*/-->
+<!--        .phone-note {-->
+<!--            margin: 10px 5px;                 /* 上下 左右 */-->
+<!--            height: 60px;-->
+<!--            /*border: 1px solid #000;*/-->
+<!--            background-color: #EEE9E9;-->
 
-        }
+<!--        }-->
 
-        ul li {
-            list-style: none;
-            float: left;
-            margin: 20px 10px;
-            width: 150px;
-        }
-        .cdr {
-            font-weight: bold;
-        }
-        .record {
-            text-decoration: none;
-        }
-        .record:visited {
-            color: red;
-        }
-        .play {
-            text-decoration: none;
-        }
-        .play:visited {
-            color: red;
-        }
+<!--        ul li {-->
+<!--            list-style: none;-->
+<!--            float: left;-->
+<!--            margin: 20px 10px;-->
+<!--            width: 150px;-->
+<!--        }-->
+<!--        .cdr {-->
+<!--            font-weight: bold;-->
+<!--        }-->
+<!--        .record {-->
+<!--            text-decoration: none;-->
+<!--        }-->
+<!--        .record:visited {-->
+<!--            color: red;-->
+<!--        }-->
+<!--        .play {-->
+<!--            text-decoration: none;-->
+<!--        }-->
+<!--        .play:visited {-->
+<!--            color: red;-->
+<!--        }-->
 
         /*来电通知*/
         .call-note-container {
@@ -66,8 +66,14 @@
     </style>
 </head>
 <body>
+    <div>电话会议测试</div>
+    <div>
+        <button class="three">213</button>
+        <button class="four">214</button>
+        <button class="five">215</button>
+    </div>
+
     <h2>这是一个测试页面，使用webSocket协议</h2>
-    <h3 class="id">{{ip}}</h3>
     <div class="call-note-container">
         <div class="call-number">来电号码</div>
         <div class="time">通话时间</div>
@@ -76,18 +82,38 @@
         <button class="bt-stopTime">停止计时</button>
     </div>
 
-    <div id="call-record-container">
-        <ul class="phone-note">
-            <li class="cdr">通话记录</li>
-            <li class="number"><em>017730523795</em></li>
-            <li class="all-time">0:19</li>
-            <li ><a href="http://127.0.0.1:80/audio/017730523795_200_20190816-174816_32780.wav" class="record">录音下载</a></li>
-            <li ><audio controls>
-                    <source src="http://127.0.0.1:80/audio/017730523795_200_20190816-174816_32780.wav" type="audio/wav"></source>
-                </audio>
-            </li>
-        </ul>
-    </div>
+<!--    <div id="call-record-container">-->
+<!--        <ul class="phone-note">-->
+<!--            <li class="cdr">通话记录</li>-->
+<!--            <li class="number"><em>017730523795</em></li>-->
+<!--            <li class="all-time">0:19</li>-->
+<!--            <li ><a href="http://127.0.0.1:80/audio/017730523795_200_20190816-174816_32780.wav" class="record">录音下载</a></li>-->
+<!--            <li ><audio controls>-->
+<!--                    <source src="http://127.0.0.1:80/audio/017730523795_200_20190816-174816_32780.wav" type="audio/wav"></source>-->
+<!--                </audio>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </div>-->
+        <div style="text-align: center; margin: 340px 0; font:24px 'MicroSoft YaHei';">
+            <p>欢迎来到深圳泛远</p>
+        </div>
+    <script>
+        $('.three').click(function(){
+            console.log('点击213按钮')
+            socket.emit('conference',{'phone': 213});
+        })
+
+        $('.four').click(function(){
+        console.log('点击214按钮')
+            socket.emit('conference',{'phone': 214});
+        })
+
+        $('.five').click(function(){
+        console.log('点击215按钮')
+            socket.emit('conference',{'phone': 215});
+        })
+    </script>
+
 </body>
 </html>
 

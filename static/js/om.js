@@ -27,7 +27,7 @@
 
     function timing(status) {
         var interval = null;
-        window.count = 0;
+        window.count = 0;                                       // 计数也是全局变量
         if (status == 'start') {
             console.log('开始计时')
             interval = setInterval(function() {
@@ -77,7 +77,7 @@
     socket.on("anwser", function(data) {                          // 分机应答，显示状态
             $('.status').text('通话已建立')
             <!--计时器-->
-            var d = timing('start');
+            var d = timing('start');                                 //开始计时
             window.inter = d["i"]                                   // 将inter声明为全局变量
             console.log('开始计时')
     });
@@ -85,17 +85,17 @@
     socket.on("record", function(data) {                             // 分机或者来访者挂断
         if (data["status"] === 'Cdr') {
             $('.status').text('通话已结束');
-            $('.call-note-container').hide()                           // 停止计时
-            clearInterval(inter)
+            $('.call-note-container').hide()                           // 隐藏弹窗
+            clearInterval(window.inter)
+            window.count = 0                                            //计数清零
             var s = show(count)
             console.log(s)
-            var r = template(data["number"], s, data["downPath"], data["play_path"])
-            $("#call-record-container").append(r)
-            console.log('点击停止计时按钮')
+//            var r = template(data["number"], s, data["downPath"], data["play_path"])
+//            $("#call-record-container").append(r)
         }
     });
 
-    // 点击关闭显示框
+
    $(".bt-startTime").click(function(){                // 点击按钮开始计时
     var d  = timing('start');                 // 将inter声明为全局变量
     window.inter = d["i"]

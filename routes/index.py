@@ -1,12 +1,13 @@
 from flask import (
     Blueprint,
     render_template,
+    request,
     redirect,
     session,
     url_for,
 )
 from models.record import db, Voice_record, Call_record
-import time
+import time, json
 
 main = Blueprint('index', __name__)
 
@@ -44,11 +45,10 @@ def call_record():
     content['call_records'] = call_records  # 加入到content中，将content传到前端页面，让jingjia2模板使用
     return render_template('callRecord.html', **content)
 
-
+# 格式录音记录的名称
 def v_format(vs):
     for v in vs:
         v.name = v.name[:-7]
-
 
 # 录音记录
 @main.route('/voice_record')
@@ -58,3 +58,15 @@ def voice_record():
     v_format(voice_records)
     content['voice_records'] = voice_records
     return render_template('voiceRecord.html', **content)
+
+# 删除记录
+@main.route('/remove', methods=['POST'])
+def remove_voiceReocrd():
+    data = request.form.get('data')                       # post方式传递json格式字符串
+    d = json.loads(data)                                  # 将str转化成字典
+    for id in d.get('data'):
+        v = Voice_record.query.get(id)
+        print(v)
+        db.session.delete(v)
+        db.session.commit()
+    return 'sucess'

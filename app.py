@@ -4,7 +4,7 @@ from flask import (
 )
 import requests
 from flask_socketio import SocketIO
-from utils import log, om_config
+from utils import log, om_config, wget_down
 from routes.index import main as index_routes
 from routes.login import main as login_routes
 from routes.test import main as test_routes
@@ -26,6 +26,16 @@ socketio = SocketIO(app)
 app.register_blueprint(index_routes, url_prefix='')
 app.register_blueprint(test_routes, url_prefix='')
 app.register_blueprint(login_routes, url_prefix='')
+
+
+# 发送电话会议的请求
+def confer(body):
+    body_type = '<?xml version="1.0" encoding="utf-8" ?>\r\n'
+    log('打印', body_type)
+    payload = body_type + body
+    log('发送请求', payload)
+    url = om_config['om_url']
+    requests.request("POST", url, data=payload)
 
 
 # 给OM服务器发送一个POST请求
@@ -53,21 +63,32 @@ def send(data):
     socketio.emit(event='test_room', data='test_room', room=ws.get('data'))  # 私聊的功能
 
 
+# 电话会议
+@socketio.on('conference')
+def conference(data):
+    log('接收到%s的数据, 呼叫%s分机' % (data['phone'], data['phone']))
+    body = '<Transfer attribute="Connect">\r\n<ext id="212"/>\r\n<ext id="%s"/>\r\n</Transfer>' % data['phone']
+    log(body)
+    confer(body)
+
+
 # 处理各种不同的body
 def extcute_body(body):
     if isinstance(body, str):
         log('发送给OM来电转分机请求')
         reqestOM(body)
     if isinstance(body, dict):
-        if body["status"] == "RING":                                            # 有电话接入call-in，客户端显示页面
+        if body["status"] == "RING":  # 有电话接入call-in，客户端显示页面
             log(body["number"])
+            log('有电话接入，显示弹窗')
             socketio.emit(event="ring", data=body)
             # socketio.emit(event='ring', data=body, room=ws.get(cid))
-        elif body["status"] == 'Cdr':                                           # 通话结束，发送Cdr话单，包含录音文件的路径
-            log('通话结束，发送给客户端网页消息')
+        elif body["status"] == 'Cdr':  # 通话结束，发送Cdr话单，包含录音文件的路径
+            log('通话结束，停止计时')
             socketio.emit(event='record', data=body)
             # socketio.emit(event='ring', data=body, room=ws.get(cid))
-        elif body["status"] == 'ANWSER':                                                    # 分机应答，让计时器开始计时
+            wget_down(body['downPath'])
+        elif body["status"] == 'ANWSER':  # 分机应答，让计时器开始计时
             log('通话建立')
             socketio.emit(event="anwser", data=body)
             # socketio.emit(event='anwser', data=body, room=ws.get(data))

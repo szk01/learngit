@@ -3,11 +3,11 @@ from excuteRequest import log
 import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import tostring
 import random
-import time
+import time, asyncio
 import subprocess  # 用来调用命令行shell
-from utils import om_config
-from models.record import Call_record, Voice_record
-from models import session
+from utils import om_config, wget_down
+from models.record import Call_record, Voice_record, db
+# from models import session
 
 
 class Funcs(Process_request):
@@ -17,6 +17,12 @@ class Funcs(Process_request):
         'IDLE': {'212'},
         'ONLINE': {'212'},
         'OFFLINE': set(),
+    }
+    # 每一通电话的三个时间节点
+    time = {
+        'start_time': None,             # 电话的打入时间
+        'on_time': None,                # 电话的接通时间
+        'end_time': None,               # 电话的结束时间
     }
 
     # 加上请求头，组成完整请求
@@ -29,17 +35,32 @@ class Funcs(Process_request):
     # 添加通话记录到mysql数据库
     @staticmethod
     def sql_addCallRecord(cr):
-        call_record = Call_record(phone=cr['number'], name=cr['name'], type=1, start_time=1566877020)
-        session.add(call_record)
-        session.commit()
+        log('静态方法，添加通话记录')
+        log('打印传过来的字典', cr)
+        call_record = Call_record(phone=cr['phone'], name=cr['name'], type=cr['type'],
+                                  start_time=Funcs.time['start_time'], on_time=Funcs.time['on_time'], end_time=Funcs.time['end_time']
+                                  )
+        Funcs.time['start_time'] = None
+        Funcs.time['on_time'] = None
+        Funcs.time['end_time'] = None
+        log(Funcs.time)
+        db.session.add(call_record)
+        log('执行了add')
+        db.session.commit()
 
     # 添加录音记录到mysql数据库
     @staticmethod
     def sql_addVoiceRecord(vr):
+        log('静态方法，添加录音记录')
         voice_record = Voice_record(name=vr['name'], url=vr['url'], play_count=vr['play_count'],
                                     down_count=vr['down_count'])
-        session.add(voice_record)
-        session.commit()
+        db.session.add(voice_record)
+        db.session.commit()
+
+    @staticmethod                       # 获取时间戳
+    def get_time():
+        t = time.time()
+        return int(t)
 
     # 修改分机状态信息
     def phone_status(self):
@@ -111,6 +132,10 @@ class Funcs(Process_request):
 
     # 对（来电转分机触发）振铃事件RING 进行处理，发送客户端的号码。显示弹窗
     def alterWin(self):
+        start_time = Funcs.get_time()               # 客户打入时间
+        Funcs.time['start_time'] = start_time       # 更新打入时间
+        log('填写start_time时间段', Funcs.time)
+
         event = self.getRoot()
         mes = event.find('visitor')
         number = mes.attrib['from']  # 来电id
@@ -122,6 +147,10 @@ class Funcs(Process_request):
 
     # 对ANWSER事件处理，分机应答后，发送状态，计时器开始计数
     def status_change(self):
+        on_time = Funcs.get_time()  # 电话接通时间
+        Funcs.time['on_time'] = on_time  # 更新接通时间
+        log('填写start_time和on_time', Funcs.time)
+
         log('执行函数status_change()')
         event = self.getRoot()
         mes = event.find('ext')
@@ -132,23 +161,29 @@ class Funcs(Process_request):
 
     # 通话结束后，拿到录音的相对路径，下载录音到服务器上，返回来电号码
     def recording(self):
+        end_time = Funcs.get_time()  # 客户打入时间
+        Funcs.time['end_time'] = end_time  # 更新打入时间
+        log('填写所有的字段', Funcs.time)
+
         event = self.getRoot()
         number = event.find('CPN').text
         cdr_type = event.find('Type').text
-        if cdr_type == 'LO':  # 只处理类型为LO的话单，来电转分机是 内部互拨，分机呼叫分机
+        if cdr_type == 'IN':                        # 只处理类型为IN的话单，来电转分机是 内部互拨，分机呼叫分机
             log('recording()', number)
             recording = event.find('Recording')
             record_name = recording.text                           # 语音文件名字
             pid = event.find('CDPN').text                          # 分机号
-            play_path = om_config['app_record_url'] + record_name
-            log('输出相对路径', play_path)
-            omUrl = om_config['om_record_url'] + record_name       # 存储在om上的录音文件地址
+            # play_path = om_config['win_path'] + record_name
+            # log('输出相对路径', play_path)
+            play_path = 'audio/' + record_name
+            omUrl = om_config['om_record_url'] + record_name       # 存储在om上的录音文件地址，给wget下载
             log('完整路径：', omUrl)
 
-            cmd = 'wget -P %s %s' % (om_config['win_path'], omUrl)
-            log('执行shell命令，10s之后下载录音...', cmd)
-            time.sleep(10)  # 10s之后下载录音
-            subprocess.call(cmd, shell=True)  # 将录音文件下载到服务器的指定文件夹中
+            # cmd = 'wget -P %s %s' % (om_config['win_path'], omUrl)
+            # log('执行shell命令，10s之后下载录音...', cmd)
+            # time.sleep(10)  # 10s之后下载录音
+            # subprocess.call(cmd, shell=True)  # 将录音文件下载到服务器的指定文件夹中
+            # await wget_down(omUrl)
 
             cr = {                           # 通话记录
                "phone": number,
@@ -157,29 +192,31 @@ class Funcs(Process_request):
             }
 
             vr = {                            # 录音记录
-                "name": "未知",
+                "name": record_name,
                 "url": play_path,
                 "play_count": 0,
                 "down_count": 0,
             }
 
             ws = {                            # 发送给ws客户端的消息
+                "status": "Cdr",
                 "number": number,
                 "downPath": omUrl,
                 "play": play_path,
             }
             Funcs.sql_addCallRecord(cr)       # 添加通话记录
-            Funcs.sql_addVoiceRecord(vr)
+            Funcs.sql_addVoiceRecord(vr)      # 添加录音记录
+            log('发送消息')
             return ws
 
     # 根据attribute调用请求函数
     def funcs(self):
         # 可能少了一个判断root的tag
         f = {
-            'Cdr': self.recording,  # 话单请求，返回两个录音文件路径            2.6.2/LO
-            # 'BYE': self.call_end,             # 来电和分机通话结束，返回来电号码
+            'Cdr': self.recording,         # 话单请求，返回两个录音文件路径            2.6.2/LO
+            # 'BYE': self.call_end,        # 来电和分机通话结束，返回来电号码
             'ANSWER': self.status_change,  # 来电转分机分机应答，通话建立              2.5.3
-            'RING': self.alterWin,  # 来电 弹窗显示号码，正在呼叫               2.5.3
+            'RING': self.alterWin,          # 来电 弹窗显示号码，正在呼叫               2.5.3
             'INCOMING': self.autoTransfer,
             'BUSY': self.phone_status,
             'IDLE': self.phone_status,
