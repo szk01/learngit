@@ -14,8 +14,8 @@ class Funcs(Process_request):
     # 类变量，所有的实例共享这个变量
     p = {
         'BUSY': set(),
-        'IDLE': {'212'},
-        'ONLINE': {'212'},
+        'IDLE': {'220'},
+        'ONLINE': {'220'},
         'OFFLINE': set(),
     }
     # 每一通电话的三个时间节点
