@@ -9,6 +9,7 @@
 	<script type="text/javascript" src="static/js/nav.js"></script>
 	<script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="https://cdn.bootcss.com/socket.io/1.5.1/socket.io.min.js"></script>
+	<script type="text/javascript" src="static/js/om.js"></script>
 	<style type="text/css">
 		* {
 			margin: 0;
@@ -23,7 +24,8 @@
 <body>
 	<div class="nav">
 		<div class="nav-top">
-			<div id="mini" style="border-bottom:1px solid rgba(255,255,255,.1)"><img src="images/mini.png" ></div>
+			<div id="mini" style="border-bottom:1px solid rgba(255,255,255,.1)" class={{number}}><img src="images/mini.png" ></div>
+			<span id="number" >{{number}}</span>
 		</div>
 		<ul>
 			<li class="nav-item">
@@ -54,7 +56,7 @@
 				<a href="javascript:;"><i class="my-icon nav-icon icon_4"></i><span>话务中心</span><i class="my-icon nav-more"></i></a>
 				<ul>
 					<li class="call_record"><a href="javascript:;"><span>通话记录</span></a></li>
-					<li><a href="javascript:;"><span>分机管理</span></a></li>
+					<li class="seat_manage"><a href="javascript:;"><span>分机管理</span></a></li>
 					<li class="voice_record"><a href="javascript:;"><span>通话录音</span></a></li>
 				</ul>
 			</li>
@@ -75,16 +77,23 @@
 
 	</div>
 	<script>
+
 		$('.call_record').on("li, click", function() {					//点击改变到通话记录页面
-			console.log('通话记录的li测试')
+			console.log('到通话记录页面')
 			//$('#iframe').attr('src', 'http://106.15.44.224/call_record')
 			$('#iframe').attr('src', '/call_record')
 		});
 
 		$(".voice_record").on("li, click", function() {					//点击改变到录音记录页面
-			console.log('录音记录的li测试')
+			console.log('到录音记录页面')
 			//$('#iframe').attr('src', 'http://106.15.44.224/voice_record')
 			$('#iframe').attr('src', '/voice_record')					//写的是相对路径
+		});
+
+		$(".seat_manage").on("li, click", function() {					//点击改变到分机管理页面
+			console.log('到分机管理页面')
+			//$('#iframe').attr('src', 'http://106.15.44.224/voice_record')
+			$('#iframe').attr('src', '/seat')							//写的是相对路径
 		});
 	</script>
 </body>

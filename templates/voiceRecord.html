@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <title>录音记录</title>
     <link rel="stylesheet" type="text/css" href="static/css/call_note.css">
-	<script type="text/javascript" src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
-    <script type="text/javascript" src="https://cdn.bootcss.com/socket.io/1.5.1/socket.io.min.js"></script>
+<!--	<script type="text/javascript" src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>-->
+<!--    <script type="text/javascript" src="https://cdn.bootcss.com/socket.io/1.5.1/socket.io.min.js"></script>-->
     <script type="text/javascript" src="static/js/jquery.min.js"></script>
-    <script type="text/javascript" src="static/js/om.js"></script>
+<!--    <script type="text/javascript" src="static/js/om.js"></script>-->
     <style>
         * {
             margin: 0;
@@ -34,17 +34,20 @@
             border: 0;
         }
 
+        ul li {
+            list-style: none;
+        }
+
     </style>
 </head>
 <body>
-    <div class="call-note-container">
-        <div class="call-number">来电号码</div>
-        <div class="time">通话时间</div>
-        <div class="status">状态</div>
-        <button class="bt-startTime">开始计时</button>
-        <button class="bt-stopTime">停止计时</button>
-    </div>
-
+<!--    <div class="call-note-container">-->
+<!--        <div class="call-number">来电号码</div>-->
+<!--        <div class="time">通话时间</div>-->
+<!--        <div class="status">状态</div>-->
+<!--        <button class="bt-startTime">开始计时</button>-->
+<!--        <button class="bt-stopTime">停止计时</button>-->
+<!--    </div>-->
     <table>
         <caption>
             通话记录（删除后刷新页面）
@@ -55,7 +58,19 @@
             <th>下载地址（年月日/来电号码_分机号...）</th>
             <th>操作/删除</th>
         </tr>
-        {% for voice in voice_records %}
+<!--        {% for voice in voice_records %}-->
+<!--        <tr>-->
+<!--        	<td><input type="checkbox" class="check" id={{voice.id}}></td>-->
+<!--            <td> <audio controls src="{{voice.url}}" preload="auto">-->
+
+<!--                 </audio>-->
+<!--            </td>-->
+<!--            <td  ><a href="{{voice.url}}">{{voice.name}}</a></td>-->
+<!--            <td ><button id={{voice.id}} class="bt">删除</button></td>-->
+<!--        </tr>-->
+<!--        {% endfor %}-->
+
+        {% for voice in vs %}
         <tr>
         	<td><input type="checkbox" class="check" id={{voice.id}}></td>
             <td> <audio controls src="{{voice.url}}" preload="auto">
@@ -67,6 +82,24 @@
         </tr>
         {% endfor %}
     </table>
+
+    <div id="page">
+        <ul class="pagination">
+            <li>
+                {% if pagination.has_next %}
+                <a href="?page={{ pagination.next_num }}">下一页</a>           <!--问号后面是查询参数-->
+                {% endif %}
+            </li>
+            <li>
+                第{{pagination.page}}/{{pagination.pages}}页
+            </li>
+            <li>
+                {% if pagination.has_prev %}
+                <a href="?page={{ pagination.prev_num }}">上一页</a>
+                {% endif %}
+            </li>
+        </ul>
+    </div>
 
 <script type="text/javascript">
 

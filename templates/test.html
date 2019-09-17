@@ -73,14 +73,24 @@
         <button class="five">215</button>
     </div>
 
-    <h2>这是一个测试页面，使用webSocket协议</h2>
-    <div class="call-note-container">
-        <div class="call-number">来电号码</div>
-        <div class="time">通话时间</div>
-        <div class="status">状态</div>
-        <button class="bt-startTime">开始计时</button>
-        <button class="bt-stopTime">停止计时</button>
+    <div>第三方进入</div>
+    <div>
+        <button class="tp3">213</button>
+        <button class="tp4">214</button>
+        <button class="tp5">215</button>
     </div>
+        <button class="satisfy">满意度调查按钮</button>
+
+
+    <h2>这是一个测试页面，使用webSocket协议</h2>
+    <a href="/seat">测试是否跳转</a>
+<!--    <div class="call-note-container">-->
+<!--        <div class="call-number">来电号码</div>-->
+<!--        <div class="time">通话时间</div>-->
+<!--        <div class="status">状态</div>-->
+<!--        <button class="bt-startTime">开始计时</button>-->
+<!--        <button class="bt-stopTime">停止计时</button>-->
+<!--    </div>-->
 
 <!--    <div id="call-record-container">-->
 <!--        <ul class="phone-note">-->
@@ -96,22 +106,50 @@
 <!--    </div>-->
         <div style="text-align: center; margin: 340px 0; font:24px 'MicroSoft YaHei';">
             <p>欢迎来到深圳泛远</p>
+            <p>你的工号是{{name}}ll</p>
         </div>
     <script>
         $('.three').click(function(){
             console.log('点击213按钮')
             socket.emit('conference',{'phone': 213});
+            $('.tp3').attr('disabled', true);               //让重复第三方按钮失效
         })
 
         $('.four').click(function(){
-        console.log('点击214按钮')
+            console.log('点击214按钮')
             socket.emit('conference',{'phone': 214});
+            $('.tp4').attr('disabled', true);               //让重复第三方按钮失效
         })
 
         $('.five').click(function(){
-        console.log('点击215按钮')
+            console.log('点击215按钮')
             socket.emit('conference',{'phone': 215});
+            $('.tp5').attr('disabled', true);               //让重复第三方按钮失效
         })
+
+
+        /* 让第三方加入会话 */
+        $('.tp3').click(function(){
+            console.log('tp3-212 hold请求')
+            socket.emit('hold', {'hphone': 213});            // 发送212的hold请求
+        })
+
+        $('.tp4').click(function(){
+            console.log('tp4-212 hold请求')
+            socket.emit('hold', {'hphone': 214});
+        })
+
+        $('.tp5').click(function(){
+            console.log('tp5-212 hold请求')
+            socket.emit('hold', {'hphone': 215});
+        })
+
+        $('.satisfy').click(function() {
+            console.log('点击满意度按钮')
+            socket.emit('satisfy', {'satisfy': 'y'})
+        })
+
+
     </script>
 
 </body>

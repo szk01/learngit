@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/socket.io/1.5.1/socket.io.min.js"></script>
+    <title>座机</title>
+    <style>
+        * {
+            margin: 1px;
+            padding: 0;
+
+        }
+        .seat {
+            width: 150px;
+            height: 100px;
+            border: 1px solid green;
+            display: inline-block;
+        }
+        p {
+            display: inline;
+        }
+
+        .example {
+            width: 200px;
+            height: 400px;
+            border: 1px bold green;
+        }
+        .blank {
+            width: 300px;
+            height: 100px;
+        }
+        .conference {
+            display: inline-block;
+            border: 1px solid black;
+            width: 150px;
+            height: 100px;
+        }
+        .priority-setting {
+            display: inline-block;
+            margin: 10px 10px;
+        }
+    </style>
+</head>
+<body>
+    {%for seat in seats%}
+    <div class="seat">
+        <div class="sn">{{seat.number}}</div>
+        <p></p>
+        <p><button class="p-{{seat.number}}">拨打</button></p>
+        <p class="status">状态</p>
+    </div>
+    {%endfor%}
+
+    <div class="blank"></div>
+
+    <div>拉入第三方，进行电话会议，你是会议主持人</div>
+    {%for seat in seats%}
+    <div class="conference">
+        <div class="sn">{{seat.number}}</div>
+        <p></p>
+        <p><button class="c-{{seat.number}}">拨打</button></p>
+        <p class="p-{{seat.number}}">状态</p>
+    </div>
+    {%endfor%}
+
+    <div class="blank"></div>
+
+    <div class="seat-priority">分机优先级设定,数字越小优先级越高</div>
+    <div>
+        <div class="priority-setting">
+            <p>213</p>
+            <select class="select">
+                <option value="213-1">1</option>
+                <option value="213-2">2</option>
+                <option value="213-3">3</option>
+            </select>
+        </div>
+
+        <div class="priority-setting">
+            <p>214</p>
+            <select class="select">
+                <option value="214-1">1</option>
+                <option value="214-2">2</option>
+                <option value="214-3">3</option>
+            </select>
+        </div>
+
+        <div class="priority-setting">
+            <p>215</p>
+            <select class="select">
+                <option value="215-1">1</option>
+                <option value="215-2">2</option>
+                <option value="215-3">3</option>
+            </select>
+        </div>
+        <button class="bt-priority">优先级设定</button>
+    </div>
+
+<script>
+    var sp = {}
+    $('.bt-priority').click(function() {
+        $('select').each(function() {
+            var o =$(this).val()                                // 这个val()函数是可以拿到选择的option
+            spilted(o)
+            console.log(sp)
+            send_priority()
+        })
+    })
+
+    var spilted = function(str) {                           // 切割字符串，加入字典
+        var array = str.split("-")
+        console.log(array[0])
+        var seat = array[0]
+        sp[seat] = array[1]
+    }
+
+    var send_priority = function() {
+        var url = "/"                                       // 使用相对路径
+        console.log(url);
+        var socket = io.connect(url);
+        socket.on('connect', function() {
+            console.log('座机优先级：', sp)
+            socket.emit('priority', sp);
+        });
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    var url = "http://127.0.0.1:80"
+    console.log(url);
+    var socket = io.connect(url);
+
+    $('.p-213').click(function(){
+        console.log('点击213按钮')
+        socket.emit('conference',{'phone': 213});
+        $('.c-213').attr('disabled', true);               //让重复第三方按钮失效
+    })
+
+    $('.p-214').click(function(){
+        console.log('点击214按钮')
+        socket.emit('conference',{'phone': 214});
+        $('.c-214').attr('disabled', true);               //让重复第三方按钮失效
+    })
+
+    $('.p-215').click(function(){
+        console.log('点击215按钮')
+        socket.emit('conference',{'phone': 215});
+        $('.c-215').attr('disabled', true);               //让重复第三方按钮失效
+    })
+
+
+    /* 让第三方加入会话 */
+    $('.c-213').click(function(){
+        console.log('tp3-212 hold请求，呼叫第三方，电话会议')
+        socket.emit('hold', {'hphone': 213});            // 发送212的hold请求
+    })
+
+    $('.c-214').click(function(){
+        console.log('tp4-212 hold请求，呼叫第三方，电话会议')
+        socket.emit('hold', {'hphone': 214});
+    })
+
+    $('.c-215').click(function(){
+        console.log('tp5-212 hold请求，呼叫第三方，电话会议')
+        socket.emit('hold', {'hphone': 215});
+    })
+
+<!--    &lt;!&ndash;实时监控分机状态&ndash;&gt;-->
+<!--    socket.on('phone_status', function(data){-->
+<!--        var class = '-' + data['id']-->
+<!--        console.log('分机状态转变成', data['phone_status'])-->
+<!--        $(.class).text('状态'+data['phone_status'])-->
+
+<!--    })-->
+
+
+</script>
+</body>
+</html>

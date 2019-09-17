@@ -1,9 +1,10 @@
 from flask import (
     Flask,
     request,
+    Response,
 )
 import requests
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO, join_room, leave_room
 from utils import log, om_config, wget_down
 from routes.index import main as index_routes
 from routes.login import main as login_routes
@@ -11,8 +12,10 @@ from routes.test import main as test_routes
 from allFuncs import Funcs
 from models.user import db, login_manager
 from models import config
+from werkzeug.routing import BaseConverter
 
 # 先要初始化一个 Flask 实例，并将Flask-SocketIO添加到Flask应用程序
+
 app = Flask(__name__)
 app.secret_key = 'test for good'
 app.config.from_object(config)
@@ -28,12 +31,39 @@ app.register_blueprint(test_routes, url_prefix='')
 app.register_blueprint(login_routes, url_prefix='')
 
 
+# 注册正则表达式匹配路由
+class RegexConverter(BaseConverter):
+    def __init__(self, url_map, *items):
+        super(RegexConverter, self).__init__(url_map)
+        self.regex = items[0]
+
+
+# 注册正则表达式
+app.url_map.converters['reg'] = RegexConverter
+
+# 传输音频wav文件
+@app.route('/audio/<reg("[0-9]{8}"):datatime>/<name>')                   # 解析出两个参数，自动传到方法中
+def audio(name, datatime):                                               # 所以方法要接受两个参数
+    # path = '/root/learngit/audio/' + name  # 音频所在的路径
+    win_path = 'C:/Users/86177/Documents/GitHub/flaskWeb/audio/' + name
+
+    def gen_audio():  # 这是一个生成器
+        with open(win_path, 'rb') as wav:
+            data = wav.read(1024)
+            while data:
+                yield data
+
+                data = wav.read(1024)
+
+    log('传输音频文件完成...')
+    return Response(gen_audio(), mimetype="audio/mpeg3")
+
+
 # 发送电话会议的请求
-def confer(body):
+def post_om(body):
     body_type = '<?xml version="1.0" encoding="utf-8" ?>\r\n'
-    log('打印', body_type)
     payload = body_type + body
-    log('发送请求', payload)
+    log('发送呼叫请求', payload)
     url = om_config['om_url']
     requests.request("POST", url, data=payload)
 
@@ -49,49 +79,90 @@ def reqestOM(body):
     requests.request("POST", url, data=payload, headers=headers, verify=False)
 
 
-ws = {
-    'cid': 'sid',
+ws = {           # ws的样例
+    '1763': '503d9587b1d34d39983cbe0400',
 }
 
 
 # 接收客户端的消息，
 @socketio.on('login')
 def send(data):
-    log('use webScoket receive sucessful', data)
-    sid = request.sid  # io的客户端，用来标识唯一客户端。也是会话id
-    ws['data'] = sid
-    socketio.emit(event='test_room', data='test_room', room=ws.get('data'))  # 私聊的功能
+    log('use webScoket receive sucessful', data)            # 数据以字典的形式传递过来的，{'data': '123'}
+    sid = request.sid           # io的客户端，用来标识唯一客户端。也是会话id
+    ws[data] = sid
+    log('查看ws字典', ws)
+    socketio.emit(event='test_room', data='connected')  # 私聊的功能
 
 
 # 电话会议
 @socketio.on('conference')
 def conference(data):
     log('接收到%s的数据, 呼叫%s分机' % (data['phone'], data['phone']))
+    # 212是被呼叫的号码
     body = '<Transfer attribute="Connect">\r\n<ext id="212"/>\r\n<ext id="%s"/>\r\n</Transfer>' % data['phone']
     log(body)
-    confer(body)
+    post_om(body)
+
+
+@socketio.on('hold')
+def hold(data):
+    log('接收到hold', data)
+    # 发送212hold请求
+    h_body = '<Control attribute="Hold">\r\n<ext id="212"/>\r\n</Control>'
+    post_om(h_body)
+    # 让第三方会话接入
+    t_body = '<Transfer attribute="Connect">\r\n<ext id="212"/>\r\n<ext id="%s"/>\r\n</Transfer>' % data['hphone']
+    post_om(t_body)
+    # 执行conference命令
+    c_body = '<?xml version="1.0" encoding="utf-8" ?><Transfer attribute="Conference"><ext id="212"/></Transfer>'
+    post_om(c_body)
+
+
+@socketio.on('satisfy')                     # 接收到消息转到语音播报
+def satisfy(data):
+    log('接收到点击按钮传递的信息', data)
+    # 发送语音评价
+    s_body = '<Transfer attribute="Connect"><visitor id="%s" /><menu id="1"/></Transfer>' % ws['tran_id']
+    log('转发到语音播报命令', s_body)
+    post_om(s_body)
+
+
+@socketio.on('priority')
+def setting_priority(data):
+    log('接收到设置优先级的按钮', data)
 
 
 # 处理各种不同的body
 def extcute_body(body):
-    if isinstance(body, str):
-        log('发送给OM来电转分机请求')
-        reqestOM(body)
+    # if isinstance(body, str):
+    #     log('发送给OM来电转分机请求')
+    #     reqestOM(body)
     if isinstance(body, dict):
         if body["status"] == "RING":  # 有电话接入call-in，客户端显示页面
             log(body["number"])
             log('有电话接入，显示弹窗')
-            socketio.emit(event="ring", data=body)
-            # socketio.emit(event='ring', data=body, room=ws.get(cid))
+            # socketio.emit(event="ring", data=body)
+            userid = body['pid']
+            log('Ring', userid)
+            socketio.emit(event='ring', data=body, room=ws.get(userid))
         elif body["status"] == 'Cdr':  # 通话结束，发送Cdr话单，包含录音文件的路径
             log('通话结束，停止计时')
-            socketio.emit(event='record', data=body)
+            userid = body['pid']
+            socketio.emit(event='off', data=body, room=ws.get(userid))
             # socketio.emit(event='ring', data=body, room=ws.get(cid))
             wget_down(body['downPath'])
         elif body["status"] == 'ANWSER':  # 分机应答，让计时器开始计时
             log('通话建立')
-            socketio.emit(event="anwser", data=body)
+            userid = body['pid']
+            socketio.emit(event='anwser', data=body, room=ws.get(userid))
             # socketio.emit(event='anwser', data=body, room=ws.get(data))
+        elif body['status'] == 'Transfer':              # 来电转分机请求
+            log('发送来电转分机请求')
+            # 将来访者id写入ws字典
+            ws['tran_id'] = body['vid']
+            reqestOM(body['transfer'])
+        elif body['status'] == 'change_status':         # 分机状态改变
+            socketio.emit(event='phone_status', data=body)              # 广播给所有客户端
 
 
 # 会使用到多线程，不同的进程处理不同的请求

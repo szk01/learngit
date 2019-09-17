@@ -16,6 +16,25 @@ main = Blueprint('login', __name__)
 def login():
     if request.method == 'GET':
         return render_template('login.html')
+    # else:
+    #     print('post方式登录')
+    #     name = request.form.get('name')
+    #     number = request.form.get('number')
+    #     us['number'] = number
+    #     password = request.form.get('password')
+    #     user = User.query.filter(User.name == name, User.password == password, User.number == number).first()
+    #     if user:
+    #         print(number)
+    #         return render_template('index.html', number=number)
+    #     else:
+    #         return u'用户名或者密码错误，请确认后重新登录'
+
+
+@main.route('/index', methods=['GET', 'POST'])
+def index():
+    if request.method == 'GET':
+        # 重定向到login登录页面，不明白为什么是.login，算是保护路由
+        return redirect(url_for('.login'))
     else:
         print('post方式登录')
         name = request.form.get('name')
@@ -23,26 +42,7 @@ def login():
         password = request.form.get('password')
         user = User.query.filter(User.name == name, User.password == password, User.number == number).first()
         if user:
-            # return render_template('index.html', name=name)
-            return redirect(url_for("index"))
+            print(number)
+            return render_template('index.html', number=number)
         else:
             return u'用户名或者密码错误，请确认后重新登录'
-
-
-@main.route('/index', methods=['POST','GET'])
-def index():
-    if request.method == 'GET':
-        return '必须先登录'
-    else:
-        return render_template('index.html')
-
-
-# 传输图片
-@main.route('/images/<name>')
-def img_stream(name):
-    win_path = 'C:/Users/86177/Documents/GitHub/flaskWeb/images/' + name
-    # path = '/root/learngit/images/' + name
-    with open(win_path, 'rb') as img:
-        data = img.read()
-        print('传递图片...')
-    return data

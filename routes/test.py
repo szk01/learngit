@@ -2,7 +2,7 @@ from flask import (
     request,
     Blueprint,
     render_template,
-    Response,
+    Response
 )
 
 from utils import log
@@ -25,19 +25,12 @@ def index():
     return render_template('test.html')
 
 
-# 传输音频wav文件
-@main.route('/audio/20190904/<name>')
-def audio(name):
-    # path = '/root/learngit/audio/' + name  # 音频所在的路径
-    win_path = 'C:/Users/86177/Documents/GitHub/flaskWeb/audio/' + name
-
-    def gen_audio():  # 这是一个生成器
-        with open(win_path, 'rb') as wav:
-            data = wav.read(1024)
-            while data:
-                yield data
-
-                data = wav.read(1024)
-
-    log('传输音频文件完成...')
-    return Response(gen_audio(), mimetype="audio/mpeg3")
+# 传输图片
+@main.route('/images/<name>')
+def img_stream(name):
+    win_path = 'C:/Users/86177/Documents/GitHub/flaskWeb/images/' + name
+    # path = '/root/learngit/images/' + name
+    with open(win_path, 'rb') as img:
+        data = img.read()
+        print('传递图片...')
+    return data
