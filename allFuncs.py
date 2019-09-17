@@ -225,15 +225,17 @@ class Funcs(Process_request):
 
     def assign(self):
         # 配置menu1,满意度评价
-        menu1 = '<Control attribute="Assign"><menu id="1"><voicefile>user_welcome153149</voicefile><repeat>3</repeat' \
+        # 上海OM50的录音文件   user_welcome160431      user_welcome160927     user_welcome160523
+        # 深圳OM20的录音文件   user_welcome153149      user_welcome153531     user_offhour153419
+        menu1 = '<Control attribute="Assign"><menu id="1"><voicefile>user_welcome160431</voicefile><repeat>3</repeat' \
                 '><infolength>1</infolength><exit>#</exit></menu></Control> '
         post_om(menu1)
         # 配置menu2，超时
-        menu2 = '<Control attribute="Assign"><menu id="2"><voicefile>user_welcome153531</voicefile><repeat>1</repeat' \
+        menu2 = '<Control attribute="Assign"><menu id="2"><voicefile>user_welcome160927</voicefile><repeat>1</repeat' \
                 '><infolength>1</infolength><exit>#</exit></menu></Control> '
         post_om(menu2)
         # 配置menu3，感谢来电
-        menu3 = '<Control attribute="Assign"><menu id="3"><voicefile>user_offhour153419</voicefile><repeat>1</repeat' \
+        menu3 = '<Control attribute="Assign"><menu id="3"><voicefile>user_welcome160523</voicefile><repeat>1</repeat' \
                 '><exit>#</exit></menu></Control> '
         post_om(menu3)
 

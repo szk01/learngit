@@ -27,11 +27,6 @@ def wget_down(Url):
     subprocess.call(cmd, shell=True)  # 将录音文件下载到服务器的指定文件夹中
 
 
-# 写一个装饰器，用来给函数计时
-# def t_count(func):
-#     def f(*args, **kW)
-
-
 # 配置文件
 om_config = {
     # 'om_url': 'http://192.168.1.150/xml',  # 给om发送来电转分机，post请求的地址
