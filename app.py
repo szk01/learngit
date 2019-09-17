@@ -65,7 +65,7 @@ def post_om(body):
     payload = body_type + body
     log('发送呼叫请求', payload)
     url = om_config['om_url']
-    requests.request("POST", url, data=payload)
+    requests.request("POST", url, data=payload, verify=False)
 
 
 # 给OM服务器发送一个POST请求

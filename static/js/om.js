@@ -79,8 +79,8 @@
             var userid = '221'
         }
         if (rid == '10088') {
-            // var userid = '213'
-            var userid = '222'
+            // var userid = '213'                   //本地开发
+            var userid = '222'                      //给上海使用
         }
         console.log('发送给应用服务器的id',userid)
         socket.emit('login', userid);

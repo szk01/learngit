@@ -16,12 +16,12 @@ def post_om(body):
     payload = body_type + body
     log('给om发送请求', payload)
     url = om_config['om_url']
-    requests.request("POST", url, data=payload)
+    requests.request("POST", url, data=payload, verify=False)
 
 
 # 用于app文件，下载录音文件
 def wget_down(Url):
-    cmd = 'wget -P %s %s --http-user=user --http-password=user' % (om_config['win_path'], Url)
+    cmd = 'wget -P %s %s --http-user=user --http-password=user' % (om_config['linux_path'], Url)
     log('执行shell命令，60s之后下载录音...', cmd)
     time.sleep(60)  # 60s之后下载录音
     subprocess.call(cmd, shell=True)  # 将录音文件下载到服务器的指定文件夹中
