@@ -16,8 +16,8 @@ class Funcs(Process_request):
     # 类变量，所有的实例共享这个变量
     p = {
         'BUSY': set(),
-        'IDLE': {'212'},
-        'ONLINE': {'212'},
+        'IDLE': {'221'},
+        'ONLINE': {'221'},
         'OFFLINE': set(),
         'pid': None,
     }
