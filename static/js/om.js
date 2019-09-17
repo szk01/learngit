@@ -75,10 +75,12 @@
     socket.on('connect', function() {
         var rid = $('#mini').attr('class')          // 找到工号，判断相应的分机号
         if (rid == '10087') {
-            var userid = '212'
+            // var userid = '212'
+            var userid = '221'
         }
         if (rid == '10088') {
-            var userid = '213'
+            // var userid = '213'
+            var userid = '222'
         }
         console.log('发送给应用服务器的id',userid)
         socket.emit('login', userid);
