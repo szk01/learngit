@@ -8,6 +8,7 @@ import subprocess  # 用来调用命令行shell
 from utils import om_config, wget_down, post_om
 from models.record import Call_record, Voice_record, db
 
+
 # from models import session
 
 
@@ -19,7 +20,7 @@ class Funcs(Process_request):
         'ONLINE': {'221'},
         'OFFLINE': set(),
         'pid': None,
-        'priority': {                   # 这是默认优先级，数字越小，优先级越高
+        'priority': {  # 这是默认优先级，数字越小，优先级越高
             '212': 1,
             '213': 2,
             '214': 3,
@@ -180,28 +181,32 @@ class Funcs(Process_request):
 
     # 通话结束后，拿到录音的相对路径，下载录音到服务器上，返回来电号码
     def recording(self):
+        global play_path, record_name
         end_time = Funcs.get_time()  # 客户打入时间
         Funcs.time['end_time'] = end_time  # 更新打入时间
         log('填写所有的字段', Funcs.time)
 
-        event = self.getRoot()
-        number = event.find('CPN').text
-        cdr_type = event.find('Type').text
-        if cdr_type == 'IN':  # 只处理类型为IN的话单，来电转分机是 内部互拨，分机呼叫分机
-            log('recording()', number)
-            recording = event.find('Recording')
-            record_name = recording.text  # 语音文件名字
-            pid = event.find('CDPN').text  # 分机号
-            play_path = 'audio/' + record_name
-            omUrl = om_config['om_record_url'] + record_name  # 存储在om上的录音文件地址，给wget下载
-            log('完整路径：', omUrl)
+        try:
+            event = self.getRoot()
+            number = event.find('CPN').text
+            cdr_type = event.find('Type').text
+            if cdr_type == 'IN':  # 只处理类型为IN的话单，来电转分机是 内部互拨，分机呼叫分机
+                log('recording()', number)
+                recording = event.find('Recording')
+                record_name = recording.text  # 语音文件名字
+                pid = event.find('CDPN').text  # 分机号
+                play_path = 'audio/' + record_name
+                omUrl = om_config['om_record_url'] + record_name  # 存储在om上的录音文件地址，给wget下载
+                log('完整路径：', omUrl)
 
-            # cmd = 'wget -P %s %s' % (om_config['win_path'], omUrl)
-            # log('执行shell命令，10s之后下载录音...', cmd)
-            # time.sleep(10)  # 10s之后下载录音
-            # subprocess.call(cmd, shell=True)  # 将录音文件下载到服务器的指定文件夹中
-            # await wget_down(omUrl)
-
+                # cmd = 'wget -P %s %s' % (om_config['win_path'], omUrl)
+                # log('执行shell命令，10s之后下载录音...', cmd)
+                # time.sleep(10)  # 10s之后下载录音
+                # subprocess.call(cmd, shell=True)  # 将录音文件下载到服务器的指定文件夹中
+                # await wget_down(omUrl)
+        except:
+            pass
+        else:
             cr = {  # 通话记录
                 "phone": number,
                 "name": "未知",
@@ -256,30 +261,29 @@ class Funcs(Process_request):
             m = '<Transfer attribute="Connect"><visitor id="%s" /><menu id="3"/></Transfer>' % vid
             post_om(m)  # 转接到语音菜单3
 
-
     # 菜单2或3播报完，收到endofAnn事件，执行挂断电话命令
     def clear(self):
         event = self.getRoot()
         vid = event.find('visitor').attrib['id']
         mid = event.find('menu').attrib['id']
-        if mid == '3':                              # 语音菜单三(感谢来电)播报完，挂断消息
+        if mid == '3':  # 语音菜单三(感谢来电)播报完，挂断消息
             c_body = '<Control attribute="Clear"><visitor id="%s"/></Control>' % vid
             post_om(c_body)
         if mid == "1":
-            m = '<Transfer attribute="Connect"><visitor id="%s" /><menu id="2"/></Transfer>' % vid      # 重复三次（做出评价）完。播报菜单2，超时播报
+            m = '<Transfer attribute="Connect"><visitor id="%s" /><menu id="2"/></Transfer>' % vid  # 重复三次（做出评价）完。播报菜单2，超时播报
             post_om(m)
         if mid == "2":
-            c_body = '<Control attribute="Clear"><visitor id="%s"/></Control>' % vid        # 超时挂断电话
+            c_body = '<Control attribute="Clear"><visitor id="%s"/></Control>' % vid  # 超时挂断电话
             post_om(c_body)
 
     # 根据attribute调用请求函数
     def funcs(self):
         # 可能少了一个判断root的tag
         f = {
-            'Cdr': self.recording,         # 话单请求，返回两个录音文件路径            2.6.2/LO
+            'Cdr': self.recording,  # 话单请求，返回两个录音文件路径            2.6.2/LO
             # 'BYE': self.call_end,        # 来电和分机通话结束，返回来电号码
             'ANSWER': self.status_change,  # 来电转分机分机应答，通话建立              2.5.3
-            'RING': self.alterWin,         # 来电 弹窗显示号码，正在呼叫               2.5.3
+            'RING': self.alterWin,  # 来电 弹窗显示号码，正在呼叫               2.5.3
             'INCOMING': self.autoTransfer,
             'BUSY': self.phone_status,
             'IDLE': self.phone_status,
