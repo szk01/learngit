@@ -8,7 +8,6 @@ import subprocess  # 用来调用命令行shell
 from utils import om_config, wget_down, post_om
 from models.record import Call_record, Voice_record, db
 
-
 # from models import session
 
 
@@ -20,6 +19,11 @@ class Funcs(Process_request):
         'ONLINE': {'221'},
         'OFFLINE': set(),
         'pid': None,
+        'priority': {                   # 这是默认优先级，数字越小，优先级越高
+            '212': 1,
+            '213': 2,
+            '214': 3,
+        }
     }
     # 每一通电话的三个时间节点
     time = {
@@ -252,6 +256,7 @@ class Funcs(Process_request):
             m = '<Transfer attribute="Connect"><visitor id="%s" /><menu id="3"/></Transfer>' % vid
             post_om(m)  # 转接到语音菜单3
 
+
     # 菜单2或3播报完，收到endofAnn事件，执行挂断电话命令
     def clear(self):
         event = self.getRoot()
@@ -271,10 +276,10 @@ class Funcs(Process_request):
     def funcs(self):
         # 可能少了一个判断root的tag
         f = {
-            'Cdr': self.recording,  # 话单请求，返回两个录音文件路径            2.6.2/LO
+            'Cdr': self.recording,         # 话单请求，返回两个录音文件路径            2.6.2/LO
             # 'BYE': self.call_end,        # 来电和分机通话结束，返回来电号码
             'ANSWER': self.status_change,  # 来电转分机分机应答，通话建立              2.5.3
-            'RING': self.alterWin,  # 来电 弹窗显示号码，正在呼叫               2.5.3
+            'RING': self.alterWin,         # 来电 弹窗显示号码，正在呼叫               2.5.3
             'INCOMING': self.autoTransfer,
             'BUSY': self.phone_status,
             'IDLE': self.phone_status,

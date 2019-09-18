@@ -130,6 +130,10 @@ def satisfy(data):
 @socketio.on('priority')
 def setting_priority(data):
     log('接收到设置优先级的按钮', data)
+    priori = {}
+    priori['priority'] = data
+    Funcs.p.update(priori)
+    log(Funcs.p)
 
 
 # 处理各种不同的body

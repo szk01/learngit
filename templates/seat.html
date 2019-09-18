@@ -98,15 +98,29 @@
     </div>
 
 <script>
+    var url = "/"
+    console.log(url);
+    var socket = io.connect(url);
+
     var sp = {}
     $('.bt-priority').click(function() {
         $('select').each(function() {
             var o =$(this).val()                                // 这个val()函数是可以拿到选择的option
             spilted(o)
             console.log(sp)
-            send_priority()
+
         })
     })
+
+    var sendData = function() {
+        socket.emit('priority', data=sp);
+    }
+
+    $('.bt-priority').click(function() {
+        console.log('等待0.5s后发送数据...')
+        setTimeout("sendData()", 500)
+    })
+
 
     var spilted = function(str) {                           // 切割字符串，加入字典
         var array = str.split("-")
@@ -115,32 +129,11 @@
         sp[seat] = array[1]
     }
 
-    var send_priority = function() {
-        var url = "/"                                       // 使用相对路径
-        console.log(url);
-        var socket = io.connect(url);
-        socket.on('connect', function() {
-            console.log('座机优先级：', sp)
-            socket.emit('priority', sp);
-        });
-    }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-    var url = "/"
-    console.log(url);
-    var socket = io.connect(url);
+<!--    var url = "/"-->
+<!--    console.log(url);-->
+<!--    var socket = io.connect(url);-->
 
     $('.p-213').click(function(){
         console.log('点击213按钮')
@@ -177,7 +170,7 @@
         socket.emit('hold', {'hphone': 215});
     })
 
-<!--    &lt;!&ndash;实时监控分机状态&ndash;&gt;-->
+
 <!--    socket.on('phone_status', function(data){-->
 <!--        var class = '-' + data['id']-->
 <!--        console.log('分机状态转变成', data['phone_status'])-->
