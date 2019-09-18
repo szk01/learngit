@@ -79,7 +79,7 @@ om_config = {
     'om_url': 'https://fanyuan.tpddns.cn:1888/xml',  # 上海那边的om50,发送来电转分机请求
     'app_record_url': 'http://106.15.44.224/audio/',  # 浏览器获取服务器录音文件的地址
     # 'om_record_url': 'http://192.168.1.150/mcc/Recorder/',  # 深圳om20存储录音文件的地址
-    'om_record_url': 'http://101.81.125.16:2888/usb/builtin/Recorder/',  # 上海om50存储录音文件的地址
+    'om_record_url': 'http://101.81.125.16:2888/mcc/Recorder/',  # 上海om50存储录音文件的地址
     'linux_path': '/root/learngit/audio',  # 录音下载到阿里云服务器的路径
     # 'win_path': 'C:/Users/86177/Documents/GitHub/flaskWeb/audio'  # 录音下载到本地电脑上的路径，也是audio的播放路径
 }
