@@ -9,10 +9,12 @@ from utils import log, om_config, wget_down
 from routes.index import main as index_routes
 from routes.login import main as login_routes
 from routes.test import main as test_routes
+from routes.client import main as client_routes
 from allFuncs import Funcs
 from models.user import db, login_manager
 from models import config
 from werkzeug.routing import BaseConverter
+from utils import get_phone, auto
 
 # 先要初始化一个 Flask 实例，并将Flask-SocketIO添加到Flask应用程序
 
@@ -29,6 +31,7 @@ socketio = SocketIO(app)
 app.register_blueprint(index_routes, url_prefix='')
 app.register_blueprint(test_routes, url_prefix='')
 app.register_blueprint(login_routes, url_prefix='')
+app.register_blueprint(client_routes, url_prefix='')
 
 
 # 注册正则表达式匹配路由
@@ -104,6 +107,7 @@ def conference(data):
     post_om(body)
 
 
+# 让第三方进入电话会议
 @socketio.on('hold')
 def hold(data):
     log('接收到hold', data)
@@ -118,6 +122,7 @@ def hold(data):
     post_om(c_body)
 
 
+# 触发满意度评价
 @socketio.on('satisfy')                     # 接收到消息转到语音播报
 def satisfy(data):
     log('接收到点击按钮传递的信息', data)
@@ -127,13 +132,23 @@ def satisfy(data):
     post_om(s_body)
 
 
+setting_phone = {
+    'deafault' : '212',
+    'pid': None,
+}
+# 设置分机的优先级
 @socketio.on('priority')
 def setting_priority(data):
-    log('接收到设置优先级的按钮', data)
+    log('接收到设置优先级', data)
     priori = {}
     priori['priority'] = data
     Funcs.p.update(priori)
     log(Funcs.p)
+    set_phone = get_phone(data, Funcs.p)
+    if setting_phone:
+        setting_phone['pid'] = set_phone
+    else:
+        log('分机优先级设置失败')
 
 
 # 处理各种不同的body
@@ -162,9 +177,12 @@ def extcute_body(body):
             # socketio.emit(event='anwser', data=body, room=ws.get(data))
         elif body['status'] == 'Transfer':              # 来电转分机请求
             log('发送来电转分机请求')
-            # 将来访者id写入ws字典
-            ws['tran_id'] = body['vid']
-            reqestOM(body['transfer'])
+            ws['tran_id'] = body['vid']             # 将来访者id写入ws字典，供满意度调查按钮使用
+            if setting_phone['pid']:                # 如果设置了分机的优先级，使用优先分机
+                auto(body['vid'], setting_phone['pid'])
+            else:
+                pid = list(Funcs.p['IDLE'])
+                auto(body['vid'], pid[0])    # 如果没有，就使用默认分机
         elif body['status'] == 'change_status':         # 分机状态改变
             socketio.emit(event='phone_status', data=body)              # 广播给所有客户端
 

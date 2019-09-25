@@ -7,7 +7,7 @@ import time, asyncio
 import subprocess  # 用来调用命令行shell
 from utils import om_config, wget_down, post_om
 from models.record import Call_record, Voice_record, db
-
+from utils import get_phone
 
 # from models import session
 
@@ -16,7 +16,7 @@ class Funcs(Process_request):
     # 类变量，所有的实例共享这个变量
     p = {
         'BUSY': set(),
-        'IDLE': {'221'},
+        'IDLE': {'212'},
         'ONLINE': {'221'},
         'OFFLINE': set(),
         'pid': None,
@@ -54,16 +54,16 @@ class Funcs(Process_request):
         Funcs.time['end_time'] = None
         log(Funcs.time)
         db.session.add(call_record)
-        log('执行了add')
+        log('在数据库加入一条通话记录...')
         db.session.commit()
 
     # 添加录音记录到mysql数据库
     @staticmethod
     def sql_addVoiceRecord(vr):
-        log('静态方法，添加录音记录')
         voice_record = Voice_record(name=vr['name'], url=vr['url'], play_count=vr['play_count'],
                                     down_count=vr['down_count'])
         db.session.add(voice_record)
+        log('在数据库加入一条录音记录...')
         db.session.commit()
 
     @staticmethod  # 获取时间戳
@@ -125,27 +125,31 @@ class Funcs(Process_request):
     def autoTransfer(self):
         event = self.getRoot()
         ext = event.find('visitor')
-        visitor_id = ext.attrib['id']  # 访问者id
+        vid = ext.attrib['id']  # 访问者id
         # 组成来电转分机请求
         # 读取xml文件，并修改visitor的属性
-        autoText = '<Transfer attribute="Connect">\r\n<visitor id="14"/>\r\n<ext id="215"/>\r\n</Transfer>'
-        # 解析xml字符串
-        root = ET.fromstring(autoText)
-        visitor = root.find('visitor')
-        visitor.set('id', visitor_id)
-        # 随机取到idle的id，赋值给ext
-        random_idle_id = random.choice(list(Funcs.p['IDLE']))  # 随机取到IDLE的id
-        ext = root.find('ext')
-        ext.set('id', random_idle_id)
-        log('autoTransfer():', root)  # 应该是Transfer
-        log('来访者id:', root.find('visitor').attrib['id'])
-        log('转接分机id:', root.find('ext').attrib['id'])
-        vid = root.find('visitor').attrib['id']
-        req_body = tostring(root, encoding='utf-8')  # res_body是bytes类型的数据
-        req_body = req_body.decode('utf-8')  # 现在转成字符串utf-8类型
-
-        data = Funcs.add_header(req_body)
-        t = {'transfer': data, 'vid': vid, 'status': 'Transfer'}
+        # autoText = '<Transfer attribute="Connect">\r\n<visitor id="14"/>\r\n<ext id="215"/>\r\n</Transfer>'
+        # # 解析xml字符串
+        # root = ET.fromstring(autoText)
+        # visitor = root.find('visitor')
+        # visitor.set('id', visitor_id)
+        # # 随机取到idle的id，赋值给ext
+        # random_idle_id = random.choice(list(Funcs.p['IDLE']))  # 随机取到IDLE的id
+        #
+        # ext = root.find('ext')
+        # ext.set('id', pid)                                    # 设置转给哪个分机
+        # log('autoTransfer():', root)  # 应该是Transfer
+        # log('来访者id:', root.find('visitor').attrib['id'])
+        # log('转接分机id:', root.find('ext').attrib['id'])
+        # vid = root.find('visitor').attrib['id']
+        # req_body = tostring(root, encoding='utf-8')  # res_body是bytes类型的数据
+        # req_body = req_body.decode('utf-8')  # 现在转成字符串utf-8类型
+        #
+        # data = Funcs.add_header(req_body)
+        t = {
+            'vid': vid,
+            'status': 'Transfer',
+        }
         return t
 
     # 对（来电转分机触发）振铃事件RING 进行处理，发送客户端的号码。显示弹窗
@@ -181,16 +185,16 @@ class Funcs(Process_request):
 
     # 通话结束后，拿到录音的相对路径，下载录音到服务器上，返回来电号码
     def recording(self):
-        global play_path, record_name
-        end_time = Funcs.get_time()  # 客户打入时间
-        Funcs.time['end_time'] = end_time  # 更新打入时间
-        log('填写所有的字段', Funcs.time)
-
+        global play_path, omUrl, pid
+        global record_name
         try:
             event = self.getRoot()
             number = event.find('CPN').text
             cdr_type = event.find('Type').text
             if cdr_type == 'IN':  # 只处理类型为IN的话单，来电转分机是 内部互拨，分机呼叫分机
+                end_time = Funcs.get_time()  # 客户打入时间
+                Funcs.time['end_time'] = end_time  # 更新打入时间
+                log('填写所有的时间字段', Funcs.time)
                 log('recording()', number)
                 recording = event.find('Recording')
                 record_name = recording.text  # 语音文件名字
@@ -198,12 +202,6 @@ class Funcs(Process_request):
                 play_path = 'audio/' + record_name
                 omUrl = om_config['om_record_url'] + record_name  # 存储在om上的录音文件地址，给wget下载
                 log('完整路径：', omUrl)
-
-                # cmd = 'wget -P %s %s' % (om_config['win_path'], omUrl)
-                # log('执行shell命令，10s之后下载录音...', cmd)
-                # time.sleep(10)  # 10s之后下载录音
-                # subprocess.call(cmd, shell=True)  # 将录音文件下载到服务器的指定文件夹中
-                # await wget_down(omUrl)
         except:
             pass
         else:

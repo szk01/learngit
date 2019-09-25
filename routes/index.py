@@ -117,3 +117,9 @@ def remove_voiceReocrd():
         db.session.delete(v)
         db.session.commit()
     return 'sucess'
+
+
+# 添加客户信息页面
+@main.route('/addClient', methods=['GET'])
+def addclient():
+    return render_template('addClient.html')

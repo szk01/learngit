@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加客户信息</title>
+    <script type="text/javascript" src="static/js/jquery-3.4.1.min.js"></script>
+</head>
+<body>
+    <input type="search" placeholder="输入客户姓名" value="" class="search">
+	<p>如果你想增加一个客户信息, 请点击</p><button class="bt-add-client">增加+</button>
+	<!--下面是搜索的客户结果-->
+	<div class="find_clients">
+		<table class="find-table">
+
+		</table>
+	</div>
+    <!--显示所有客户信息-->
+    <table class="clients">
+        <caption>客户信息表</caption>
+        <tr class="head">
+        	<th>序列</th>
+            <th>客户姓名</th>
+            <th>客户手机号码</th>
+            <th>客户公司</th>
+            <th>客户微信</th>
+            <th>客户qq</th>
+            <th>客户邮箱</th>
+            <th>操作</th>
+        </tr>
+        <tr class="infos">
+        	<td>0</td>
+            <td>test</td>
+            <td>123456789101</td>
+            <td>szfy</td>
+            <td>wechat</td>
+            <td>87877897,386428934</td>
+            <td>32043789@syfy</td>
+            <td><button class="edit">修改</button></td>
+        </tr>
+    </table>
+    <!--修改信息的弹窗-->
+    <div id="tc" style="margin: 0 auto; width: 200px; height: 300px; border: solid gold 1px; display: none; ">
+        <div class="cid" style="display: none">
+			<span id="">序列</span>
+			<input type="" name="" class="in-cid" value=""/>
+		</div>
+		<div class="name">
+			<span id="">姓名</span>
+			<input type="" name="" class="in-name" value="" placeholder="输入姓名" />
+		</div>
+		<div class="phone">
+			<span id="">手机号码</span>
+			<button class="add-phone">新增</button>
+			<input type="" name="" class="in-phone" value="" placeholder="输入手机号码" />
+		</div>
+		<div class="gs">
+			<span id="">客户公司</span>
+			<input type="" name="" class="in-gs" value="" placeholder="输入客户公司" />
+		</div>
+		<div class="wechat">
+			<span id="">客户微信</span>
+			<button class="add-wechat">新增</button>
+			<input type="" name="" class="in-wechat" value="" placeholder="输入微信" />
+		</div>
+		<div class="qq">
+			<span id="">客户qq</span>
+			<button class="add-qq">新增</button>
+			<input type="" name="" class="in-qq" value="" placeholder="输入客户qq" />
+		</div>
+		<div class="email">
+			<span id="">客户邮箱</span>
+			<button class="add-email" >新增</button>
+			<input type="" name="" class="in-email" value="" placeholder="输入邮箱" />
+		</div>
+		<input type="button" id="bt-confirm" value="确认" style="display: block; margin: 0 auto;"/>
+	</div>
+
+	<!--增加客户弹出的弹窗-->
+	<div class="div-add-client" style=" display:none; margin: 0 auto; width: 200px; height: 300px; border: solid gold 1px; ">
+		<div class="add-cid" style="">
+			<span id="">序列</span>
+			<input type="text" name="" class="in-ad-cid" value="" placeholder="请输入序列，不可重复"/>
+	    </div>
+	    <div class="add-name">
+			<span id="">姓名</span>
+			<input type="text" name="" class="in-ad-name" value="" placeholder="输入姓名" />
+		</div>
+		<div class="add-phone">
+			<span id="">手机号码</span>
+<!--			<button class="bt-add-phone">新增</button>-->
+			<input type="text" name="" class="in-ad-phone" value="" placeholder="输入手机号码" />
+		</div>
+		<div class="add-gs">
+			<span id="">客户公司</span>
+			<input type="text" name="" class="in-ad-gs" value="" placeholder="输入客户公司" />
+		</div>
+		<div class="add-wechat">
+			<span id="">客户微信</span>
+<!--			<button class="bt-add-wechat">新增</button>-->
+			<input type="text" name="" class="in-ad-wechat" value="" placeholder="输入微信" />
+		</div>
+		<div class="add-qq">
+			<span id="">客户qq</span>
+<!--			<button class="bt-add-qq">新增</button>-->
+			<input type="text" name="" class="in-ad-qq" value="" placeholder="输入客户qq" />
+		</div>
+		<div class="add-email">
+			<span id="">客户邮箱</span>
+<!--			<button class="bt-add-email" >新增</button>-->
+			<input type="text" name="" class="in-ad-email" value="" placeholder="输入邮箱" />
+		</div>
+		<input type="button" id="bt-add-confirm" value="确认" style="display: block; margin: 0 auto" />
+	</div>
+
+</body>
+
+
+<script>
+	var log = console.log.bind(console)
+	/*点击增加按钮 显示增加弹窗*/
+	$('.bt-add-client').click(function () {
+		$('.div-add-client').show()
+
+	})
+
+	// 清除增加弹窗中的input值，还原增加弹窗
+	function clear_input_value(className){
+		// var vs = $('.'+className+' '+'input:text').val()
+		// console.log('clear_input_value的value值',vs)
+		var its = $('.'+className+' '+'input:text')
+		for(var i = 0; i < its.length; i++){
+			log('所得到的增加的弹窗的值', its[i].value)
+			its[i].value = ''
+		}
+	}
+
+	/*弹窗的增加客户信息的按钮*/
+	$('.bt-add-phone').click(function () {
+		log('点击按钮')
+		var $p = $('<input type="text" name="" class="in-ad-phone" value="" placeholder="输入手机号码" />')
+		$('.add-phone').append($p)
+	})
+	$('.bt-add-wechat').click(function () {
+		log('点击按钮')
+		var $w = $('<input type="text" name="" class="in-ad-wechat" value="" placeholder="输入微信号" />')
+		$('.add-wechat').append($w)
+	})
+	$('.bt-add-qq').click(function () {
+		log('点击按钮')
+		var $q = $('<input type="text" name="" class="in-ad-qq" value="" placeholder="输入qq号" />')
+		$('.add-qq').append($q)
+	})
+	$('.bt-add-email').click(function () {
+		log('点击按钮')
+		var $e = $('<input type="text" name="" class="in-ad-email" value="" placeholder="输入邮箱" />')
+		$('.add-email').append($e)
+	})
+
+	/*点击增加客户的确认按钮*/
+	$('#bt-add-confirm').click(function () {
+		var cid = $('.in-ad-cid').val()							// 序列号
+		var name = $('.in-ad-name').val()						// 姓名
+		var phone = $('.in-ad-phone').val()						// 手机号
+		var gs = $('.in-ad-gs').val()							// 公司
+		var wechat = $('.in-ad-wechat').val()					// 微信
+		var qq = $('.in-ad-qq').val()							// qq
+		var email = $('.in-ad-email').val()						// email
+		//console.log('确认增加按钮获取的消息', cid, name, phone, gs, wechat, qq, email)
+		var add_data = {}
+		add_data.cid = cid
+		add_data.name = name
+		add_data.phone = phone
+		add_data.gs = gs
+		add_data.wechat = wechat
+		add_data.qq = qq
+		add_data.email = email
+		 $.ajax({
+      		type:"post",
+      		url:"/add_client",
+      		data: add_data,
+      		success: function(r){
+      			console.log('成功增加新客户...', r)
+				load_clients()				// 重新加载所有的客户
+      		}
+      	});
+		var className = 'div-add-client'
+		clear_input_value(className)
+		$('.div-add-client').hide()			// 隐藏增加弹窗
+
+	})
+
+	function sort_data(d) {
+		var info = {}
+		info.data = d
+		console.log(info)
+		return info
+	}
+
+	function dom_table(data) {		  // html()会覆盖之前的内容, $()不会覆盖，但两者不能同时使用，否则会被覆盖
+		var $table = $(`<tr class="head">
+							<th>序列</th>
+							<th>客户姓名</th>
+							<th>客户手机号码</th>
+							<th>客户公司</th>
+							<th>客户微信</th>
+							<th>客户qq</th>
+							<th>客户邮箱</th>
+						</tr> `)
+		$('table.find-table').append($table)
+		console.log('动态生成字头...')
+		for(var i = 0; i < data.length; i++){
+			console.log('拼接字符串...')
+			var $td = $(`<tr class="infos">
+								<td>${data[i].id}</td>
+								<td>${data[i].name}</td>
+								<td>${data[i].number}</td>
+								<td>${data[i].cid}</td>
+								<td>${data[i].wechat}</td>
+								<td>${data[i].qq}</td>
+							</tr>`)
+			$('table.find-table').append($td)
+		}
+	}
+
+	// 查找客户功能
+    $('.search').keyup(function(event){
+        console.log('检查到按下了按钮...')
+        if(event.keyCode === 13){
+            var $val = $('.search').val()
+            var d = sort_data($val)
+            //console.log($val)
+            $.ajax({
+      		type:"post",
+      		url:"/find_client",
+      		data: d,
+      		success: function(r){
+      			dom_table(r)
+      			console.log('查找客户...', r)
+
+      		}
+      	});
+        }
+    })
+
+	//重新加载所有的客户
+    function load_clients(){
+    	$('.clients td').remove()			// 清空以前的ajax请求，以免重复显示
+    	$.ajax({
+    		type:"post",
+    		url:"/load_clients",
+    		success: function(result){
+    			console.log('接收数据成功...')
+    			console.log('接受到的数据', result)
+    			var data = JSON.parse(result)           // 解析得到的字符串为json对象
+    			for(var i=0; i < data.length; i++){
+	      			var infos = $('<tr>' +
+			      					'<td>'+data[i].id+'</td>'+
+			      					'<td>'+data[i].name+'</td>'+
+			      					'<td>'+data[i].phone+'</td>'+
+			      					'<td>'+data[i].company+'</td>'+
+			      					'<td>'+data[i].wechat+'</td>'+
+			      					'<td>'+data[i].qq+'</td>'+
+			      					'<td>'+data[i].email+'</td>'+
+			      					'<td><button class="edit">编辑</button></td>'+
+								'/tr>')
+
+      				$('.clients').append(infos)
+				}
+    		}
+        	//console.log('是否执行了...')
+    	})
+    }
+
+	//如果有多个号码, 那么就新建多个input标签
+	function spilt_infos(str, className) {						// str是页面上数据, className是弹窗上的class
+		var array_count = str.split(',')
+		//console.log(phones)
+		console.log('分解多个号码', array_count)
+		if (array_count.length > 1) {
+		    $('.in-'+className)[0].value = array_count[0]
+			for (var i = 0; i < array_count.length-1; i++){		// 如果存在多个,那么先加一个<input>
+			    console.log('看了几次', array_count.length, i)
+				var $info = $('<input type="" name="" class="in-'+className+'" value="'+array_count[i+1]+'" />')
+				$('.'+className).append($info)
+			}
+			return false
+		}else if (array_count.length === 1) {
+			return true
+		}
+	}
+
+    // 编辑客户信息
+    $('body').on('click', '.edit', function(){						// 动态生成的节点要用on方式
+    	var tds = $(this).parent().siblings()
+        $('.in-cid')[0].value = tds[0].innerText              //拿到当前的序列,左边都是0，右边是表格的序列。应该隐藏的序列
+    	$('.in-name')[0].value = tds[1].innerText						// 将姓名填入其中
+
+		var is_one_phone = spilt_infos(tds[2].innerText, 'phone') 		// 将多个号码填入其中
+		if (is_one_phone) {
+			$('.in-phone')[0].value = tds[2].innerText
+		}
+
+		$('.in-gs')[0].value = tds[3].innerText
+
+		var is_one_wechat = spilt_infos(tds[4].innerText, 'wechat') 		// 将多个wechat填入其中
+		if (is_one_wechat) {
+			$('.in-wechat')[0].value = tds[4].innerText
+		}
+
+		var is_one_qq = spilt_infos(tds[5].innerText, 'qq') 				// 将多个qq填入其中
+		console.log(tds[5].innerText)
+		if (is_one_qq) {
+			$('.in-qq')[0].value = tds[5].innerText
+		}
+
+		var is_one_email = spilt_infos(tds[6].innerText, 'email') 			// 将多个邮箱填入其中
+		if (is_one_email) {
+			$('.in-email')[0].value = tds[6].innerText
+		}
+		$('#tc').show()
+	})
+
+	/*给添加按钮增加事件*/
+	$('#tc').on('click', '.add-phone', function(){
+			console.log('点击增加phone...')
+			var $phone = $('<input type="" name="" class="in-phone" value="" placeholder="输入手机号码" />')
+			$('.phone').append($phone)
+	})
+	$('#tc').on('click', '.add-wechat', function(){
+		console.log('点击增加wechat...')
+		var $wechat = $('<input type="" name="" class="in-wechat" value="" placeholder="输入微信" />')
+		$('.wechat').append($wechat)
+	})
+	$('#tc').on('click', '.add-qq', function(){
+		console.log('点击增加qq...')
+		var $qq = $('<input type="" name="" class="in-qq" value="" placeholder="输入客户qq" />')
+		$('.qq').append($qq)
+	})
+	$('#tc').on('click', '.add-email', function(){
+		console.log('点击增加email...')
+		var $email = $('<input type="" name="" class="in-email" value="" placeholder="输入邮箱" />')
+		$('.email').append($email)
+	})
+
+    function splitLast(str) {
+        var last_index = str.lastIndexOf(',')
+        var new_str = str.slice(0, last_index)
+        return new_str
+    }
+
+	//给确认按钮加上点击事件, 拿到所有的信息， 发送ajax请求，载入所有修改好的客户信息
+	$('#tc').on('click', '#bt-confirm', function(){
+        var cid = $('.in-cid').val()
+		var c_name = $('.in-name').val()					//客户姓名
+
+		var c_phones =  ''
+		var $in_phones = $('.in-phone')
+
+		var c_gs = $('.in-gs').val()
+
+		var c_wechats = ''
+		var $in_wechats = $('.in-wechat')
+
+		var c_qqs = ''
+		var $in_qqs = $('.in-qq')
+
+		var c_mails = ''
+		var $in_emails = $('.in-email')
+
+		for (var i = 0; i<$in_phones.length; i++){
+			console.log($in_phones[i].value)
+			c_phones += $in_phones[i].value+','
+		}
+
+		console.log('电话号码', c_phones)
+
+		for (var i = 0; i < $in_wechats.length; i++){               // 拿到input输入框中的所有信息
+			console.log('拿到输入框中的', $in_wechats[i].value)
+			c_wechats += $in_wechats[i].value+','
+		}
+		console.log('微信号码', c_wechats)
+
+		for (var i = 0; i < $in_qqs.length; i++){
+			console.log($in_qqs[i].value)
+			c_qqs += $in_qqs[i].value+','
+		}
+		console.log('qq号码', c_qqs)
+
+		for (var i = 0; i < $in_emails.length; i++){
+			console.log($in_emails[i].value)
+			c_mails += $in_emails[i].value+','
+		}
+		console.log('邮箱', c_mails)
+
+		var client_info = {}						// 将信息加入一个字典
+		client_info.c_cid = cid
+		client_info.c_name = c_name
+		client_info.c_phones = splitLast(c_phones)
+		client_info.c_gs = c_gs
+		client_info.c_wechats = splitLast(c_wechats)
+		client_info.c_qqs = splitLast(c_qqs)
+		client_info.c_mails = splitLast(c_mails)
+		console.log('客户所有信息', client_info)
+
+		$('#tc').hide()
+		// 发送ajax请求
+		ajax_save(client_info)				// 修改完之后重新载入所有用户
+		$('#tc').html(`<div class="cid" style="display: none">
+			                <span id="">序列</span>
+			            <input name="" class="in-cid" value=""/>
+		               </div>
+		               <div class="name">
+						<span id="">姓名</span>
+							<input type="" name="" class="in-name" value="" placeholder="输入姓名" />
+						</div>
+						<div class="phone">
+							<span id="">手机号码</span>
+							<button class="add-phone">新增</button>
+                            <input type="" name="" class="in-phone" value="" placeholder="输入手机号码" />
+						</div>
+						<div class="gs">
+							<span id="">客户公司</span>
+							<input type="" name="" class="in-gs" value="" placeholder="输入客户公司" />
+						</div>
+						<div class="wechat">
+							<span id="">客户微信</span>
+							<button class="add-wechat">新增</button>
+							<input type="" name="" class="in-wechat" value="" placeholder="输入微信" />
+						</div>
+						<div class="qq">
+							<span id="">客户qq</span>
+							<button class="add-qq">新增</button>
+							<input type="" name="" class="in-qq" value="" placeholder="输入客户qq" />
+						</div>
+						<div class="email">
+							<span id="">客户邮箱</span>
+							<button class="add-email" >新增</button>
+							<input type="" name="" class="in-email" value="" placeholder="输入邮箱" />
+						</div>
+						<input type="button" id="bt-confirm" value="确认" style="display: block; margin: 0 auto;"/>
+		`)
+
+	})
+
+      //点击保存按钮，发送post请求，修改信息
+    function ajax_save(data) {
+      	$.ajax({
+      		type:"post",
+      		url:"/client_update",
+      		data: data,
+      		success: function(result){
+      			console.log('接收数据成功...', result)
+      			load_clients()
+      		}
+      	});
+    }
+
+    load_clients()              //先载入所有的客户
+</script>
+
+</html>

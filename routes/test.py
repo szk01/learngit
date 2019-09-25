@@ -5,7 +5,7 @@ from flask import (
     Response
 )
 
-from utils import log
+from utils import log, om_config
 
 main = Blueprint('test', __name__)  # 第二个参数指定了该蓝图所在的模块名
 

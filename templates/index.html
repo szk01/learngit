@@ -5,7 +5,7 @@
 <title>首页</title>
 	<link rel="stylesheet" type="text/css" href="static/css/nav.css">
 	<link rel="stylesheet" type="text/css" href="static/font/iconfont.css">
-	<script type="text/javascript" src="static/js/jquery.min.js"></script>
+	<script type="text/javascript" src="static/js/jquery-3.4.1.min.js"></script>
 	<script type="text/javascript" src="static/js/nav.js"></script>
 	<script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="https://cdn.bootcss.com/socket.io/1.5.1/socket.io.min.js"></script>
@@ -39,8 +39,7 @@
 			<li class="nav-item">
 				<a href="javascript:;"><i class="my-icon nav-icon icon_2"></i><span>客户管理</span><i class="my-icon nav-more"></i></a>
 				<ul>
-					<li><a href="javascript:;"><span>添加客户信息</span></a></li>
-					<li><a href="javascript:;"><span>修改客户信息</span></a></li>
+					<li class="addClient"><a href="javascript:;"><span>客户信息</span></a></li>
 					<li><a href="javascript:;"><span>删除客户信息</span></a></li>
 				</ul>
 			</li>
@@ -95,6 +94,11 @@
 			//$('#iframe').attr('src', 'http://106.15.44.224/voice_record')
 			$('#iframe').attr('src', '/seat')							//写的是相对路径
 		});
+
+		$(".addClient").click(function() {
+			console.log('到客户记录页面')
+			$('#iframe').attr('src', '/client')					//写的是相对路径
+		})
 	</script>
 </body>
 </html>
