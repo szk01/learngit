@@ -1,4 +1,5 @@
 /*用来显示弹窗的js代码*/
+    // 将时间格式化显示
     function show(count) {                                  // 格式化显示时间
         var timeshow = "00:00";
         if (count < 60 ) {
@@ -26,6 +27,7 @@
         return timeshow
     }
 
+    // 计时器计时出时间
     function timing(status) {
         var interval = null;
         window.count = 0;                                       // 计数也是全局变量
@@ -41,6 +43,7 @@
         return d
     }
 
+    // 生成通话记录模板
     function template(number, alltme, recordUrl, audioUrl) {
         var t = `
         <ul class="phone-note">
@@ -54,6 +57,7 @@
         return t
     }
 
+    // 生成来电弹窗模板
     function add_note() {
         console.log('加上来电通知...')
         var note = `
@@ -72,6 +76,7 @@
     var url = "/"                                   // 使用相对路径
     console.log(url);
     var socket = io.connect(url);
+    // 告诉服务器是谁登陆
     socket.on('connect', function() {
         var rid = $('#mini').attr('class')          // 找到工号，判断相应的分机号
         if (rid == '10087') {
@@ -90,6 +95,7 @@
         console.log(data)
     });
 
+    // 服务器通知有来电
     socket.on("ring", function(data) {                         // 有电话拨打进来，显示来电号码
         var t = add_note()                                              // 加上新版弹窗
         console.log('有来电...')
@@ -100,14 +106,16 @@
 
     });
 
+    // 服务器通知分机已接电话
     socket.on("anwser", function(data) {                          // 分机应答，显示状态
             $('.status').text('通话已建立')
-            <!--计时器-->
+
             var d = timing('start');                                 //开始计时
             window.inter = d["i"]                                   // 将inter声明为全局变量
             console.log('开始计时')
     });
 
+    // 服务器通知通话挂断,清除弹窗计时数
     socket.on("off", function(data) {                             // 分机或者来访者挂断
         console.log('结束通话...')
         if (data["status"] === 'Cdr') {
@@ -123,25 +131,35 @@
     });
 
 
-   $(".bt-startTime").click(function(){                // 点击按钮开始计时
-    var d  = timing('start');                 // 将inter声明为全局变量
-    window.inter = d["i"]
-    console.log('点击开始计时')
-    });
+   // $(".bt-startTime").click(function(){                // 点击按钮开始计时
+   //  var d  = timing('start');                 // 将inter声明为全局变量
+   //  window.inter = d["i"]
+   //  console.log('点击开始计时')
+   //  });
 
-    $(".bt-stopTime").click(function(){                // 点击按钮停止计时
-        clearInterval(inter)
-        var s = show(count)
-        console.log(s)
-        var r = template(17730273676, s, 3, 4)
-        $("#call-record-container").append(r)
-        console.log('点击停止计时按钮')
+    // $(".bt-stopTime").click(function(){                // 点击按钮停止计时
+    //     clearInterval(inter)
+    //     var s = show(count)
+    //     console.log(s)
+    //     var r = template(17730273676, s, 3, 4)
+    //     $("#call-record-container").append(r)
+    //     console.log('点击停止计时按钮')
+    // })
+
+    // 来电弹窗上的满意度调查按钮
+    $('.call-note-container').on('click', '.satisfy', function () {
+        console.log('点击满意度调查按钮')
+        socket.emit('satisfy', {'data': 'satisfy'})     // 只传递数据，不需要返回的数据。使用websocket协议
     })
 
-    $('.close').click(function(){                   // 点击关闭按钮的时候，隐藏弹窗
-        $('.call-note-container').hide()
+    // 来电弹窗上的关闭按钮，清除计时
+    $('.call-note-container').on('click', '.close', function () {
+        $('.call-note-container').hide()                           // 隐藏弹窗
+        clearInterval(window.inter)
+        window.count = 0
     })
 
+    // 首页测试的满意度调查按钮
     $('.satisfy').click(function() {                //按钮点击
         console.log('点击满意度调查按钮')
         socket.emit('satisfy', {'data': 'satisfy'})     // 只传递数据，不需要返回的数据。使用websocket协议
