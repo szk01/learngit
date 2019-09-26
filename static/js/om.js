@@ -147,13 +147,13 @@
     // })
 
     // 来电弹窗上的满意度调查按钮
-    $('.call-note-container').on('click', '.satisfy', function () {
+    $('body').on('click', '.satisfy', function () {
         console.log('点击满意度调查按钮')
         socket.emit('satisfy', {'data': 'satisfy'})     // 只传递数据，不需要返回的数据。使用websocket协议
     })
 
     // 来电弹窗上的关闭按钮，清除计时
-    $('.call-note-container').on('click', '.close', function () {
+    $('body').on('click', '.close', function () {
         $('.call-note-container').hide()                           // 隐藏弹窗
         clearInterval(window.inter)
         window.count = 0

@@ -230,6 +230,7 @@ class Funcs(Process_request):
             log('发送消息')
             return ws
 
+    #OM重启会配置满意度调查音乐
     def assign(self):
         # 配置menu1,满意度评价
         # 上海OM50的录音文件   user_welcome160431      user_welcome160927     user_welcome160523
@@ -302,6 +303,3 @@ class Funcs(Process_request):
 
         # log('result:' ,result)
 
-# dom = xmldom.parse('busy.xml')
-# funct = Funcs(dom)
-# funct.funcs()
