@@ -1,0 +1,65 @@
+    <!--导航栏相应的css和js-->
+    {% macro css_js()%}
+        <link rel="stylesheet" type="text/css" href="static/css/nav.css">
+        <link rel="stylesheet" type="text/css" href="static/font/iconfont.css">
+        <script type="text/javascript" src="static/js/jquery-3.4.1.min.js"></script>
+        <script type="text/javascript" src="static/js/nav.js"></script>
+		<script type="text/javascript" src="https://cdn.bootcss.com/socket.io/1.5.1/socket.io.min.js"></script>
+		<script type="text/javascript" src="static/js/om.js"></script>				<!--生成弹窗的js代码-->
+    {% endmacro %}
+
+    <!--导航栏的div-->
+    <div class="nav" style="float: left">
+		<div class="nav-top">
+			<div id="mini" style="border-bottom:1px solid rgba(255,255,255,.1)" class={{number}}><img src="images/mini.png" ></div>
+			<span id="number" >{{number}}</span>
+		</div>
+		<ul>
+			<li class="nav-item">
+				<a href="javascript:;"><i class="my-icon nav-icon icon_1"></i><span>用户中心</span><i class="my-icon nav-more"></i></a>
+				<ul>
+					<li><a href="/manage_account"><span>管理账号</span></a></li>
+					<li><a href="javascript:;"><span>修改账号信息</span></a></li>
+					<li><a href="javascript:;"><span>删除账号</span></a></li>
+				</ul>
+			</li>
+			<li class="nav-item">
+				<a href="javascript:;"><i class="my-icon nav-icon icon_2"></i><span>客户管理</span><i class="my-icon nav-more"></i></a>
+				<ul>
+					<li class="addClient"><a href="/client"><span>客户信息</span></a></li>
+					<li><a href="javascript:;"><span>删除客户信息</span></a></li>
+				</ul>
+			</li>
+			<li class="nav-item">
+				<a href="javascript:;"><i class="my-icon nav-icon icon_3"></i><span>数据统计</span><i class="my-icon nav-more"></i></a>
+				<ul>
+					<li><a href="javascript:;"><span>订单列表</span></a></li>
+					<li><a href="javascript:;"><span>待完善</span></a></li>
+					{% macro data_statistics() %}
+                        <li><a href="javascript:;"><span>待完善</span></a></li>
+                    {% endmacro %}
+				</ul>
+			</li>
+			<li class="nav-item">
+				<a href="javascript:;"><i class="my-icon nav-icon icon_4"></i><span>话务中心</span><i class="my-icon nav-more"></i></a>
+				<ul>
+					<li class="call_record"><a href="/call_record"><span>通话记录</span></a></li>
+					<li class="seat_manage"><a href="/seat"><span>分机管理</span></a></li>
+					<li class="voice_record"><a href="/voice_record"><span>通话录音</span></a></li>
+				</ul>
+			</li>
+			<li class="nav-item">
+				<a href="javascript:;"><i class="my-icon nav-icon icon_4"></i><span>系统管理</span><i class="my-icon nav-more"></i></a>
+				<ul>
+					<li><a href="javascript:;"><span>订单列表</span></a></li>
+					<li><a href="javascript:;"><span>待完善</span></a></li>
+					<li><a href="javascript:;"><span>待完善</span></a></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+
+	<div class="class-note"></div>			<!--将其作为弹窗的父元素-->
+
+
+

@@ -1,7 +1,5 @@
 from excuteRequest import Process_request
 from excuteRequest import log
-import xml.etree.ElementTree as ET
-from xml.etree.ElementTree import tostring
 import random
 import time, asyncio
 import subprocess  # 用来调用命令行shell
@@ -9,18 +7,16 @@ from utils import om_config, wget_down, post_om
 from models.record import Call_record, Voice_record, db
 from utils import get_phone
 
-# from models import session
-
 
 class Funcs(Process_request):
     # 类变量，所有的实例共享这个变量
     p = {
         'BUSY': set(),
-        'IDLE': {'212'},
-        'ONLINE': {'221'},
+        'IDLE': {'213'},                    # 当前端页面设置了分机的优先级，使用此分机进行测试
+        'ONLINE': {'213'},
         'OFFLINE': set(),
-        'pid': None,
-        'priority': {  # 这是默认优先级，数字越小，优先级越高
+        'pid': '213',                         # 写死的默认分机，前端没有设置分机优先的时候，使用此分机
+        'priority': {                      # 这是默认优先级，数字越小，优先级越高。这些数据并没有用，只是前台设置后的demo示例
             '212': 1,
             '213': 2,
             '214': 3,
@@ -47,7 +43,7 @@ class Funcs(Process_request):
         log('打印传过来的字典', cr)
         call_record = Call_record(phone=cr['phone'], name=cr['name'], type=cr['type'],
                                   start_time=Funcs.time['start_time'], on_time=Funcs.time['on_time'],
-                                  end_time=Funcs.time['end_time']
+                                  end_time=Funcs.time['end_time'], uid=cr['uid'],
                                   )
         Funcs.time['start_time'] = None
         Funcs.time['on_time'] = None
@@ -61,7 +57,8 @@ class Funcs(Process_request):
     @staticmethod
     def sql_addVoiceRecord(vr):
         voice_record = Voice_record(name=vr['name'], url=vr['url'], play_count=vr['play_count'],
-                                    down_count=vr['down_count'])
+                                    down_count=vr['down_count'], uid=vr['uid']
+                                    )
         db.session.add(voice_record)
         log('在数据库加入一条录音记录...')
         db.session.commit()
@@ -85,7 +82,7 @@ class Funcs(Process_request):
             Funcs.p['IDLE'].add(id)  # 加入空闲组
             Funcs.p['OFFLINE'].discard(id)  # 移出离线组
             p = {'id': id, 'status': 'change_status', 'phone_status': '空闲'}
-            return p
+            return p                                # 发送给前端页面，显示分机状态
 
         # 忙事件报告
         if event_name == 'BUSY':
@@ -93,14 +90,14 @@ class Funcs(Process_request):
             Funcs.p[event_name].add(id)  # 加入忙组
             Funcs.p['IDLE'].discard(id)  # 移出空闲组
             p = {'id': id, 'status': 'change_status', 'phone_status': '忙线'}
-            return p
+            return p                                # 发送给前端页面，显示分机状态
 
         # 空闲事件报告
         if event_name == 'IDLE':
             Funcs.p[event_name].add(id)  # 加入空闲组
             Funcs.p['BUSY'].remove(id)  # 移出忙组
             p = {'id': id, 'status': 'change_status', 'phone_status': '空闲'}
-            return p
+            return p                                # 发送给前端页面，显示分机状态
 
         # 离线事件报告
         if event_name == 'OFFLINE':
@@ -112,7 +109,7 @@ class Funcs(Process_request):
             if id in Funcs.p['ONLINE']:
                 Funcs.p['ONLINE'].remove(id)  # 移出在线组
             p = {'id': id, 'status': 'change_status', 'phone_status': '离线'}
-            return p
+            return p                                # 发送给前端页面，显示分机状态
 
     # 查询语音文件
     def Query_voice(self):
@@ -126,26 +123,6 @@ class Funcs(Process_request):
         event = self.getRoot()
         ext = event.find('visitor')
         vid = ext.attrib['id']  # 访问者id
-        # 组成来电转分机请求
-        # 读取xml文件，并修改visitor的属性
-        # autoText = '<Transfer attribute="Connect">\r\n<visitor id="14"/>\r\n<ext id="215"/>\r\n</Transfer>'
-        # # 解析xml字符串
-        # root = ET.fromstring(autoText)
-        # visitor = root.find('visitor')
-        # visitor.set('id', visitor_id)
-        # # 随机取到idle的id，赋值给ext
-        # random_idle_id = random.choice(list(Funcs.p['IDLE']))  # 随机取到IDLE的id
-        #
-        # ext = root.find('ext')
-        # ext.set('id', pid)                                    # 设置转给哪个分机
-        # log('autoTransfer():', root)  # 应该是Transfer
-        # log('来访者id:', root.find('visitor').attrib['id'])
-        # log('转接分机id:', root.find('ext').attrib['id'])
-        # vid = root.find('visitor').attrib['id']
-        # req_body = tostring(root, encoding='utf-8')  # res_body是bytes类型的数据
-        # req_body = req_body.decode('utf-8')  # 现在转成字符串utf-8类型
-        #
-        # data = Funcs.add_header(req_body)
         t = {
             'vid': vid,
             'status': 'Transfer',
@@ -185,7 +162,7 @@ class Funcs(Process_request):
 
     # 通话结束后，拿到录音的相对路径，下载录音到服务器上，返回来电号码
     def recording(self):
-        global play_path, omUrl, pid
+        global play_path, omUrl, pid, uid               # 为防止python解释器无法解释到底是局部变量还是全局变量
         global record_name
         try:
             event = self.getRoot()
@@ -199,6 +176,10 @@ class Funcs(Process_request):
                 recording = event.find('Recording')
                 record_name = recording.text  # 语音文件名字
                 pid = event.find('CDPN').text  # 分机号
+                if pid == '213':
+                    uid = 1
+                elif pid == '214':
+                    uid = 2
                 play_path = 'audio/' + record_name
                 omUrl = om_config['om_record_url'] + record_name  # 存储在om上的录音文件地址，给wget下载
                 log('完整路径：', omUrl)
@@ -209,6 +190,7 @@ class Funcs(Process_request):
                 "phone": number,
                 "name": "未知",
                 "type": 1,
+                "uid": uid,
             }
 
             vr = {  # 录音记录
@@ -216,6 +198,7 @@ class Funcs(Process_request):
                 "url": play_path,
                 "play_count": 0,
                 "down_count": 0,
+                "uid": uid,
             }
 
             ws = {  # 发送给ws客户端的消息
@@ -301,5 +284,4 @@ class Funcs(Process_request):
         except Exception as e:
             log(e)  # 没有找到就打印,没有找到这个函数
 
-        # log('result:' ,result)
 

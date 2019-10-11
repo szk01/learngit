@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>通话记录</title>
+    {% from 'include_base.html' import css_js %}
+    {{ css_js() }}
 <!--    <script type="text/javascript" src="https://cdn.bootcss.com/socket.io/1.5.1/socket.io.min.js"></script>-->
     <script type="text/javascript" src="static/js/jquery-3.4.1.min.js"></script>
 <!--    <script type="text/javascript" src="static/js/om.js"></script>-->
@@ -44,6 +46,8 @@
     </style>
 </head>
 <body>
+    <!--左侧导航栏-->
+    {% include 'include_base.html' %}
 <!--    <div class="call-note-container">-->
 <!--        <div class="call-number">来电号码</div>-->
 <!--        <div class="time">通话时间</div>-->

@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>录音记录</title>
+    {% from 'include_base.html' import css_js %}
+    {{ css_js() }}
     <link rel="stylesheet" type="text/css" href="static/css/call_note.css">
 <!--	<script type="text/javascript" src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>-->
 <!--    <script type="text/javascript" src="https://cdn.bootcss.com/socket.io/1.5.1/socket.io.min.js"></script>-->
@@ -41,13 +43,9 @@
     </style>
 </head>
 <body>
-<!--    <div class="call-note-container">-->
-<!--        <div class="call-number">来电号码</div>-->
-<!--        <div class="time">通话时间</div>-->
-<!--        <div class="status">状态</div>-->
-<!--        <button class="bt-startTime">开始计时</button>-->
-<!--        <button class="bt-stopTime">停止计时</button>-->
-<!--    </div>-->
+     <!--左侧导航栏-->
+    {% include 'include_base.html' %}
+
     <table>
         <caption>
             通话记录（删除后刷新页面）
@@ -58,17 +56,6 @@
             <th>下载地址（年月日/来电号码_分机号...）</th>
             <th>操作/删除</th>
         </tr>
-<!--        {% for voice in voice_records %}-->
-<!--        <tr>-->
-<!--        	<td><input type="checkbox" class="check" id={{voice.id}}></td>-->
-<!--            <td> <audio controls src="{{voice.url}}" preload="auto">-->
-
-<!--                 </audio>-->
-<!--            </td>-->
-<!--            <td  ><a href="{{voice.url}}">{{voice.name}}</a></td>-->
-<!--            <td ><button id={{voice.id}} class="bt">删除</button></td>-->
-<!--        </tr>-->
-<!--        {% endfor %}-->
 
         {% for voice in vs %}
         <tr>

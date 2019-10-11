@@ -66,10 +66,20 @@
                 <div class="call-number" style="font-size: 20px; text-align:center; margin: 30px 30px; color:red;">来电号码</div>
                 <div class="time" style="font-size: 20px; text-align:center; margin: 30px 30px;">通话时间</div>
                 <div class="status" style="font-size: 20px; text-align:center; margin: 30px 30px;">状态</div>
-                <button class="satisfy" style="font-size: 20px; text-align:center; margin: 30px 30px;">满意度调查按钮</button>
 		    </div>
         `
         return note
+    }
+
+    // 获取到cookie
+    function getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0; i<ca.length; i++) {
+            var c = ca[i].trim();
+            if (c.indexOf(name)===0) return c.substring(name.length,c.length);
+        }
+      return "";
     }
 
 //  var url = "http://106.15.44.224:80"
@@ -78,17 +88,18 @@
     var socket = io.connect(url);
     // 告诉服务器是谁登陆
     socket.on('connect', function() {
-        var rid = $('#mini').attr('class')          // 找到工号，判断相应的分机号
-        if (rid == '10087') {
-            // var userid = '212'
-            var userid = '221'
-        }
-        if (rid == '10088') {
-            // var userid = '213'                   //本地开发
-            var userid = '222'                      //给上海使用
-        }
-        console.log('发送给应用服务器的id',userid)
-        socket.emit('login', userid);
+        var cookie = getCookie('session')
+        console.log('js获取的cookie是', cookie)   // 找到工号，判断相应的分机号
+        // if (cookie === '10087') {
+        //     console.log('true or false', cookie === '10087')
+        //     var userid = '213'                  // 本地开发
+        //     // var userid = '221'               // 给上海使用
+        // }else if (cookie === '10088') {
+        //     var userid = '214'                   //本地开发
+        //     // var userid = '222'                      //给上海使用
+        // }
+        console.log('发送给应用服务器的id是', cookie)
+        socket.emit('login', cookie);
     });                                                          // 这些都是套路函数，建立通道，发送提示消息
 
     socket.on("test_room", function(data) {
@@ -99,7 +110,7 @@
     socket.on("ring", function(data) {                         // 有电话拨打进来，显示来电号码
         var t = add_note()                                              // 加上新版弹窗
         console.log('有来电...')
-        $(document.body).append(t)
+        $('.class-note').append(t)
 
         $('.call-number').text('来电号码'+data["number"])
         $('.status').text('呼叫中')
@@ -131,29 +142,17 @@
     });
 
 
-   // $(".bt-startTime").click(function(){                // 点击按钮开始计时
-   //  var d  = timing('start');                 // 将inter声明为全局变量
-   //  window.inter = d["i"]
-   //  console.log('点击开始计时')
-   //  });
-
-    // $(".bt-stopTime").click(function(){                // 点击按钮停止计时
-    //     clearInterval(inter)
-    //     var s = show(count)
-    //     console.log(s)
-    //     var r = template(17730273676, s, 3, 4)
-    //     $("#call-record-container").append(r)
-    //     console.log('点击停止计时按钮')
-    // })
-
-    // 来电弹窗上的满意度调查按钮
-    $('body').on('click', '.satisfy', function () {
-        console.log('点击满意度调查按钮')
-        socket.emit('satisfy', {'data': 'satisfy'})     // 只传递数据，不需要返回的数据。使用websocket协议
+    // 来电弹窗上的满意度调查按钮                使用jquery的事件委托的方式，委托给父节点
+    $('.class-note').on('click', '.satisfy', function () {
+        console.log('点击满意度调查按钮...')
+        socket.emit('satisfy', {'data': 'satisfy'})
     })
 
+
+
     // 来电弹窗上的关闭按钮，清除计时
-    $('body').on('click', '.close', function () {
+    $(document.body).on('click', '.close', function () {                    // 没有起作用
+        console.log('点击来电弹窗的关闭按钮')
         $('.call-note-container').hide()                           // 隐藏弹窗
         clearInterval(window.inter)
         window.count = 0

@@ -1,6 +1,5 @@
 from . import db  # 相对引用，db变量存在于models/__init__.py文件中
-from . import login_manager
-from flask_login import UserMixin
+from flask_login import UserMixin               # 实现了三个属性和一个方法
 
 
 # class User(db.Model, UserMixin):
@@ -64,7 +63,7 @@ class CompanyPermit(db.Model):
 
 
 # 用户表
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True)

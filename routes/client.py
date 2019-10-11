@@ -96,19 +96,18 @@ def find_client():
     log('传输给前端的东西', all_r_json)
     return all_r_json
 
-# 前端增加
+# 增加一个客户
 @main.route('/add_client', methods=['POST'])
 def add_client():
     new_client = request.form
-    id = new_client.get('cid')
+    # id = new_client.get('cid')
     name = new_client.get('name')
-    cid = new_client.get('gs')
+    cid = new_client.get('gs')                  # 公司
     number = new_client.get('phone')
     wechat = new_client.get('wechat')
     qq = new_client.get('qq')
     email = new_client.get('email')
-    c = Client(id=id, cid=cid,
-                       number=number, name=name, wechat=wechat, email=email, qq=qq)
+    c = Client(cid=cid,number=number, name=name, wechat=wechat, email=email, qq=qq)
     db.session.add(c)
     db.session.commit()
     return 'add sucess'

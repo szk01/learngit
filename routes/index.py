@@ -9,7 +9,7 @@ from flask import (
 from models.record import db, Voice_record, Call_record
 from models.seat import Seat
 import time, json
-
+from utils import log
 main = Blueprint('index', __name__)
 
 
@@ -26,33 +26,20 @@ def formatted(cs):
         et = time.localtime(c.end_time)
         c.end_time = time.strftime(format, et)
 
-
-# 得出总时长
-# def duration(cs):
-#     for c in cs:
-#         at = c.end_time - c.start_time
-#         format = '%Y/%m/%d %H:%M:%S'
-#         at = time.strftime(format, at)
-#         return at
-
-# 通话记录 使用ORM，从数据库拿到数据
-# @main.route('/call_record')
-# def call_record():
-#     content = {}
-#     call_records = Call_record.query.all()  # 拿到call_records中的所有数据
-#     formatted(call_records)  # 格式化时间戳
-#     # allTime = duration(call_records)                      # 得出总时长
-#     # content['allTime'] = allTime
-#     content['call_records'] = call_records  # 加入到content中，将content传到前端页面，让jingjia2模板使用
-#     return render_template('callRecord.html', **content)
-
-
+# 通话记录
 @main.route('/call_record')
 def page_cr():
+    authNumber = request.cookies.get('number')
+    log('cookie', request.cookies)
     content = {}
-    current_page = request.args.get('page', 1, type=int)  # 从查询字符串获取当前页数
-    # per_page = current_app.config['BLUELOG_POST_PER_PAGE']  # 每页数量
-    pagination = Call_record.query.paginate(current_page, per_page=12)  # 分页对象
+    current_page = request.args.get('page', 1, type=int)  # 从查询字符串获取当前页数  current_page是1
+    # 使用cookie进行数据隔离
+    if authNumber in '10000':
+        pagination = Call_record.query.paginate(current_page, per_page=10)  # 分页对象
+    elif authNumber == '10087':
+        pagination = Call_record.query.filter_by(uid = 1).paginate(current_page, per_page=10)
+    elif authNumber == '10088':
+        pagination = Call_record.query.filter_by(uid= 2).paginate(current_page, per_page=10)
     cs = pagination.items  # 当前页数的记录列表
     formatted(cs)
     # for v in cs:
@@ -68,25 +55,23 @@ def v_format(vs):
     for v in vs:
         v.name = v.name[:-7]
 
-
-# # 录音记录
-# @main.route('/voice_record')
-# def voice_record():
-#     content = {}
-#     voice_records = Voice_record.query.all()
-#     v_format(voice_records)
-#     content['voice_records'] = voice_records
-#     return render_template('voiceRecord.html', **content)
-
-
-# 通话记录，10条记录一个页面
+# 录音记录，10条记录一个页面
 # paginate()查询函数需要两个参数，当前页面和此页面记录数
 @main.route('/voice_record')
 def page_vr():
+    authNumber = request.cookies.get('number')
+    log('cookie', request.cookies)
+    calls = []
     content = {}
-    current_page = request.args.get('page', 1, type=int)  # 从查询字符串获取当前页数
-    # per_page = current_app.config['BLUELOG_POST_PER_PAGE']  # 每页数量
-    pagination = Voice_record.query.paginate(current_page, per_page=10)  # 分页对象
+    current_page = request.args.get('page', 1, type=int)                                    # 从查询字符串获取当前页数
+    # 管理员登录，显示所有的记录
+    if authNumber == '10000':
+        pagination = Voice_record.query.paginate(current_page, per_page=10)                     # 分页对象
+    elif authNumber == '10087':
+        pagination = Voice_record.query.filter_by(uid = 1).paginate(current_page, per_page=10)
+    elif authNumber == '10088':
+        pagination = Voice_record.query.filter_by(uid = 2).paginate(current_page, per_page=10)
+
     vs = pagination.items  # 当前页数的记录列表
     v_format(vs)
     # for v in vs:
@@ -96,7 +81,7 @@ def page_vr():
 
     return render_template('voiceRecord.html', **content)
 
-
+# 已有的座机表
 @main.route('/seat')
 def seat():
     content = {}

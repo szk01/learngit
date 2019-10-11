@@ -12,4 +12,6 @@ class Seat(db.Model):
     number = db.Column(db.String(255), unique=True)                     # 座机号码，比如212
     bind_time = db.Column(db.Integer)                                   # 用户登录最后的时间，使用时间戳
 
+    user = db.relationship('User', primaryjoin='Seat.uid == User.id', backref='seats')
+
 

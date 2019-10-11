@@ -3,171 +3,264 @@
 <head>
     <meta charset="UTF-8">
     <title>添加客户信息</title>
+	{% from 'include_base.html' import css_js %}
+    {{ css_js() }}
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"/>
     <script type="text/javascript" src="static/js/jquery-3.4.1.min.js"></script>
+	<style type="text/css">
+		/*编辑按钮*/
+			.form-container {
+			  position: fixed;
+			  left: 400px;
+			  top: 300px;
+			  /*border: solid red 1px;*/
+			  width: 500px;
+			  /*margin: 0 auto;*/						/*对fixed元素的定位不起作用*/
+			  color: #4985ff;
+			  display: none;
+			}
+
+		/*增加客户按钮*/
+			.form-add-container {
+			  position: fixed;
+			  left: 400px;
+			  top: 300px;
+			  /*border: solid red 1px;*/
+			  width: 500px;
+			  /*margin: 0 auto;*/						/*对fixed元素的定位不起作用*/
+			  color: #4985ff;
+			  display: none;
+			}
+
+			.bt{							/*确定按钮居中*/
+				text-align: center;
+			}
+
+
+			.mask { 	/*遮罩层暂时不需要*/
+				position: absolute;					/*根据父节点来进行定位*/
+				top: 0px;
+				left: 0px;
+				width: 100%;
+				height: 100%;
+				background: #000;
+				opacity: 1;
+				display: none;
+			}
+
+			/*.search{*/
+			/*	float: none;*/
+			/*}*/
+
+			.add_client{
+				margin: 0 100px 0 10px;			/*上右下左 和浏览器显示的不一样*/
+				display: block;
+			}
+	</style>
 </head>
 <body>
-    <input type="search" placeholder="输入客户姓名" value="" class="search">
-	<p>如果你想增加一个客户信息, 请点击</p><button class="bt-add-client">增加+</button>
+	<!--左侧导航栏-->
+    {% include 'include_base.html' %}
+
+	<!--bootstrap搜索框，栅格系统使用了浮动float: left-->
+	<div class="col-md-offset-9 search">						<!--搜索框无法独占一行，已经脱离文档流，使用l了浮动,float:。加上display: block也无法改变-->
+		<form class="navbar-form navbar-left " role="search">
+		<div class="form-group">
+			<span class="glyphicon glyphicon-search" style="background-color: #FFFFFF"></span>
+			<input type="text" class="form-control" placeholder="输入姓名，手机号，qq">
+		</div>
+		<button type="submit" class="btn btn-primary">Search</button>
+		</form>
+	</div>
+
+	<div id="j_mask" class="mask"></div>
+
+	<!--增加客户按钮-->
+	<div class="add_client">
+		<p>如果你想增加一个客户信息, 请点击</p>
+		<button class="bt-add-client btn btn-primary">增加+</button>
+	</div>
+
 	<!--下面是搜索的客户结果-->
 	<div class="find_clients">
 		<table class="find-table">
-
 		</table>
 	</div>
-    <!--显示所有客户信息-->
-    <table class="clients">
-        <caption>客户信息表</caption>
-        <tr class="head">
-        	<th>序列</th>
-            <th>客户姓名</th>
-            <th>客户手机号码</th>
-            <th>客户公司</th>
-            <th>客户微信</th>
-            <th>客户qq</th>
-            <th>客户邮箱</th>
-            <th>操作</th>
-        </tr>
-        <tr class="infos">
-        	<td>0</td>
-            <td>test</td>
-            <td>123456789101</td>
-            <td>szfy</td>
-            <td>wechat</td>
-            <td>87877897,386428934</td>
-            <td>32043789@syfy</td>
-            <td><button class="edit">修改</button></td>
-        </tr>
-    </table>
-    <!--修改信息的弹窗-->
-    <div id="tc" style="margin: 0 auto; width: 200px; height: 300px; border: solid gold 1px; display: none; ">
-        <div class="cid" style="display: none">
-			<span id="">序列</span>
-			<input type="" name="" class="in-cid" value=""/>
-		</div>
-		<div class="name">
-			<span id="">姓名</span>
-			<input type="" name="" class="in-name" value="" placeholder="输入姓名" />
-		</div>
-		<div class="phone">
-			<span id="">手机号码</span>
-			<button class="add-phone">新增</button>
-			<input type="" name="" class="in-phone" value="" placeholder="输入手机号码" />
-		</div>
-		<div class="gs">
-			<span id="">客户公司</span>
-			<input type="" name="" class="in-gs" value="" placeholder="输入客户公司" />
-		</div>
-		<div class="wechat">
-			<span id="">客户微信</span>
-			<button class="add-wechat">新增</button>
-			<input type="" name="" class="in-wechat" value="" placeholder="输入微信" />
-		</div>
-		<div class="qq">
-			<span id="">客户qq</span>
-			<button class="add-qq">新增</button>
-			<input type="" name="" class="in-qq" value="" placeholder="输入客户qq" />
-		</div>
-		<div class="email">
-			<span id="">客户邮箱</span>
-			<button class="add-email" >新增</button>
-			<input type="" name="" class="in-email" value="" placeholder="输入邮箱" />
-		</div>
-		<input type="button" id="bt-confirm" value="确认" style="display: block; margin: 0 auto;"/>
+
+    <!--bootstrap表格，显示所有客户信息-->
+	<div class="client col-md-10">
+		<table class="table table-hover client">
+			<caption>客户信息表</caption>
+			<tr class="head">
+				<th>序列</th>
+				<th>客户姓名</th>
+				<th>客户手机号码</th>
+				<th>客户公司</th>
+				<th>客户微信</th>
+				<th>客户qq</th>
+				<th>客户邮箱</th>
+				<th>操作</th>
+			</tr>
+			<tr class="infos">
+				<td class="td-cid">0</td>
+				<td>test</td>
+				<td>123456789101</td>
+				<td>szfy</td>
+				<td>wechat</td>
+				<td>87877897,386428934</td>
+				<td>32043789@syfy</td>
+				<td><button class="edit btn btn-info">修改</button></td>
+			</tr>
+		</table>
 	</div>
 
-	<!--增加客户弹出的弹窗-->
-	<div class="div-add-client" style=" display:none; margin: 0 auto; width: 200px; height: 300px; border: solid gold 1px; ">
-		<div class="add-cid" style="">
-			<span id="">序列</span>
-			<input type="text" name="" class="in-ad-cid" value="" placeholder="请输入序列，不可重复"/>
-	    </div>
-	    <div class="add-name">
-			<span id="">姓名</span>
-			<input type="text" name="" class="in-ad-name" value="" placeholder="输入姓名" />
+	<!--bootstrap编辑弹窗，和增加客户编辑框是一样的，有span增加按钮-->
+	<div class="form-container">
+		<form class="form-horizontal">
+		  <div class="form-group " style="display: none">							<!--这个序列表单不显示-->
+			<label for="inputEmail3" class="col-sm-2 control-label">序列</label>
+			<div class="input-group col-sm-8">
+			  <input type="text" class="form-control ipt-id" id="inputEmail3" placeholder="id">
+			</div>
+		  </div>
+
+		  <div class="form-group">									<!--表单组-->
+		      <label for="inputEmail3" class="col-sm-2 control-label">姓名</label>
+		      <div class="input-group col-sm-8">							<!--输入框组-->
+		          <input type="text" class="form-control ipt-name" id="inputEmail3" placeholder="Name">
+		      </div>
+		  </div>
+
+		  <div class="form-group form-phone">
+		    <label for="inputPassword3" class="col-sm-2 control-label">手机号</label>
+		    <div class="input-group col-sm-8">
+		      <input type="tel" class="form-control ipt-phone" id="inputPassword3" placeholder="Tel">
+		      <span class="input-group-addon">增加</span>
+		    </div>
+		  </div>
+
+		  <div class="form-group">
+		    <label for="inputPassword3" class="col-sm-2 control-label">公司</label>
+		    <div class="input-group col-sm-8">
+		      <input type="tel" class="form-control ipt-gs" id="inputPassword3" placeholder="Company">
+
+		    </div>
+		  </div>
+
+		  <div class="form-group form-wechat">
+		    <label for="inputPassword3" class="col-sm-2 control-label">微信</label>
+		    <div class="input-group col-sm-8">
+		      <input type="text" class="form-control ipt-wechat" id="inputPassword3" placeholder="Wechat">
+		      <span class="input-group-addon">增加</span>
+		    </div>
+		  </div>
+
+		  <div class="form-group form-qq">
+		    <label for="inputPassword3" class="col-sm-2 control-label">QQ</label>
+		    <div class="input-group col-sm-8">
+		      <input type="qq" class="form-control ipt-qq" id="inputPassword3" placeholder="QQ">
+		      <span class="input-group-addon">增加</span>
+		    </div>
+		  </div>
+
+		  <div class="form-group form-email">
+		    <label for="inputPassword3" class="col-sm-2 control-label">邮箱</label>
+		    <div class="input-group col-sm-8">
+		      <input type="email" class="form-control ipt-email" id="inputPassword3" placeholder="Email">
+		      <span class="input-group-addon">增加</span>
+		    </div>
+		  </div>
+			<!--<input class="btn btn-default" type="submit" value="Submit" id="bt-submit">-->
+		</form>
+
+		<div class="bt">						<!--在一个div中两个input类型的button是并联的-->
+			<input type="button" class="btn btn-primary btn-confirm" value="确认" />
+			<input type="button" class="btn btn-primary btn-cancel" value="取消" />
 		</div>
-		<div class="add-phone">
-			<span id="">手机号码</span>
-<!--			<button class="bt-add-phone">新增</button>-->
-			<input type="text" name="" class="in-ad-phone" value="" placeholder="输入手机号码" />
-		</div>
-		<div class="add-gs">
-			<span id="">客户公司</span>
-			<input type="text" name="" class="in-ad-gs" value="" placeholder="输入客户公司" />
-		</div>
-		<div class="add-wechat">
-			<span id="">客户微信</span>
-<!--			<button class="bt-add-wechat">新增</button>-->
-			<input type="text" name="" class="in-ad-wechat" value="" placeholder="输入微信" />
-		</div>
-		<div class="add-qq">
-			<span id="">客户qq</span>
-<!--			<button class="bt-add-qq">新增</button>-->
-			<input type="text" name="" class="in-ad-qq" value="" placeholder="输入客户qq" />
-		</div>
-		<div class="add-email">
-			<span id="">客户邮箱</span>
-<!--			<button class="bt-add-email" >新增</button>-->
-			<input type="text" name="" class="in-ad-email" value="" placeholder="输入邮箱" />
-		</div>
-		<input type="button" id="bt-add-confirm" value="确认" style="display: block; margin: 0 auto" />
 	</div>
 
+	<!--bootstrap增加按钮 的编辑弹窗，无增加按钮-->
+	<div class="form-add-container">
+		<form class="form-horizontal">
+
+		  <div class="form-group">										<!--表单组 form-group是不能变的-->
+		      <label for="inputEmail3" class="col-sm-2 control-label">姓名</label>
+		      <div class="input-group col-sm-8">							<!--输入框组-->
+		          <input type="text" class="form-control ipt-add-name" id="inputEmail3" placeholder="Name">
+		      </div>
+		  </div>
+
+		  <div class="form-group add-form-phone">
+		    <label for="inputPassword3" class="col-sm-2 control-label">手机号</label>
+		    <div class="input-group col-sm-8">
+		      <input type="tel" class="form-control ipt-add-phone" id="inputPassword3" placeholder="Tel">
+		    </div>
+		  </div>
+
+
+		  <div class="form-group">
+		    <label for="inputPassword3" class="col-sm-2 control-label">公司</label>
+		    <div class="input-group col-sm-8">
+		      <input type="text" class="form-control ipt-add-gs" id="inputPassword3" placeholder="Company">
+		    </div>
+		  </div>
+
+
+		  <div class="form-group form-add-wechat">
+		    <label for="inputPassword3" class="col-sm-2 control-label">微信</label>
+		    <div class="input-group col-sm-8">
+		      <input type="text" class="form-control ipt-add-wechat" id="inputPassword3" placeholder="Wechat">
+		    </div>
+		  </div>
+
+
+		  <div class="form-group form-add-qq">
+		    <label for="inputPassword3" class="col-sm-2 control-label">QQ</label>
+		    <div class="input-group col-sm-8">
+		      <input type="qq" class="form-control ipt-add-qq" id="inputPassword3" placeholder="QQ">
+		    </div>
+		  </div>
+
+
+
+		  <div class="form-group form-add-email">
+		    <label for="inputPassword3" class="col-sm-2 control-label">邮箱</label>
+		    <div class="input-group col-sm-8">
+		      <input type="email" class="form-control ipt-add-email" id="inputPassword3" placeholder="Email">
+		    </div>
+		  </div>
+			<!--<input class="btn btn-default" type="submit" value="Submit" id="bt-submit">-->
+		</form>
+
+		<div class="bt">						<!--在一个div中两个input类型的button是并联的-->
+			<input type="button" class="btn btn-primary btn-add-confirm" value="确认" />
+			<input type="button" class="btn btn-primary btn-add-cancel" value="取消" />
+		</div>
+	</div>
 </body>
 
 
 <script>
 	var log = console.log.bind(console)
-	/*点击增加按钮 显示增加弹窗*/
+
+	// 点击增加客户按钮 显示编辑弹窗
 	$('.bt-add-client').click(function () {
-		$('.div-add-client').show()
-
+		$('.form-add-container').show()
+		$('.mask').show()
 	})
 
-	// 清除增加弹窗中的input值，还原增加弹窗
-	function clear_input_value(className){
-		// var vs = $('.'+className+' '+'input:text').val()
-		// console.log('clear_input_value的value值',vs)
-		var its = $('.'+className+' '+'input:text')
-		for(var i = 0; i < its.length; i++){
-			log('所得到的增加的弹窗的值', its[i].value)
-			its[i].value = ''
-		}
-	}
-
-	/*弹窗的增加客户信息的按钮*/
-	$('.bt-add-phone').click(function () {
-		log('点击按钮')
-		var $p = $('<input type="text" name="" class="in-ad-phone" value="" placeholder="输入手机号码" />')
-		$('.add-phone').append($p)
-	})
-	$('.bt-add-wechat').click(function () {
-		log('点击按钮')
-		var $w = $('<input type="text" name="" class="in-ad-wechat" value="" placeholder="输入微信号" />')
-		$('.add-wechat').append($w)
-	})
-	$('.bt-add-qq').click(function () {
-		log('点击按钮')
-		var $q = $('<input type="text" name="" class="in-ad-qq" value="" placeholder="输入qq号" />')
-		$('.add-qq').append($q)
-	})
-	$('.bt-add-email').click(function () {
-		log('点击按钮')
-		var $e = $('<input type="text" name="" class="in-ad-email" value="" placeholder="输入邮箱" />')
-		$('.add-email').append($e)
-	})
-
-	/*点击增加客户的确认按钮*/
-	$('#bt-add-confirm').click(function () {
-		var cid = $('.in-ad-cid').val()							// 序列号
-		var name = $('.in-ad-name').val()						// 姓名
-		var phone = $('.in-ad-phone').val()						// 手机号
-		var gs = $('.in-ad-gs').val()							// 公司
-		var wechat = $('.in-ad-wechat').val()					// 微信
-		var qq = $('.in-ad-qq').val()							// qq
-		var email = $('.in-ad-email').val()						// email
+	/*点击增加客户的确认按钮，显示编辑弹窗，拿到编辑弹窗中的信息，发送ajax请求，增加一条客户记录，重新加载所有客户*/
+	$('.btn-add-confirm').click(function () {
+		// var cid = $('.in-ad-cid').val()							// 序列号
+		var name = $('.ipt-add-name').val()						// 姓名
+		var phone = $('.ipt-add-phone').val()						// 手机号
+		var gs = $('.ipt-add-gs').val()							// 公司
+		var wechat = $('.ipt-add-wechat').val()					// 微信
+		var qq = $('.ipt-add-qq').val()							// qq
+		var email = $('.ipt-add-email').val()						// email
 		//console.log('确认增加按钮获取的消息', cid, name, phone, gs, wechat, qq, email)
 		var add_data = {}
-		add_data.cid = cid
+		// add_data.cid = cid
 		add_data.name = name
 		add_data.phone = phone
 		add_data.gs = gs
@@ -183,44 +276,19 @@
 				load_clients()				// 重新加载所有的客户
       		}
       	});
-		var className = 'div-add-client'
-		clear_input_value(className)
-		$('.div-add-client').hide()			// 隐藏增加弹窗
+		log('编辑框中的信息', add_data)
+		reset_edit()						//
+		$('.form-add-container').hide()			// 隐藏增加客户编辑弹窗
+		$('.mask').hide()
 
 	})
 
-	function sort_data(d) {
-		var info = {}
-		info.data = d
-		console.log(info)
-		return info
-	}
-
-	function dom_table(data) {		  // html()会覆盖之前的内容, $()不会覆盖，但两者不能同时使用，否则会被覆盖
-		var $table = $(`<tr class="head">
-							<th>序列</th>
-							<th>客户姓名</th>
-							<th>客户手机号码</th>
-							<th>客户公司</th>
-							<th>客户微信</th>
-							<th>客户qq</th>
-							<th>客户邮箱</th>
-						</tr> `)
-		$('table.find-table').append($table)
-		console.log('动态生成字头...')
-		for(var i = 0; i < data.length; i++){
-			console.log('拼接字符串...')
-			var $td = $(`<tr class="infos">
-								<td>${data[i].id}</td>
-								<td>${data[i].name}</td>
-								<td>${data[i].number}</td>
-								<td>${data[i].cid}</td>
-								<td>${data[i].wechat}</td>
-								<td>${data[i].qq}</td>
-							</tr>`)
-			$('table.find-table').append($td)
-		}
-	}
+	/*点击增加客户编辑框的取消功能*/
+	$('.btn-add-cancel').click(function () {
+		$('.form-add-container').hide()
+		$('.mask').hide()
+		reset_add_edit()
+	})
 
 	// 查找客户功能
     $('.search').keyup(function(event){
@@ -236,11 +304,11 @@
       		success: function(r){
       			dom_table(r)
       			console.log('查找客户...', r)
-
       		}
       	});
         }
     })
+
 
 	//重新加载所有的客户
     function load_clients(){
@@ -254,195 +322,177 @@
     			var data = JSON.parse(result)           // 解析得到的字符串为json对象
     			for(var i=0; i < data.length; i++){
 	      			var infos = $('<tr>' +
-			      					'<td>'+data[i].id+'</td>'+
+			      					'<td class="td-cid">'+data[i].id+'</td>'+
 			      					'<td>'+data[i].name+'</td>'+
 			      					'<td>'+data[i].phone+'</td>'+
 			      					'<td>'+data[i].company+'</td>'+
 			      					'<td>'+data[i].wechat+'</td>'+
 			      					'<td>'+data[i].qq+'</td>'+
 			      					'<td>'+data[i].email+'</td>'+
-			      					'<td><button class="edit">编辑</button></td>'+
+			      					'<td><button class="edit btn btn-info">修改</button></td>'+
 								'/tr>')
 
-      				$('.clients').append(infos)
+      				$('table.client').append(infos)
 				}
     		}
         	//console.log('是否执行了...')
     	})
     }
 
-	//如果有多个号码, 那么就新建多个input标签
-	function spilt_infos(str, className) {						// str是页面上数据, className是弹窗上的class
-		var array_count = str.split(',')
-		//console.log(phones)
-		console.log('分解多个号码', array_count)
-		if (array_count.length > 1) {
-		    $('.in-'+className)[0].value = array_count[0]
-			for (var i = 0; i < array_count.length-1; i++){		// 如果存在多个,那么先加一个<input>
-			    console.log('看了几次', array_count.length, i)
-				var $info = $('<input type="" name="" class="in-'+className+'" value="'+array_count[i+1]+'" />')
-				$('.'+className).append($info)
+    //表格中的数据，生成多个联系方式input模板
+    function template_input(name, info){
+    var t = `
+    <div class="new_ipt">
+        <label for="inputPassword3" class="col-sm-2 control-label">${name}</label>
+        <div class="input-group col-sm-8">
+            <input type="email" class="form-control ipt-${name}" id="inputPassword3" value="${info}" placeholder="">
+        </div>
+    </div>
+    `
+    return t
+}
+
+	// 有多个信息, 那么就新建多个input标签
+	function spilt_infos(str, className){
+		var infos = str.split(',')
+		if(infos.length > 1){
+			$('.ipt-'+className)[0].value = infos[0]					//将第一个信息加到原本的input中
+			for (var i = 0; i < infos.length-1; i++){					//将第二个+信息加到新生成的input中
+				var ipt = template_input(className, infos[i+1])
+				$('.form-'+className).append(ipt)
 			}
 			return false
-		}else if (array_count.length === 1) {
+		}else if(infos.length === 1){
 			return true
 		}
 	}
 
-    // 编辑客户信息
-    $('body').on('click', '.edit', function(){						// 动态生成的节点要用on方式
+	// 恢复编辑弹窗原样
+	function reset_edit(){
+		log('编辑框的取消按钮')
+		$('.new_ipt').remove()						// 去除动态生成的input
+		var ipts = $('.form-container input.form-control')				// 清空数据
+		for(var i = 0; i < ipts.length; i++){
+			ipts[i].value = ""
+		}
+	}
+
+	// 重置增加客户弹窗编辑框
+	function reset_add_edit(){
+		var add_ipts = $('.form-add-container input.form-control')
+		for(var i = 0; i < add_ipts.length; i++){
+			add_ipts[i].value = ""
+		}
+	}
+
+    // 编辑客户信息按钮，将表格中的信息填入编辑弹窗中
+    $('body').on('click', '.edit', function(){							// 动态生成的节点要用on方式
+    	log('点击编辑按钮...')
+		// $('form-container').show()
     	var tds = $(this).parent().siblings()
-        $('.in-cid')[0].value = tds[0].innerText              //拿到当前的序列,左边都是0，右边是表格的序列。应该隐藏的序列
-    	$('.in-name')[0].value = tds[1].innerText						// 将姓名填入其中
+        $('.ipt-id')[0].value = tds[0].innerText              			//拿到当前的序列
+
+    	$('.ipt-name')[0].value = tds[1].innerText						// 将姓名填入其中
 
 		var is_one_phone = spilt_infos(tds[2].innerText, 'phone') 		// 将多个号码填入其中
 		if (is_one_phone) {
-			$('.in-phone')[0].value = tds[2].innerText
+			$('.ipt-phone')[0].value = tds[2].innerText
 		}
 
-		$('.in-gs')[0].value = tds[3].innerText
+		$('.ipt-gs')[0].value = tds[3].innerText								// 将公司名填入其中
 
 		var is_one_wechat = spilt_infos(tds[4].innerText, 'wechat') 		// 将多个wechat填入其中
 		if (is_one_wechat) {
-			$('.in-wechat')[0].value = tds[4].innerText
+			$('.ipt-wechat')[0].value = tds[4].innerText
 		}
 
 		var is_one_qq = spilt_infos(tds[5].innerText, 'qq') 				// 将多个qq填入其中
 		console.log(tds[5].innerText)
 		if (is_one_qq) {
-			$('.in-qq')[0].value = tds[5].innerText
+			$('.ipt-qq')[0].value = tds[5].innerText
 		}
 
 		var is_one_email = spilt_infos(tds[6].innerText, 'email') 			// 将多个邮箱填入其中
 		if (is_one_email) {
-			$('.in-email')[0].value = tds[6].innerText
+			$('.ipt-email')[0].value = tds[6].innerText
 		}
-		$('#tc').show()
+		$('.form-container').show()
+		$('.mask').show()
+
 	})
 
-	/*给添加按钮增加事件*/
-	$('#tc').on('click', '.add-phone', function(){
-			console.log('点击增加phone...')
-			var $phone = $('<input type="" name="" class="in-phone" value="" placeholder="输入手机号码" />')
-			$('.phone').append($phone)
-	})
-	$('#tc').on('click', '.add-wechat', function(){
-		console.log('点击增加wechat...')
-		var $wechat = $('<input type="" name="" class="in-wechat" value="" placeholder="输入微信" />')
-		$('.wechat').append($wechat)
-	})
-	$('#tc').on('click', '.add-qq', function(){
-		console.log('点击增加qq...')
-		var $qq = $('<input type="" name="" class="in-qq" value="" placeholder="输入客户qq" />')
-		$('.qq').append($qq)
-	})
-	$('#tc').on('click', '.add-email', function(){
-		console.log('点击增加email...')
-		var $email = $('<input type="" name="" class="in-email" value="" placeholder="输入邮箱" />')
-		$('.email').append($email)
+	// 编辑弹窗的取消按钮，将数据清空以及将动态生成的input去掉，
+	// 隐藏编辑弹窗，去掉遮罩层,dispaly设为none;
+	$('.btn-cancel').click(function () {
+		log('编辑框的取消按钮')
+		$('.new_ipt').remove()						// 去除动态生成的input
+		var ipts = $('.form-container input.form-control')				// 清空数据
+		for(var i = 0; i < ipts.length; i++){
+			ipts[i].value = ""
+		}
+		$('.form-container').hide()
+		$('.mask').css('display', 'none')			// 去掉遮罩层,dispaly设为none
 	})
 
-    function splitLast(str) {
+	// 整理表格数据，去除最后一个,
+    function del_last(str) {
         var last_index = str.lastIndexOf(',')
-        var new_str = str.slice(0, last_index)
-        return new_str
+		return str.slice(0, last_index)
     }
 
-	//给确认按钮加上点击事件, 拿到所有的信息， 发送ajax请求，载入所有修改好的客户信息
-	$('#tc').on('click', '#bt-confirm', function(){
-        var cid = $('.in-cid').val()
-		var c_name = $('.in-name').val()					//客户姓名
-
-		var c_phones =  ''
-		var $in_phones = $('.in-phone')
-
-		var c_gs = $('.in-gs').val()
-
-		var c_wechats = ''
-		var $in_wechats = $('.in-wechat')
-
-		var c_qqs = ''
-		var $in_qqs = $('.in-qq')
-
-		var c_mails = ''
-		var $in_emails = $('.in-email')
-
-		for (var i = 0; i<$in_phones.length; i++){
-			console.log($in_phones[i].value)
-			c_phones += $in_phones[i].value+','
+    // 拿到输入框中的多个信息,拼接成字符串
+	function get_ipt_info(ipt){
+		var one_ipt_info = ''
+		for (var i = 0; i<ipt.length; i++){
+			//console.log(ipt[i].value)
+			one_ipt_info += ipt[i].value+','
 		}
+		one_ipt_info = del_last(one_ipt_info)
 
-		console.log('电话号码', c_phones)
+		return one_ipt_info
+	}
 
-		for (var i = 0; i < $in_wechats.length; i++){               // 拿到input输入框中的所有信息
-			console.log('拿到输入框中的', $in_wechats[i].value)
-			c_wechats += $in_wechats[i].value+','
-		}
-		console.log('微信号码', c_wechats)
+	//给确认按钮加上点击事件, 拿到所有的信息， 发送ajax请求，载入所有修改好的客户信息。最后隐藏编辑弹窗
+	$('body').on('click', '.btn-confirm', function(){
+        var cid = $('.ipt-id').val()
+		log('id号', cid)
+		var c_name = $('.ipt-name').val()					// 客户姓名
+		log('姓名', c_name)
+		var $in_phones = $('.ipt-phone')
+		var c_phones =  get_ipt_info($in_phones)			// 电话号码
 
-		for (var i = 0; i < $in_qqs.length; i++){
-			console.log($in_qqs[i].value)
-			c_qqs += $in_qqs[i].value+','
-		}
-		console.log('qq号码', c_qqs)
+		var c_gs = $('.ipt-gs').val()						// 公司
 
-		for (var i = 0; i < $in_emails.length; i++){
-			console.log($in_emails[i].value)
-			c_mails += $in_emails[i].value+','
-		}
-		console.log('邮箱', c_mails)
+		var $in_wechat = $('.ipt-wechat')
+		var c_wechats =  get_ipt_info($in_wechat)			// 微信
+
+		var $in_qqs = $('.ipt-qq')
+		var c_qqs =  get_ipt_info($in_qqs)					//qq
+		log('编辑框中的qq', c_qqs)
+
+		var $in_emails = $('.ipt-email')
+		var c_emails =  get_ipt_info($in_emails)			// 邮箱
 
 		var client_info = {}						// 将信息加入一个字典
 		client_info.c_cid = cid
 		client_info.c_name = c_name
-		client_info.c_phones = splitLast(c_phones)
+		client_info.c_phones = c_phones
 		client_info.c_gs = c_gs
-		client_info.c_wechats = splitLast(c_wechats)
-		client_info.c_qqs = splitLast(c_qqs)
-		client_info.c_mails = splitLast(c_mails)
+		client_info.c_wechats = c_wechats
+		client_info.c_qqs = c_qqs
+		client_info.c_mails = c_emails
 		console.log('客户所有信息', client_info)
 
-		$('#tc').hide()
+		// $('#tc').hide()
 		// 发送ajax请求
-		ajax_save(client_info)				// 修改完之后重新载入所有用户
-		$('#tc').html(`<div class="cid" style="display: none">
-			                <span id="">序列</span>
-			            <input name="" class="in-cid" value=""/>
-		               </div>
-		               <div class="name">
-						<span id="">姓名</span>
-							<input type="" name="" class="in-name" value="" placeholder="输入姓名" />
-						</div>
-						<div class="phone">
-							<span id="">手机号码</span>
-							<button class="add-phone">新增</button>
-                            <input type="" name="" class="in-phone" value="" placeholder="输入手机号码" />
-						</div>
-						<div class="gs">
-							<span id="">客户公司</span>
-							<input type="" name="" class="in-gs" value="" placeholder="输入客户公司" />
-						</div>
-						<div class="wechat">
-							<span id="">客户微信</span>
-							<button class="add-wechat">新增</button>
-							<input type="" name="" class="in-wechat" value="" placeholder="输入微信" />
-						</div>
-						<div class="qq">
-							<span id="">客户qq</span>
-							<button class="add-qq">新增</button>
-							<input type="" name="" class="in-qq" value="" placeholder="输入客户qq" />
-						</div>
-						<div class="email">
-							<span id="">客户邮箱</span>
-							<button class="add-email" >新增</button>
-							<input type="" name="" class="in-email" value="" placeholder="输入邮箱" />
-						</div>
-						<input type="button" id="bt-confirm" value="确认" style="display: block; margin: 0 auto;"/>
-		`)
+		//ajax_save(client_info)
+		reset_edit()
+		$('.form-container').hide()
+		$('.mask').css('display', 'none')			// 去掉遮罩层,dispaly设为none
 
 	})
 
-      //点击保存按钮，发送post请求，修改信息
+      //点击保存按钮，发送post请求，将新增客户信息填入数据库
     function ajax_save(data) {
       	$.ajax({
       		type:"post",
@@ -455,7 +505,10 @@
       	});
     }
 
-    load_clients()              //先载入所有的客户
-</script>
 
+    load_clients()              //先载入所有的客户
+
+
+</script>
+	<script src="../static/js/client.js"></script>
 </html>

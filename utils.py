@@ -9,6 +9,18 @@ def log(*args, **kwargs):
     dt = time.strftime(format, value)
     print(dt, *args, **kwargs)
 
+# 根据seatId找到number账号
+def getNumber(sid, Model, ws):
+    log('执行getNumber函数')
+    seat = Model.query.filter_by(number=sid).first()
+    log('找到对应的座机')
+    user = seat.user
+    log('分机对应的账号', user.number)
+    roomId = user.number  # 根据分机号找到账号
+    room = ws.get(roomId)
+    log(sid,'座机对应的的room号码', room)
+    return room
+
 
 # 给OM服务器发送一个POST请求
 def post_om(body):
@@ -30,7 +42,7 @@ def auto(vid, pid):
 
 # 用于app文件，下载录音文件
 def wget_down(Url):
-    cmd = 'wget -P %s %s --http-user=user --http-password=user' % (om_config['path'], Url)
+    cmd = 'wget -P %s %s --http-user=user --http-password=user' % (om_config['audio_path'], Url)        # 从OM的Url上下载到计算机相应的地点om_config['audio_path']
     log('执行shell命令，60s之后下载录音...', cmd)
     time.sleep(60)  # 60s之后下载录音
     subprocess.call(cmd, shell=True)  # 将录音文件下载到服务器的指定文件夹中
@@ -39,19 +51,21 @@ def wget_down(Url):
 # 用于分机优先级
 pri_list = []
 
-
+# 被引入到app.py文件中，找到分机
 def get_phone(data, idle):
     get_pri_list(data)
     count = 0
-    find_seat(data, idle, count)
+    p = find_seat(data, idle, count)
+    log('能得到的优先级最高的分机是', p)
+    return p
 
-
+# 递归，找到空闲且优先级较高的分机
 def find_seat(data, idle, count):
     # log('在find_seat()中寻找pri_list', pri_list)
     v = findMin(pri_list)
     log('最小的数字', v)
     seat = get_key(data, v)
-    log('得到的分机号码', seat, type(seat))
+    log('得到的分机号码', seat)
     if seat:  # 如果找到优先级最高的seat
         # log('空闲分组中存在的分机', idle['IDLE'])
         if seat in idle['IDLE']:  # 并且座机空闲
@@ -63,24 +77,24 @@ def find_seat(data, idle, count):
             log('第%s次迭代' % count)
             find_seat(data, idle, count)  # 递归
     else:
-        log('有优先级相同的座机，请在页面上重新选择')
+        log('有优先级相同的座机，或者无相应的空闲分机...')
 
 
-# 得到优先级列表
+# 将前端的页面设置的分机加入优先级列表
 def get_pri_list(data):
     for k, v in data.items():
         pri_list.append(v)
-        log(pri_list)
+        log('依次加入分机优先级列表', pri_list)
 
 
-# 通过value找到key,用此函数的前提是key和value必须唯一,否则返回空值
+# 通过value找到key,用此函数的前提是key和value必须唯一,否则返回空值。因此分机的优先级不可以重复
 def get_key(dict, value):
     for k, v in dict.items():
         if v == value:
             return k
 
 
-# 找到最小值
+# 找到优先级的最小值
 def findMin(list):
     if len(list):
         min = list[0]
@@ -111,12 +125,18 @@ def serialize(result):
 
 
 # 配置文件
+
 om_config = {
-    # 'om_url': 'http://192.168.1.150/xml',  # 给om发送来电转分机，post请求的地址
-    'om_url': 'https://fanyuan.tpddns.cn:1888/xml',  # 上海那边的om50,发送来电转分机请求
-    'app_record_url': 'http://106.15.44.224/audio/',  # 浏览器获取服务器录音文件的地址
-    'om_record_url': 'http://192.168.1.150/mcc/Recorder/',  # 深圳om20存储录音文件的地址
-    # 'om_record_url': 'http://101.81.125.16:2888/mcc/Recorder/',  # 上海om50存储录音文件的地址
-    'path': '/root/learngit/audio',  # 录音下载到阿里云服务器的路径
-    # 'path': 'C:/Users/86177/Documents/GitHub/flaskWeb/audio'  # 录音下载到本地电脑上的路径，也是audio的播放路径
+    # 来电转分机
+    # 'om_url': 'http://192.168.1.150/xml',  # OM20
+    'om_url': 'https://fanyuan.tpddns.cn:1888/xml',  # OM50
+
+    # 从OM服务器上下载录音文件地址
+    # 'om_record_url': 'http://192.168.1.150/mcc/Recorder/',  # OM20
+    'om_record_url': 'http://101.81.125.16:2888/mcc/Recorder/',  # OM50
+
+    # 录音下载到本地服务器
+    'audio_path': '/root/learngit/audio/',  # 阿里云服务器
+    #'audio_path': 'C:/Users/86177/Documents/GitHub/flaskWeb/audio/',  # 本地的录音文件
+
 }

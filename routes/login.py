@@ -3,33 +3,24 @@ from flask import (
     render_template,
     Blueprint,
     redirect,
-    url_for
+    url_for,
+    make_response,
+    session,
 )
 from models.user import User
-
+from utils import log
 main = Blueprint('login', __name__)
 
 
-# 做一个用户和密码的判断
+
 # 重定向到首页
 @main.route('/login', methods=['GET'])
 def login():
     if request.method == 'GET':
         return render_template('login.html')
-    # else:
-    #     print('post方式登录')
-    #     name = request.form.get('name')
-    #     number = request.form.get('number')
-    #     us['number'] = number
-    #     password = request.form.get('password')
-    #     user = User.query.filter(User.name == name, User.password == password, User.number == number).first()
-    #     if user:
-    #         print(number)
-    #         return render_template('index.html', number=number)
-    #     else:
-    #         return u'用户名或者密码错误，请确认后重新登录'
 
 
+# 根据用户的不同给予不同的数据
 @main.route('/index', methods=['GET', 'POST'])
 def index():
     if request.method == 'GET':
@@ -41,8 +32,15 @@ def index():
         number = request.form.get('number')
         password = request.form.get('password')
         user = User.query.filter(User.name == name, User.password == password, User.number == number).first()
+        # log('user role', user.role.name)
         if user:
             print(number)
+            # response = make_response(render_template('index.html', number=number))
+            # response.set_cookie('number', number)
+            # return response
+            session['number'] = number
             return render_template('index.html', number=number)
         else:
             return u'用户名或者密码错误，请确认后重新登录'
+
+

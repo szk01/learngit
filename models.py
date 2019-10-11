@@ -80,7 +80,9 @@
 #     create_uid = db.Column(db.Integer)
 #
 #     company = db.relationship('Company', primaryjoin='Role.cid == Company.id', backref='roles')
-#
+
+#     角色表目前只有客户和admin
+
 #
 # class RolePermit(db.Model):
 #     __tablename__ = 'role_permit'
@@ -91,6 +93,7 @@
 #     update_time = db.Column(db.BigInteger, nullable=False)
 #
 #     role = db.relationship('Role', primaryjoin='RolePermit.rid == Role.id', backref='role_permits')
+#     权限是基于功能，客服的功能有看自己的相应的数据
 #
 #
 # class Seat(db.Model):
