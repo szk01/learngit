@@ -8,6 +8,7 @@ from flask import (
     jsonify,
 )
 from models.record import db, Voice_record, Call_record
+from models.user import User
 from models.seat import Seat
 import time, json
 from utils import log
@@ -34,16 +35,19 @@ def formatted(cs):
 def page_cr():
     # authNumber = request.cookies.get('number')
     authNumber = session['number']
-    log('cookie', authNumber)
+    log('session', authNumber)
     content = {}
     current_page = request.args.get('page', 1, type=int)  # 从查询字符串获取当前页数  current_page是1
-    # 使用cookie进行数据隔离
+
+    user = User.query.filter_by(number=authNumber)
+    if user:  # 如果用户存在，找到对应的录音文件
+        pagination = Call_record.query.filter_by(uid=user.id).paginate(current_page, per_page=10)
+
+    # 管理员登录，显示所有的记录
     if authNumber == '10000':
         pagination = Call_record.query.paginate(current_page, per_page=10)  # 分页对象
-    elif authNumber == '10087':
-        pagination = Call_record.query.filter_by(uid = 1).paginate(current_page, per_page=10)
-    elif authNumber == '10088':
-        pagination = Call_record.query.filter_by(uid= 2).paginate(current_page, per_page=10)
+
+
     cs = pagination.items  # 当前页数的记录列表
     formatted(cs)
     # for v in cs:
@@ -65,16 +69,16 @@ def v_format(vs):
 def page_vr():
     authNumber = session['number']
     log('cookie voice', authNumber)
-    calls = []
     content = {}
-    current_page = request.args.get('page', 1, type=int)                                    # 从查询字符串获取当前页数
+    current_page = request.args.get('page', 1, type=int)  # 从查询字符串获取当前页数
+
+    user = User.query.filter_by(number=authNumber)
+    if user:                        # 如果用户存在，找到对应的录音文件
+        pagination = Voice_record.query.filter_by(uid = user.id).paginate(current_page, per_page=10)
+
     # 管理员登录，显示所有的记录
     if authNumber == '10000':
         pagination = Voice_record.query.paginate(current_page, per_page=10)                     # 分页对象
-    elif authNumber == '10087':
-        pagination = Voice_record.query.filter_by(uid = 1).paginate(current_page, per_page=10)
-    elif authNumber == '10088':
-        pagination = Voice_record.query.filter_by(uid = 2).paginate(current_page, per_page=10)
 
     vs = pagination.items  # 当前页数的记录列表
     v_format(vs)
