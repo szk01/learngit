@@ -39,7 +39,7 @@ def page_cr():
     content = {}
     current_page = request.args.get('page', 1, type=int)  # 从查询字符串获取当前页数  current_page是1
 
-    user = User.query.filter_by(number=authNumber)
+    user = User.query.filter_by(number=authNumber).first()
     if user:  # 如果用户存在，找到对应的录音文件
         pagination = Call_record.query.filter_by(uid=user.id).paginate(current_page, per_page=10)
 
@@ -72,7 +72,7 @@ def page_vr():
     content = {}
     current_page = request.args.get('page', 1, type=int)  # 从查询字符串获取当前页数
 
-    user = User.query.filter_by(number=authNumber)
+    user = User.query.filter_by(number=authNumber).first()
     if user:                        # 如果用户存在，找到对应的录音文件
         pagination = Voice_record.query.filter_by(uid = user.id).paginate(current_page, per_page=10)
 
