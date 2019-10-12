@@ -30,6 +30,7 @@ class Funcs(Process_request):
     }
 
     # 加上请求头，组成完整请求
+    # 静态方法，只限于类使用，实例是不能使用的
     @staticmethod
     def add_header(body):
         body_type = '<?xml version="1.0" encoding="utf-8" ?>\r\n'

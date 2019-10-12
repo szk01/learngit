@@ -113,6 +113,8 @@ def serialize(result):
     try:
         if isinstance(result, Iterable):
             tmp = [dict(zip(res.__dict__.keys(), res.__dict__.values())) for res in result]
+            # __dict__， 将类实例变成字典形式
+            # [{id: 1, cid: 2, ...}, {id: 2, cid: 3, ...}, {id: 3, cid: 4, ...}, {id: 4, cid: 5, ...}]
             for t in tmp:
                 t.pop('_sa_instance_state')
         else:
@@ -137,6 +139,6 @@ om_config = {
 
     # 录音下载到本地服务器
     'audio_path': '/root/learngit/audio/',  # 阿里云服务器
-    #'audio_path': 'C:/Users/86177/Documents/GitHub/flaskWeb/audio/',  # 本地的录音文件
+    # 'audio_path': 'C:/Users/86177/Documents/GitHub/flaskWeb/audio/',  # 本地的录音文件
 
 }

@@ -47,3 +47,16 @@ def changePassword():
     user.password = form.get('password')
     db.session.commit()
     return 'sucess'
+
+# 验证管理员身份，创建用户
+@main.route('/creat_user', methods=['POST', 'GET'])
+def creatUser():
+    authNumber = session['number']
+    log('creatUser authNumber', authNumber)
+    # 如果是管理员权限，可以创建一个用户
+    if authNumber == '10000':
+        form = request.form
+        log('form', form)
+        # 创建一个用户    orm对应的class，操作一个对象即可
+
+    return '123'

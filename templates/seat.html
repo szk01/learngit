@@ -54,7 +54,7 @@
         <div class="seat" style="display: inline-block">
             <div class="sn">{{seat.number}}</div>
             <p><button class="p-{{seat.number}} button-seat">拨打</button></p>
-            <p class="status">状态</p>
+            <p class="status">离线</p>
         </div>
         {%endfor%}
     </div>
@@ -65,15 +65,15 @@
 
 
     <!--第三方会议-->
-    <div>拉入第三方，进行电话会议，你是会议主持人</div>
-    {%for seat in seats%}
-    <div class="conference">
-        <div class="sn">{{seat.number}}</div>
-        <p></p>
-        <p><button class="c-{{seat.number}}">拨打</button></p>
-        <p class="p-{{seat.number}}">状态</p>
-    </div>
-    {%endfor%}
+<!--    <div>拉入第三方，进行电话会议，你是会议主持人</div>-->
+<!--    {%for seat in seats%}-->
+<!--    <div class="conference">-->
+<!--        <div class="sn">{{seat.number}}</div>-->
+<!--        <p></p>-->
+<!--        <p><button class="c-{{seat.number}}">拨打</button></p>-->
+<!--        <p class="p-{{seat.number}}">状态</p>-->
+<!--    </div>-->
+<!--    {%endfor%}-->
 
 
     <div class="blank"></div>
@@ -113,9 +113,63 @@
     </div>
 
 <script>
+    var log = console.log.bind(console)
     var url = "/"
     console.log(url);
     var socket = io.connect(url);
+
+    // 替换字符串
+    var replaceString = function (s) {
+        if (s === 'online') {
+            return '在线'
+        } else if (s === 'idle') {
+            return '空闲'
+        } else if (s === 'busy') {
+            return '忙碌'
+        }
+    }
+
+    // 主动请求分机状态
+    var phoneStatus = function() {
+        $.ajax({
+            type:"post",
+            url:"/seat_status",
+            success: function(r) {
+                var result = r
+                var seats = Object.keys(result)                 // 将字典的key组成数组
+                for (var i = 0; i < seats.length; i++) {
+                    $('.seat').each(function() {
+                        var $divNum = $(this).children('.sn').text()
+                        if(seats[i] === $divNum) {
+                            let s = seats[i]
+                            var seat = result[s]
+                            var status = replaceString(seat)
+                            $(this).children('.status').text(status)
+                        }
+                    })
+                }
+            }
+        })
+    }
+
+    phoneStatus()
+
+    // 接收分机状态的转变
+    socket.on('phone_status', function(data){
+        log('状态转变', data)
+        var number = data['id']
+        var status = data['phone_status']
+        $('.seat').each(function() {
+            var $divNum = $(this).children('.sn').text()
+            if(number === $divNum) {
+                log('num', number)
+                $(this).children('.status').text(status)
+            }
+        })
+        // var class = '-' + data['id']
+        // console.log('分机状态转变成', data['phone_status'])
+        // $('.class').text('状态'+data['phone_status'])
+    })
 
     var sp = {}
     $('.bt-priority').click(function() {
@@ -193,13 +247,6 @@
         socket.emit('hold', {'hphone': 215});
     })
 
-
-    // 接收分机状态的转变
-    socket.on('phone_status', function(data){
-        // var class = '-' + data['id']
-        // console.log('分机状态转变成', data['phone_status'])
-        // $('.class').text('状态'+data['phone_status'])
-    })
 
 
 </script>

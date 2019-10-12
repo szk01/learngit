@@ -5,11 +5,14 @@ from flask import (
     redirect,
     session,
     url_for,
+    jsonify,
 )
 from models.record import db, Voice_record, Call_record
 from models.seat import Seat
 import time, json
 from utils import log
+from allFuncs import Funcs
+
 main = Blueprint('index', __name__)
 
 
@@ -29,12 +32,13 @@ def formatted(cs):
 # 通话记录
 @main.route('/call_record')
 def page_cr():
-    authNumber = request.cookies.get('number')
-    log('cookie', request.cookies)
+    # authNumber = request.cookies.get('number')
+    authNumber = session['number']
+    log('cookie', authNumber)
     content = {}
     current_page = request.args.get('page', 1, type=int)  # 从查询字符串获取当前页数  current_page是1
     # 使用cookie进行数据隔离
-    if authNumber in '10000':
+    if authNumber == '10000':
         pagination = Call_record.query.paginate(current_page, per_page=10)  # 分页对象
     elif authNumber == '10087':
         pagination = Call_record.query.filter_by(uid = 1).paginate(current_page, per_page=10)
@@ -59,8 +63,8 @@ def v_format(vs):
 # paginate()查询函数需要两个参数，当前页面和此页面记录数
 @main.route('/voice_record')
 def page_vr():
-    authNumber = request.cookies.get('number')
-    log('cookie', request.cookies)
+    authNumber = session['number']
+    log('cookie voice', authNumber)
     calls = []
     content = {}
     current_page = request.args.get('page', 1, type=int)                                    # 从查询字符串获取当前页数
@@ -89,6 +93,39 @@ def seat():
     print('打印出分机结果集：', seats)
     content['seats'] = seats
     return render_template('seat.html', **content)
+
+# 返回分机状态
+@main.route('/seat_status', methods=['POST'])
+def status():
+    '''
+    p = {
+        'BUSY': set(),
+        'IDLE': {'213'},                    # 当前端页面设置了分机的优先级，使用此分机进行测试
+        'ONLINE': {'213'},
+        'OFFLINE': set(),
+        'pid': '213',                         # 写死的默认分机，前端没有设置分机优先的时候，使用此分机
+        'priority': {                      # 这是默认优先级，数字越小，优先级越高。这些数据并没有用，只是前台设置后的demo示例
+            '212': 1,
+            '213': 2,
+            '214': 3,
+        }
+    }
+    '''
+    data = {}
+    busy = Funcs.p['BUSY']
+    for b in busy:                          # busy是{'213', '214'} 这种集合
+        data[b] = 'busy'
+
+    idle = Funcs.p['IDLE']
+    for i in idle:                          # busy是{'213', '214'} 这种集合
+        data[i] = 'idle'
+
+    online = Funcs.p['ONLINE']
+    for o in online:                        # busy是{'213', '214'} 这种集合
+        data[o] = 'online'
+
+    log('data', data)
+    return jsonify(data)
 
 
 # 删除记录

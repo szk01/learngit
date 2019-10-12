@@ -9,8 +9,8 @@ from flask import (
 )
 from models.user import User
 from utils import log
-main = Blueprint('login', __name__)
 
+main = Blueprint('login', __name__)
 
 
 # 重定向到首页
@@ -20,7 +20,7 @@ def login():
         return render_template('login.html')
 
 
-# 根据用户的不同给予不同的数据
+# 登录 根据用户的不同给予不同的数据
 @main.route('/index', methods=['GET', 'POST'])
 def index():
     if request.method == 'GET':
@@ -28,10 +28,10 @@ def index():
         return redirect(url_for('.login'))
     else:
         print('post方式登录')
-        name = request.form.get('name')
         number = request.form.get('number')
         password = request.form.get('password')
-        user = User.query.filter(User.name == name, User.password == password, User.number == number).first()
+        # query.first()这些方法
+        user = User.query.filter(User.password == password, User.number == number).first()
         # log('user role', user.role.name)
         if user:
             print(number)

@@ -6,7 +6,7 @@ from . import db
 class Ccompany(db.Model):
     __tablename__ = 'ccompany'
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)                    # 这些变量不是结果集，而是查询集
     nam = db.Column(db.String(50), nullable=False)
     principle_name = db.Column(db.String(10))
     area = db.Column(db.String(50))
@@ -14,6 +14,7 @@ class Ccompany(db.Model):
     email = db.Column(db.String(50))
     wechat = db.Column(db.String(50))
     phone = db.Column(db.String(50))
+
 
 
 class Client(db.Model):
@@ -28,4 +29,10 @@ class Client(db.Model):
     email = db.Column(db.String(50), server_default=db.FetchedValue())
 
     ccompany = db.relationship('Ccompany', primaryjoin='Client.cid == Ccompany.id', backref='clients')
+
+    # 实例化对象后，使用的函数
+    # 实例 client = Client.query.filter_by(...)
+    # client.logId()
+    def logId(self):
+        print(self.id)
 

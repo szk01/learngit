@@ -65,6 +65,8 @@ def audio(name, datatime):                                               # 所�
     log('传输音频文件完成...')
     return Response(gen_audio(), mimetype="audio/mpeg3")
 
+# 钩子函数，任何请求之前，如果没有登录机返回登录页面
+
 
 # 发送电话会议的请求
 def post_om(body):
@@ -100,7 +102,7 @@ def send(data):
     sid = request.sid           # io的客户端，用来标识唯一客户端。也是会话id
     ws[data] = sid
     log('查看ws字典', ws)
-    room = getNumber('214', Seat, ws)           # 214不可以写死
+    room = getNumber('213', Seat, ws)           # 213不可以写死
     socketio.emit(event='test_room', data='connected', room=room)  # 私聊的功能
 
 

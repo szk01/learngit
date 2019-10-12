@@ -17,15 +17,29 @@
             left: 500px;
             top: 300px;
             width: 500px;
+            display: none;
+        }
+        .form-creatUser {
+            width: 400px;
+            display: inline-block;
+            border: #e0d2d2 0.05px solid;
+            border-radius: 10px;                    /*这个border-radius对border无效，对box-shadow有效*/
+            padding: 20px 20px 20px 20px;
+            box-shadow: 7px 0px 10px 4px #908c8c;
+            top: 100px;
+            margin: 50px;
+        }
+
+         /*账号没有填*/
+        .ipt-account:invalid{
+
         }
     </style>
 </head>
 <body>
     {% include 'include_base.html' %}
     <!--账号信息显示-->
-    <div class="content">
-        <div class=" user_info">
-            <div class="col-sm-3 col-md-2">
+            <div class="col-sm-3 col-md-2">            <!--浏览器的 display: block-->
                 <div class="thumbnail">
                     <img src="../images/default_img.gif" alt="default img" style="width: 50px; height:50px">
                     <div class="caption">
@@ -65,35 +79,102 @@
                     </div>
                 </div>
             </form>
-            
+
+        <!--admin增加一个user-->
+        <div class="border"></div>
+            <form class="form-creatUser">
+                <div class="form-group">
+                    <label >账号</label>
+                    <input type="text" class="form-control ipt-account"  placeholder="Account" required>    <!--required为必填项-->
+                </div>
+                <div class="form-group">
+                    <label >用户名</label>
+                    <input type="text" class="form-control ipt-user"  placeholder="userName" required>
+                </div>
+                <div class="form-group">
+                    <label >所属公司</label>
+                    <select class="form-control select-gs">
+                        <option value="shanghai">上海:shanghai</option>
+                        <option value="shengzhen">深圳:shengzhen</option>
+                        <option value="guangxi">广西（崇左）:guangxi</option>
+                        <option value="yuenan">越南:yuenan</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label >密码</label>
+                    <input type="password" class="form-control ipt-password"  placeholder="Password" required>
+                </div>
+                <div class="form-group">
+                    <label >确认密码</label>
+                    <input type="password" class="form-control ipt-confirmPassword"  placeholder="confirmPassword" required>
+                </div>
+                <div class="form-group">
+                    <label >关联分机号码</label>
+                    <input type="text" class="form-control ipt-seat"  placeholder="seatNumber" required>
+                </div>
+              <button type="button" class="btn btn-default btn-creatUser">创建用户</button>
+            </form>
         </div>
-
-    </div>
-
-<!--        修改信息窗口-->
-<!--    <div class="class-change-info" style="float: left; display: none;">-->
-<!--        <div class="input-group">-->
-<!--            <span class="input-group-addon" id="basic-addon1">@</span>-->
-<!--            <input type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1">-->
-<!--        </div>-->
-<!--    </div>-->
-
 
 
     <script>
         var log = console.log.bind(console)
+
+        // admin创建用户，前端验证
+        $('.btn-creatUser').click(function () {
+            var p1 = $('.ipt-password').val()
+            var p2 = $('.ipt-confirmPassword').val()
+            if (p1 !== p2) {
+                alert('请确认两次密码相同...')
+                return
+            }
+            var data = {}
+            var account = $('.ipt-account').val()
+            var userName = $('.ipt-user').val()
+            var password = $('.ipt-password').val()
+            var seatNumber = $('.ipt-seat').val()
+            var gs = $('.select-gs').find('option:selected').val()
+
+            data.account = account
+            data.username = userName
+            data.password = password
+            data.seatNumber = seatNumber
+            data.gs = gs
+            log('a, u, s', account, userName, seatNumber)
+            // h5的required验证不完整，直接先用js验证
+            if (account === ""  || userName === "" || seatNumber === "") {
+                alert('请将信息填完整，全部为必填项')
+                 return;
+            }
+            log('data数据', data)
+
+            $.ajax({
+                type:"post",
+                url:"/creat_user",
+                data:data,
+                success: function(r) {
+                    alert('创建用户成功')
+                    //$('.form-creatUser').hide()                 // 隐藏创建用户表单
+                }
+      	    })
+            log('data', data)
+        })
+
+
         // 前端验证，提交修改密码
         $('button.submit-change_info').click(function () {
             var p1 = $('.class-p1').val()
             var p2 = $('.class-p2').val()
             if (p1 !== p2) {
                 alert('请保证两次密码相同')
+                return;                                         // 终止函数的执行
             }
             var account = $('.span-account').text()
             console.log('account', account)
             var ipt_acount = $('.class-account').val()
             if(account !== ipt_acount) {
                 alert('请输入正确账号')
+                return;                                         // 终止函数的执行
             }
             var d = {}
             d.account = account
