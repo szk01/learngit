@@ -30,9 +30,9 @@ def index():
         print('post方式登录')
         number = request.form.get('number')
         password = request.form.get('password')
-        # query.first()这些方法
-        user = User.query.filter(User.password == password, User.number == number).first()
-        # log('user role', user.role.name)
+        log('n p', number, password)
+        user = User.query.filter_by(password=password, number=number).first()
+        log('user', user)
         if user:
             print(number)
             # response = make_response(render_template('index.html', number=number))
