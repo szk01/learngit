@@ -39,12 +39,12 @@ class Funcs(Process_request):
 
     # 添加通话记录到mysql数据库
     @staticmethod
-    def sql_addCallRecord(cr):
+    def sql_addCallRecord(cr, uid):
         log('静态方法，添加通话记录')
         log('打印传过来的字典', cr)
         call_record = Call_record(phone=cr['phone'], name=cr['name'], type=cr['type'],
                                   start_time=Funcs.time['start_time'], on_time=Funcs.time['on_time'],
-                                  end_time=Funcs.time['end_time'], uid=cr['uid'],
+                                  end_time=Funcs.time['end_time'], uid=uid,
                                   )
         Funcs.time['start_time'] = None
         Funcs.time['on_time'] = None
@@ -56,9 +56,9 @@ class Funcs(Process_request):
 
     # 添加录音记录到mysql数据库
     @staticmethod
-    def sql_addVoiceRecord(vr):
+    def sql_addVoiceRecord(vr, uid):
         voice_record = Voice_record(name=vr['name'], url=vr['url'], play_count=vr['play_count'],
-                                    down_count=vr['down_count'], uid=vr['uid']
+                                    down_count=vr['down_count'], uid=uid
                                     )
         db.session.add(voice_record)
         log('在数据库加入一条录音记录...')
@@ -163,7 +163,7 @@ class Funcs(Process_request):
 
     # 通话结束后，拿到录音的相对路径，下载录音到服务器上，返回来电号码
     def recording(self):
-        global play_path, omUrl, pid, uid               # 为防止python解释器无法解释到底是局部变量还是全局变量
+        global play_path, omUrl, pid               # 为防止python解释器无法解释到底是局部变量还是全局变量
         global record_name
         try:
             event = self.getRoot()
@@ -177,42 +177,43 @@ class Funcs(Process_request):
                 recording = event.find('Recording')
                 record_name = recording.text  # 语音文件名字
                 pid = event.find('CDPN').text  # 分机号
-                if pid == '213':
-                    uid = 1
-                elif pid == '214':
-                    uid = 2
+
                 play_path = 'audio/' + record_name
                 omUrl = om_config['om_record_url'] + record_name  # 存储在om上的录音文件地址，给wget下载
                 log('完整路径：', omUrl)
         except:
             pass
         else:
-            cr = {  # 通话记录
+            r = {}
+            cr = {  # 通话记录，传到app.py文件中，加上文件
                 "phone": number,
                 "name": "未知",
                 "type": 1,
-                "uid": uid,
+
             }
 
-            vr = {  # 录音记录
+            vr = {  # 录音记录，
                 "name": record_name,
                 "url": play_path,
                 "play_count": 0,
                 "down_count": 0,
-                "uid": uid,
+
             }
 
-            ws = {  # 发送给ws客户端的消息
+            ws = {  # 发送给ws客户端的消息，传到app.py文件中，传给网页客户端
                 "status": "Cdr",
                 "number": number,
                 "downPath": omUrl,
                 "play": play_path,
-                "pid": pid,
+                "pid": pid,                     # 分机号
             }
+            r['cr'] = cr
+            r['vr'] = vr
+            r['ws'] = ws
             Funcs.sql_addCallRecord(cr)  # 添加通话记录
             Funcs.sql_addVoiceRecord(vr)  # 添加录音记录
             log('发送消息')
-            return ws
+            return r
 
     #OM重启会配置满意度调查音乐
     def assign(self):

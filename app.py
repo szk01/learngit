@@ -16,7 +16,7 @@ from allFuncs import Funcs
 from models.user import db
 from models import config
 from werkzeug.routing import BaseConverter
-from utils import get_phone, auto, getNumber
+from utils import get_phone, auto, getNumber, get_uid
 from extension import login_manager
 from models.seat import Seat
 # 先要初始化一个 Flask 实例，并将Flask-SocketIO添加到Flask应用程序
@@ -175,19 +175,24 @@ def extcute_body(body):
             seatId = body['pid']                        # seatId是分机号
             room = getNumber(seatId, Seat, ws)
             socketio.emit(event='ring', data=body, room=room)
-        elif body["status"] == 'Cdr':  # 通话结束，发送Cdr话单，包含录音文件的路径
+
+        elif body['ws']["status"] == 'Cdr':  # 通话结束，发送Cdr话单，包含录音文件的路径
             log('通话结束，停止计时')
-            seatId = body['pid']
+            seatId = body['ws']['pid']
             room = getNumber(seatId, Seat, ws)
+            uid = get_uid(Seat, body['ws']['pid'])
+            Funcs.sql_addCallRecord(body['cr'], uid)                 # 添加通话记录
+            Funcs.sql_addVoiceRecord(body['vr'], uid)                 # 添加录音记录
             socketio.emit(event='off', data=body, room=room)
-            # socketio.emit(event='ring', data=body, room=ws.get(cid))
-            wget_down(body['downPath'])
+            wget_down(body['ws']['downPath'])                     # 下载录音
+
         elif body["status"] == 'ANWSER':  # 分机应答，让计时器开始计时
             log('通话建立')
             seatId = body['pid']
             room = getNumber(seatId, Seat, ws)
             socketio.emit(event='anwser', data=body, room=room)
             # socketio.emit(event='anwser', data=body, room=ws.get(data))
+
         elif body['status'] == 'Transfer':              # 来电转分机请求
             log('发送来电转分机请求')
             ws['tran_id'] = body['vid']             # 将来访者id写入ws字典，供满意度调查按钮使用

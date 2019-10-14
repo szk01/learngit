@@ -9,7 +9,7 @@ def log(*args, **kwargs):
     dt = time.strftime(format, value)
     print(dt, *args, **kwargs)
 
-# 根据seatId找到number账号
+# 根据seatId找到number账号,根据number账号找到room房间号
 def getNumber(sid, Model, ws):
     log('执行getNumber函数')
     seat = Model.query.filter_by(number=sid).first()
@@ -21,6 +21,11 @@ def getNumber(sid, Model, ws):
     log(sid,'座机对应的的room号码', room)
     return room
 
+# 根据座机号，找到对应的用户id
+def get_uid(Model, pid):
+    seat = Model.query.filter_by(uid=pid).first()
+    uid = seat.uid
+    return uid
 
 # 给OM服务器发送一个POST请求
 def post_om(body):
