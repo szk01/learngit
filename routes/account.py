@@ -9,6 +9,7 @@ from flask import (
 import time, json
 from utils import log
 from models.user import User, db
+from models.seat import Seat
 main = Blueprint('account', __name__)
 
 # 这些都是显示用户信息
@@ -28,12 +29,10 @@ def manageAccount():
     elif role == 2:
         userInfo["user_role"] = '管理员'
 
-    if number == '10087':
-        userInfo["user_seat"] = '213'
-    elif number == '10088':
-        userInfo["user_seat"] = '214'
-    elif number == '10089':
-        userInfo["user_seat"] = '215'                  # 工号
+    # 拿到账号对应的分机号码
+    uid = user.id
+    seat = Seat.query.filter_by(uid=uid).first()
+    userInfo['user_seat'] = seat.number
 
     return render_template('manage_account.html', **userInfo)
 

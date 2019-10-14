@@ -69,6 +69,7 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     cid = db.Column(db.ForeignKey('company.id'), index=True)
     rid = db.Column(db.ForeignKey('role.id'), index=True)
+    clid = db.Column(db.ForeignKey('client.id'), index=True)
     create_uid = db.Column(db.Integer)
     status = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue())
     type = db.Column(db.Integer)
@@ -82,3 +83,4 @@ class User(db.Model, UserMixin):
 
     company = db.relationship('Company', primaryjoin='User.cid == Company.id')
     role = db.relationship('Role', primaryjoin='User.rid == Role.id')
+    client = db.relationship('Client', primaryjoin='User.clid == Client.id')

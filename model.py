@@ -147,7 +147,7 @@
 #     login_ip = db.Column(db.String(20))
 #     login_time = db.Column(db.BigInteger)
 #
-#     company = db.relationship('Company', primaryjoin='User.cid == Company.id')
+#     company = db.relationship('Company', primaryjoin='User.cid == Company.id')     通过外键找到主表
 #     client = db.relationship('Client', primaryjoin='User.clid == Client.id')
 #     role = db.relationship('Role', primaryjoin='User.rid == Role.id')
 #

@@ -8,6 +8,7 @@ from flask import (
     url_for,
 )
 from models.client import db, Client
+from models.user import User
 import time, json
 from utils import log, serialize
 main = Blueprint('client', __name__)
@@ -18,19 +19,27 @@ main = Blueprint('client', __name__)
 def client_page():
     content = {}
     infos =[]
-    cliets = Client.query.all()
-    for c in cliets:  # c是model对象，使用.取就行
-        log('取到的客户记录', c.id, c.cid, c.number, c.name, c.qq, c.wechat, c.email)
-        client = dict(
-            id = c.id,
-            name = c.name,
-            phone = c.number,
-            company = c.cid,
-            wechat = c.wechat,
-            qq = c.qq,
-            email = c.email,
-        )
-        infos.append(client)
+    number = session['number']
+    user = User.query.filter_by(number=number).first()
+    log('user', user)
+    clients = Client.query.filter_by(clid=user.id).all()
+
+    if clients:
+        for c in clients:
+            log('取到的客户记录', c.id, c.cid, c.number, c.name, c.qq, c.wechat, c.email)
+            client = dict(
+                id = c.id,
+                name = c.name,
+                phone = c.number,
+                company = c.cid,
+                wechat = c.wechat,
+                qq = c.qq,
+                email = c.email,
+            )
+            infos.append(client)
+    else:
+        log('the user has no clients')
+
     content['c_info'] = infos
     log(content)
     return render_template('client.html', **content)
@@ -39,21 +48,27 @@ def client_page():
 # 给ajax发送请求的数据。取消按钮，发送json数据
 @main.route('/load_clients', methods=['POST'])
 def load_clients():
+    number = session['number']
+    user = User.query.filter_by(number=number).first()
     log('改动客户信息就重新加载所有客户的信息...')
     cs = []
-    cliets = Client.query.all()
-    for c in cliets:  # c是model对象，使用.取就行
-        log('取到的客户记录', c.id, c.cid, c.number, c.name, c.qq, c.wechat, c.email)
-        client = dict(
-            id = c.id,
-            name = c.name,
-            phone = c.number,
-            company = c.cid,
-            wechat = c.wechat,
-            qq = c.qq,
-            email = c.email,
-        )
-        cs.append(client)
+    clients = user.client
+    if clients:
+        for c in clients:  # c是model对象，使用.取就行
+            log('取到的客户记录', c.id, c.cid, c.number, c.name, c.qq, c.wechat, c.email)
+            client = dict(
+                id = c.id,
+                name = c.name,
+                phone = c.number,
+                company = c.cid,
+                wechat = c.wechat,
+                qq = c.qq,
+                email = c.email,
+            )
+            cs.append(client)
+    else:
+        log('the user has no clients')
+
     # 将其转换成json的字符串
     json_cs = json.dumps(cs)
     # log('后台发送的json格式的字符串', json_cs)

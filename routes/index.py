@@ -73,7 +73,8 @@ def page_vr():
     current_page = request.args.get('page', 1, type=int)  # 从查询字符串获取当前页数
 
     user = User.query.filter_by(number=authNumber).first()
-    if user:                        # 如果用户存在，找到对应的录音文件
+    # 如果用户存在，找到对应的录音文件
+    if user:
         pagination = Voice_record.query.filter_by(uid = user.id).paginate(current_page, per_page=10)
 
     # 管理员登录，显示所有的记录
@@ -97,6 +98,7 @@ def seat():
     print('打印出分机结果集：', seats)
     content['seats'] = seats
     return render_template('seat.html', **content)
+
 
 # 返回分机状态
 @main.route('/seat_status', methods=['POST'])
