@@ -123,7 +123,7 @@
         console.log('结束通话...')
         if (data["status"] === 'Cdr') {
             $('.status').text('通话已结束');
-            $('.call-note-container').hide()                           // 隐藏弹窗
+            $('.class-note').hide()                           // 隐藏弹窗
             clearInterval(window.inter)
             window.count = 0                                            //计数清零
             var s = show(count)
