@@ -58,18 +58,18 @@
     }
 
     // 生成来电弹窗模板
-    function add_note() {
-        console.log('加上来电通知...')
-        var note = `
-            <div class="call-note-container" style="position:fixed; width:500px; height:250px; top:300px; left: 500px; background-color: antiquewhite ">
-                <button class="close">关闭</button>
-                <div class="call-number" style="font-size: 20px; text-align:center; margin: 30px 30px; color:red;">来电号码</div>
-                <div class="time" style="font-size: 20px; text-align:center; margin: 30px 30px;">通话时间</div>
-                <div class="status" style="font-size: 20px; text-align:center; margin: 30px 30px;">状态</div>
-		    </div>
-        `
-        return note
-    }
+    // function add_note() {
+    //     console.log('加上来电通知...')
+    //     var note = `
+    //         <div class="call-note-container" style="position:fixed; width:500px; height:250px; top:300px; left: 500px; background-color: antiquewhite ">
+    //             <button class="close">关闭</button>
+    //             <div class="call-number" style="font-size: 20px; text-align:center; margin: 30px 30px; color:red;">来电号码</div>
+    //             <div class="time" style="font-size: 20px; text-align:center; margin: 30px 30px;">通话时间</div>
+    //             <div class="status" style="font-size: 20px; text-align:center; margin: 30px 30px;">状态</div>
+	// 	    </div>
+    //     `
+    //     return note
+    // }
 
     // 获取到cookie
     function getCookie(cname) {
@@ -90,14 +90,6 @@
     socket.on('connect', function() {
         var cookie = getCookie('session')
         console.log('js获取的cookie是', cookie)   // 找到工号，判断相应的分机号
-        // if (cookie === '10087') {
-        //     console.log('true or false', cookie === '10087')
-        //     var userid = '213'                  // 本地开发
-        //     // var userid = '221'               // 给上海使用
-        // }else if (cookie === '10088') {
-        //     var userid = '214'                   //本地开发
-        //     // var userid = '222'                      //给上海使用
-        // }
         console.log('发送给应用服务器的id是', cookie)
         socket.emit('login', cookie);
     });                                                          // 这些都是套路函数，建立通道，发送提示消息
@@ -110,7 +102,7 @@
     socket.on("ring", function(data) {                         // 有电话拨打进来，显示来电号码
         var t = add_note()                                              // 加上新版弹窗
         console.log('有来电...')
-        $('.class-note').append(t)
+        $('.class-note').show()
 
         $('.call-number').text('来电号码'+data["number"])
         $('.status').text('呼叫中')

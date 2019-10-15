@@ -102,8 +102,8 @@ def send(data):
     sid = request.sid           # io的客户端，用来标识唯一客户端。也是会话id
     ws[data] = sid
     log('查看ws字典', ws)
-    room = getNumber('213', Seat, ws)           # 213不可以写死
-    socketio.emit(event='test_room', data='connected', room=room)  # 私聊的功能
+    # room = getNumber('213', Seat, ws)           # 213不可以写死
+    # socketio.emit(event='test_room', data='connected', room=room)  # 私聊的功能
 
 
 # 电话会议
@@ -168,32 +168,35 @@ def extcute_body(body):
     #     log('发送给OM来电转分机请求')
     #     reqestOM(body)
     if isinstance(body, dict):
-        if body["status"] == "RING":  # 有电话接入call-in，客户端显示页面
+
+        if body.get("status") == "RING":  # 有电话接入call-in，客户端显示页面
             log(body["number"])
             log('有电话接入，显示弹窗')
-            # socketio.emit(event="ring", data=body)
+
             seatId = body['pid']                        # seatId是分机号
             room = getNumber(seatId, Seat, ws)
             socketio.emit(event='ring', data=body, room=room)
 
-        elif body['ws']["status"] == 'Cdr':  # 通话结束，发送Cdr话单，包含录音文件的路径
-            log('通话结束，停止计时')
-            seatId = body['ws']['pid']
-            room = getNumber(seatId, Seat, ws)
-            uid = get_uid(Seat, body['ws']['pid'])
-            Funcs.sql_addCallRecord(body['cr'], uid)                 # 添加通话记录
-            Funcs.sql_addVoiceRecord(body['vr'], uid)                 # 添加录音记录
-            socketio.emit(event='off', data=body, room=room)
-            wget_down(body['ws']['downPath'])                     # 下载录音
+        elif isinstance(body.get('ws'), dict):
+            log('通话结束传过来的body', body)
+            if body['ws']['status'] == 'Cdr':
+                # 通话结束，发送Cdr话单，包含录音文件的路径
+                log('通话结束，停止计时')
+                seatId = body['ws']['pid']
+                room = getNumber(seatId, Seat, ws)
+                uid = get_uid(Seat, int(seatId))
+                Funcs.sql_addCallRecord(body['cr'], uid)                 # 添加通话记录
+                Funcs.sql_addVoiceRecord(body['vr'], uid)                 # 添加录音记录
+                socketio.emit(event='off', data=body['ws'], room=room)
+                wget_down(body['ws']['downPath'])                     # 下载录音
 
-        elif body["status"] == 'ANWSER':  # 分机应答，让计时器开始计时
+        elif body.get("status") == 'ANWSER':  # 分机应答，让计时器开始计时
             log('通话建立')
             seatId = body['pid']
             room = getNumber(seatId, Seat, ws)
             socketio.emit(event='anwser', data=body, room=room)
-            # socketio.emit(event='anwser', data=body, room=ws.get(data))
 
-        elif body['status'] == 'Transfer':              # 来电转分机请求
+        elif body.get("status") == 'Transfer':              # 来电转分机请求
             log('发送来电转分机请求')
             ws['tran_id'] = body['vid']             # 将来访者id写入ws字典，供满意度调查按钮使用
             if setting_phone['pid']:                # 如果设置分机的优先级，使用优先分机
@@ -201,7 +204,8 @@ def extcute_body(body):
             else:
                 pid = list(Funcs.p['IDLE'])             # 如果没有设置分机的优先机，就使用allFunc中的写死的默认分机213
                 auto(body['vid'], pid[0])
-        elif body['status'] == 'change_status':         # 分机状态改变
+
+        elif body.get("status") == 'change_status':         # 分机状态改变
             socketio.emit(event='phone_status', data=body)              # 广播给所有客户端，显示分机的状态
 
 

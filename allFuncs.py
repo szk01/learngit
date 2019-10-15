@@ -163,27 +163,23 @@ class Funcs(Process_request):
 
     # 通话结束后，拿到录音的相对路径，下载录音到服务器上，返回来电号码
     def recording(self):
-        global play_path, omUrl, pid               # 为防止python解释器无法解释到底是局部变量还是全局变量
-        global record_name
-        try:
-            event = self.getRoot()
-            number = event.find('CPN').text
-            cdr_type = event.find('Type').text
-            if cdr_type == 'IN':  # 只处理类型为IN的话单，来电转分机是 内部互拨，分机呼叫分机
-                end_time = Funcs.get_time()  # 客户打入时间
-                Funcs.time['end_time'] = end_time  # 更新打入时间
-                log('填写所有的时间字段', Funcs.time)
-                log('recording()', number)
-                recording = event.find('Recording')
-                record_name = recording.text  # 语音文件名字
-                pid = event.find('CDPN').text  # 分机号
+        global play_path, omUrl, pid, record_name, number  # 为防止python解释器无法解释到底是局部变量还是全局变量
+        event = self.getRoot()
+        number = event.find('CPN').text
+        cdr_type = event.find('Type').text
+        if cdr_type == 'IN':  # 只处理类型为IN的话单，来电转分机是 内部互拨，分机呼叫分机
+            end_time = Funcs.get_time()  # 客户打入时间
+            Funcs.time['end_time'] = end_time  # 更新打入时间
+            log('填写所有的时间字段', Funcs.time)
+            log('recording()', number)
+            recording = event.find('Recording')
+            record_name = recording.text  # 语音文件名字
+            pid = event.find('CDPN').text  # 分机号
 
-                play_path = 'audio/' + record_name
-                omUrl = om_config['om_record_url'] + record_name  # 存储在om上的录音文件地址，给wget下载
-                log('完整路径：', omUrl)
-        except:
-            pass
-        else:
+            play_path = 'audio/' + record_name
+            omUrl = om_config['om_record_url'] + record_name  # 存储在om上的录音文件地址，给wget下载
+            log('完整路径：', omUrl)
+
             r = {}
             cr = {  # 通话记录，传到app.py文件中，加上文件
                 "phone": number,
@@ -205,15 +201,15 @@ class Funcs(Process_request):
                 "number": number,
                 "downPath": omUrl,
                 "play": play_path,
-                "pid": pid,                     # 分机号
+                "pid": pid,  # 分机号
             }
             r['cr'] = cr
             r['vr'] = vr
             r['ws'] = ws
-            Funcs.sql_addCallRecord(cr)  # 添加通话记录
-            Funcs.sql_addVoiceRecord(vr)  # 添加录音记录
-            log('发送消息')
-            return r
+
+            log('通话结束的消息', r)
+            if r['ws']:
+                return r
 
     #OM重启会配置满意度调查音乐
     def assign(self):
