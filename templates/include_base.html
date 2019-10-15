@@ -2,6 +2,7 @@
     {% macro css_js()%}
         <link rel="stylesheet" type="text/css" href="static/css/nav.css">
         <link rel="stylesheet" type="text/css" href="static/font/iconfont.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"/>
         <script type="text/javascript" src="static/js/jquery-3.4.1.min.js"></script>
         <script type="text/javascript" src="static/js/nav.js"></script>
 		<script type="text/javascript" src="https://cdn.bootcss.com/socket.io/1.5.1/socket.io.min.js"></script>
@@ -59,9 +60,9 @@
 		</ul>
 	</div>
 
-	<!--弹屏-->
+    <!--弹屏-->
     <style>
-        /*来电弹屏样式*/
+        {#来电弹屏样式#}
         .call-note-container {
             position:fixed;
             text-align:center;
@@ -71,12 +72,13 @@
             left: 500px;
             background-color: antiquewhite ;
             box-shadow: 12px -4px 9px 0px black;
-            z-index: 99;               /* 颜色不能被压住*/
+            z-index: 99;                {#颜色不能被压住#}
         }
 
-		.class-note {
-			display: none;
-		}
+        .class-note {
+            display: none;
+        }
+
     </style>
 
 	<div class="class-note">
@@ -89,14 +91,14 @@
         </div>
     </div>
 
-	<script>
+<script>
 		var satisfy = function() {
 			console.log('点击满意度调查按钮');
 			socket.emit('satisfy', {'data': 'satisfy'});
 			clearInterval(window.inter)
 			window.count = 0
+            $('.class-note').hide()
 		}
 	</script>
-
 
 

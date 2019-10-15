@@ -61,11 +61,12 @@
     // function add_note() {
     //     console.log('加上来电通知...')
     //     var note = `
-    //         <div class="call-note-container" style="position:fixed; width:500px; height:250px; top:300px; left: 500px; background-color: antiquewhite ">
+    //         <div class="call-note-container" style="position:fixed;text-align:center; width:500px; height:250px; top:300px; left: 500px; background-color: antiquewhite ">
     //             <button class="close">关闭</button>
-    //             <div class="call-number" style="font-size: 20px; text-align:center; margin: 30px 30px; color:red;">来电号码</div>
+    //             <div class="call-number" style="font-size: 20px;  margin: 30px 30px; color:red;">来电号码</div>
     //             <div class="time" style="font-size: 20px; text-align:center; margin: 30px 30px;">通话时间</div>
     //             <div class="status" style="font-size: 20px; text-align:center; margin: 30px 30px;">状态</div>
+    //             <button class=".satisfy">满意度调查</button>
 	// 	    </div>
     //     `
     //     return note
@@ -100,10 +101,8 @@
 
     // 服务器通知有来电
     socket.on("ring", function(data) {                         // 有电话拨打进来，显示来电号码
-                                                                // 加上新版弹窗
         console.log('有来电...')
         $('.class-note').show()
-
         $('.call-number').text('来电号码'+data["number"])
         $('.status').text('呼叫中')
 
@@ -123,7 +122,7 @@
         console.log('结束通话...')
         if (data["status"] === 'Cdr') {
             $('.status').text('通话已结束');
-            $('.class-note').hide()                           // 隐藏弹窗
+            $('.call-note-container').hide()                           // 隐藏弹窗
             clearInterval(window.inter)
             window.count = 0                                            //计数清零
             var s = show(count)
@@ -151,7 +150,7 @@
     })
 
     // 首页测试的满意度调查按钮
-    $('.satisfy').click(function() {                //按钮点击
+    $('button.satisfy').click(function() {                //按钮点击
         console.log('点击满意度调查按钮')
         socket.emit('satisfy', {'data': 'satisfy'})     // 只传递数据，不需要返回的数据。使用websocket协议
     })
