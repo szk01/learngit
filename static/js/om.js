@@ -100,7 +100,7 @@
 
     // 服务器通知有来电
     socket.on("ring", function(data) {                         // 有电话拨打进来，显示来电号码
-        var t = add_note()                                              // 加上新版弹窗
+                                                                // 加上新版弹窗
         console.log('有来电...')
         $('.class-note').show()
 

@@ -23,8 +23,12 @@ def getNumber(sid, Model, ws):
 
 # 根据座机号，找到对应的用户id
 def get_uid(Model, pid):
-    seat = Model.query.filter_by(uid=pid).first()
-    uid = seat.uid
+    seat = Model.query.filter_by(number=pid).first()
+    log('seat是否存在', seat)
+    if seat:
+        uid = seat.uid  # 找到seat对应的外键
+    else:
+        uid = 22
     return uid
 
 # 给OM服务器发送一个POST请求
