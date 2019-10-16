@@ -43,7 +43,7 @@ class Funcs(Process_request):
         if Funcs.time['start_time']:
 
             log('静态方法，添加通话记录')
-            log('打印传过来的字典', cr)
+            log('插入到数据库中的字典', cr)
             call_record = Call_record(phone=cr['phone'], name=cr['name'], type=cr['type'],
                                       start_time=Funcs.time['start_time'], on_time=Funcs.time['on_time'],
                                       end_time=Funcs.time['end_time'], uid=uid,

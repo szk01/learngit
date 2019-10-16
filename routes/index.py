@@ -42,6 +42,7 @@ def page_cr():
     user = User.query.filter_by(number=authNumber).first()
     if user:  # 如果用户存在，找到对应的录音文件
         pagination = Call_record.query.filter_by(uid=user.id).paginate(current_page, per_page=10)
+        log('得到pagination', pagination)
 
     # 管理员登录，显示所有的记录
     if authNumber == '10000':
