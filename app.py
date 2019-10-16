@@ -185,6 +185,7 @@ def extcute_body(body):
                 seatId = body['ws']['pid']
                 room = getNumber(seatId, Seat, ws)
                 uid = get_uid(Seat, int(seatId))
+                log('得到用户id', uid)
                 Funcs.sql_addCallRecord(body['cr'], uid)                 # 添加通话记录
                 Funcs.sql_addVoiceRecord(body['vr'], uid)                 # 添加录音记录
                 socketio.emit(event='off', data=body['ws'], room=room)

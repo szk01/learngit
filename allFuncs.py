@@ -40,19 +40,18 @@ class Funcs(Process_request):
     # 添加通话记录到mysql数据库
     @staticmethod
     def sql_addCallRecord(cr, uid):
-        log('静态方法，添加通话记录')
-        log('打印传过来的字典', cr)
-        call_record = Call_record(phone=cr['phone'], name=cr['name'], type=cr['type'],
-                                  start_time=Funcs.time['start_time'], on_time=Funcs.time['on_time'],
-                                  end_time=Funcs.time['end_time'], uid=uid,
-                                  )
-        Funcs.time['start_time'] = None
-        Funcs.time['on_time'] = None
-        Funcs.time['end_time'] = None
-        log(Funcs.time)
-        db.session.add(call_record)
-        log('在数据库加入一条通话记录...')
-        db.session.commit()
+        if Funcs.time['start_time']:
+
+            log('静态方法，添加通话记录')
+            log('打印传过来的字典', cr)
+            call_record = Call_record(phone=cr['phone'], name=cr['name'], type=cr['type'],
+                                      start_time=Funcs.time['start_time'], on_time=Funcs.time['on_time'],
+                                      end_time=Funcs.time['end_time'], uid=uid,
+                                      )
+            log(Funcs.time)
+            db.session.add(call_record)
+            log('在数据库加入一条通话记录...')
+            db.session.commit()
 
     # 添加录音记录到mysql数据库
     @staticmethod
