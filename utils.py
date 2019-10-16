@@ -150,4 +150,7 @@ om_config = {
     'audio_path': '/root/learngit/audio/',  # 阿里云服务器
     # 'audio_path': 'C:/Users/86177/Documents/GitHub/flaskWeb/audio/',  # 本地的录音文件
 
+    # 图片文件所在地
+    'img_path': '/root/learngit/images/',                             # 服务器
+    # 'img_path': 'C:/Users/86177/Documents/GitHub/flaskWeb/audio/',      # 本地开发
 }

@@ -69,6 +69,15 @@ class Funcs(Process_request):
         t = time.time()
         return int(t)
 
+    # 处理Cdr话单消息,得到通话录音名
+    @staticmethod
+    def get_record_name(event):
+        recording = event.find('Recording')
+        if recording is not None:
+            record_name = recording.text                # 语音文件名
+            return record_name
+
+
     # 修改分机状态信息
     def phone_status(self):
         log('phone_status()执行')
@@ -161,23 +170,19 @@ class Funcs(Process_request):
         res = {"pid": pid, "status": "ANWSER"}
         return res
 
+
     # 通话结束后，拿到录音的相对路径，下载录音到服务器上，返回来电号码
     def recording(self):
-        global play_path, omUrl, pid, record_name, number  # 为防止python解释器无法解释到底是局部变量还是全局变量
         event = self.getRoot()
-        number = event.find('CPN').text
-        cdr_type = event.find('Type').text
-        if cdr_type == 'IN':  # 只处理类型为IN的话单，来电转分机是 内部互拨，分机呼叫分机
-            end_time = Funcs.get_time()  # 客户打入时间
-            Funcs.time['end_time'] = end_time  # 更新打入时间
-            log('填写所有的时间字段', Funcs.time)
-            log('recording()', number)
-            recording = event.find('Recording')
-            record_name = recording.text  # 语音文件名字
-            pid = event.find('CDPN').text  # 分机号
 
+        record_name = Funcs.get_record_name(event)
+        if record_name is not None:
+            Funcs.time['end_time'] = Funcs.get_time()  # 填入结束时间
+            number = event.find('CPN').text  # 来电手机号
+            pid = event.find('CDPN').text  # 分机号
             play_path = 'audio/' + record_name
             omUrl = om_config['om_record_url'] + record_name  # 存储在om上的录音文件地址，给wget下载
+
             log('完整路径：', omUrl)
 
             r = {}
@@ -207,9 +212,7 @@ class Funcs(Process_request):
             r['vr'] = vr
             r['ws'] = ws
 
-            log('通话结束的消息', r)
-            if r['ws']:
-                return r
+            return r
 
     #OM重启会配置满意度调查音乐
     def assign(self):
