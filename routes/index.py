@@ -34,11 +34,12 @@ def formatted(cs):
 # 通话记录
 @main.route('/call_record')
 def page_cr():
-    # authNumber = request.cookies.get('number')
     authNumber = session['number']
     log('session', authNumber)
     content = {}
     current_page = request.args.get('page', 1, type=int)  # 从查询字符串获取当前页数  current_page是1
+    global pagination
+    log('查询参数', current_page)
 
     user = User.query.filter_by(number=authNumber).first()
     if user:  # 如果用户存在，找到对应的录音文件
@@ -52,8 +53,6 @@ def page_cr():
 
     cs = pagination.items  # 当前页数的记录列表
     formatted(cs)
-    # for v in cs:
-    #     print(v)
     content['pagination'] = pagination
     content['cs'] = cs
 
@@ -73,6 +72,7 @@ def page_vr():
     log('cookie voice', authNumber)
     content = {}
     current_page = request.args.get('page', 1, type=int)  # 从查询字符串获取当前页数
+    global pagination
 
     user = User.query.filter_by(number=authNumber).first()
     # 如果用户存在，找到对应的录音文件
