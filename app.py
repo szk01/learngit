@@ -205,9 +205,9 @@ def extcute_body(body):
                 auto(body['vid'], setting_phone['pid'])
             else:
                 pid = list(Funcs.p['IDLE'])             # 如果没有设置分机的优先机，就使用allFunc中的写死的默认分机213
-                # auto(body['vid'], pid[0])
+                auto(body['vid'], pid[0])
                 # auto(body['vid'], random.choice(pid))
-                auto(body['vid'], '220')                    # 指定220分机
+                #auto(body['vid'], '220')                    # 指定220分机
 
         elif body.get("status") == 'change_status':         # 分机状态改变
             socketio.emit(event='phone_status', data=body)              # 广播给所有客户端，显示分机的状态
