@@ -19,3 +19,4 @@ response = requests.request("POST", url, data=payload, headers=headers, verify=F
 print(response.text)
 
 # wget -P C:/Users/86177/Documents/GitHub/flaskWeb/audio http://101.81.125.16:2888/usb/builtin/Recorder/20190918/207_207_20190918-171743_28723.wav --http-user=user --http-password=user
+# wget -P /root/learngit/audio/ http://fanyuan.tpddns.cn:2888/usb/builtin/Recorder/20191016/17730523795_206_20191016-193555_61454.wav --http-user=user --http-password=user

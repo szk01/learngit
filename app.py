@@ -19,6 +19,7 @@ from werkzeug.routing import BaseConverter
 from utils import get_phone, auto, getNumber, get_uid
 from extension import login_manager
 from models.seat import Seat
+import random
 # 先要初始化一个 Flask 实例，并将Flask-SocketIO添加到Flask应用程序
 
 app = Flask(__name__)
@@ -204,7 +205,8 @@ def extcute_body(body):
                 auto(body['vid'], setting_phone['pid'])
             else:
                 pid = list(Funcs.p['IDLE'])             # 如果没有设置分机的优先机，就使用allFunc中的写死的默认分机213
-                auto(body['vid'], pid[0])
+                # auto(body['vid'], pid[0])
+                auto(body['vid'], random.choice(pid))
 
         elif body.get("status") == 'change_status':         # 分机状态改变
             socketio.emit(event='phone_status', data=body)              # 广播给所有客户端，显示分机的状态

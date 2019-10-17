@@ -40,7 +40,7 @@ class Funcs(Process_request):
     # 添加通话记录到mysql数据库
     @staticmethod
     def sql_addCallRecord(cr, uid):
-        if Funcs.time['start_time']:
+        if Funcs.time['end_time']:
 
             log('静态方法，添加通话记录')
             log('插入到数据库中的字典', cr)
@@ -173,7 +173,7 @@ class Funcs(Process_request):
     # 通话结束后，拿到录音的相对路径，下载录音到服务器上，返回来电号码
     def recording(self):
         event = self.getRoot()
-
+        # 拿到通话记录
         record_name = Funcs.get_record_name(event)
         if record_name is not None:
             Funcs.time['end_time'] = Funcs.get_time()  # 填入结束时间

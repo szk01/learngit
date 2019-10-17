@@ -144,7 +144,7 @@ om_config = {
 
     # 从OM服务器上下载录音文件地址
     # 'om_record_url': 'http://192.168.1.150/mcc/Recorder/',  # OM20
-    'om_record_url': 'http://101.81.125.16:2888/mcc/Recorder/',  # OM50
+    'om_record_url': 'http://fanyuan.tpddns.cn:2888/mcc/Recorder/',  # OM50
 
     # 录音下载到本地服务器
     'audio_path': '/root/learngit/audio/',  # 阿里云服务器

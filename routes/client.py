@@ -22,7 +22,8 @@ def client_page():
     number = session['number']
     user = User.query.filter_by(number=number).first()
     log('user', user)
-    clients = Client.query.filter_by(clid=user.id).all()
+    #clients = Client.query.filter_by(cid=user.id).all()            # 通过
+    clients = Client.query.all()
 
     if clients:
         for c in clients:
