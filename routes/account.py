@@ -26,13 +26,18 @@ def manageAccount():
     role = user.rid
     if role == 1 :
         userInfo["user_role"] = '客服'
+        log('登录的是客服')
+        uid = user.id
+        seat = Seat.query.filter_by(uid=uid).first()
+        if seat:  # 找到客服的分配的分机
+            userInfo['user_seat'] = seat.number
+
     elif role == 2:
         userInfo["user_role"] = '管理员'
+        log('登录的是管理员')
+        userInfo['user_seat'] = ""
 
     # 拿到账号对应的分机号码
-    uid = user.id
-    seat = Seat.query.filter_by(uid=uid).first()
-    userInfo['user_seat'] = seat.number
 
     return render_template('manage_account.html', **userInfo)
 
