@@ -41,18 +41,15 @@ def page_cr():
     global pagination
     log('查询参数', current_page)
 
-    user = User.query.filter_by(number=authNumber).first()
-    if user:  # 如果用户存在，找到对应的录音文件
-        pagination = Call_record.query.filter_by(uid=user.id).paginate(current_page, per_page=10)
-        log('得到pagination', pagination, user.id)
-
-    # 管理员登录，显示所有的记录
-    if authNumber == '10000':
+    if authNumber == '10000':  # 如果是管理员登录
         pagination = Call_record.query.paginate(current_page, per_page=10)  # 分页对象
 
+    else:  # 如果是客服登录
+        user = User.query.filter_by(number=authNumber).first()
+        pagination = Call_record.query.filter_by(uid=user.id).paginate(current_page, per_page=10)
 
     cs = pagination.items  # 当前页数的记录列表
-    formatted(cs)
+    formatted(cs)  # 格式化时间戳
     content['pagination'] = pagination
     content['cs'] = cs
 
@@ -74,19 +71,19 @@ def page_vr():
     current_page = request.args.get('page', 1, type=int)  # 从查询字符串获取当前页数
     global pagination
 
-    user = User.query.filter_by(number=authNumber).first()
-    # 如果用户存在，找到对应的录音文件
-    if user:
-        pagination = Voice_record.query.filter_by(uid = user.id).paginate(current_page, per_page=10)
 
-    # 管理员登录，显示所有的记录
+    # 如果用户存在，找到对应的录音文件
     if authNumber == '10000':
         pagination = Voice_record.query.paginate(current_page, per_page=10)                     # 分页对象
 
+    else:
+        user = User.query.filter_by(number=authNumber).first()
+        pagination = Voice_record.query.filter_by(uid = user.id).paginate(current_page, per_page=10)
+
+
     vs = pagination.items  # 当前页数的记录列表
     v_format(vs)
-    # for v in vs:
-    #     print(v)
+
     content['pagination'] = pagination
     content['vs'] = vs
 
