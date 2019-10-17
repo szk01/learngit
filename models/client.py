@@ -22,7 +22,7 @@ class Client(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     cid = db.Column(db.ForeignKey('ccompany.id'), index=True)
-    clid = db.Column(db.ForeignKey('user.id'), index=True)
+    #clid = db.Column(db.ForeignKey('user.id'), index=True)
     number = db.Column(db.String(50), nullable=False, server_default=db.FetchedValue())
     name = db.Column(db.String(10))
     qq = db.Column(db.String(50))
@@ -30,7 +30,7 @@ class Client(db.Model):
     email = db.Column(db.String(50), server_default=db.FetchedValue())
 
     ccompany = db.relationship('Ccompany', primaryjoin='Client.cid == Ccompany.id', backref='clients')
-    user = db.relationship('User', primaryjoin='Client.clid == User.id', backref='clients')
+    #user = db.relationship('User', primaryjoin='Client.clid == User.id', backref='clients')
 
     # 实例化对象后，使用的函数
     # 实例 client = Client.query.filter_by(...)
