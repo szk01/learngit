@@ -174,11 +174,12 @@ class Funcs(Process_request):
     def recording(self):
         event = self.getRoot()
         # 拿到通话记录
-        record_name = Funcs.get_record_name(event)
-        if record_name is not None:
+        cdr_type = event.find('Type').text                      # 只解析IN话单
+        if cdr_type == 'IN':
             Funcs.time['end_time'] = Funcs.get_time()  # 填入结束时间
             number = event.find('CPN').text  # 来电手机号
             pid = event.find('CDPN').text  # 分机号
+            record_name = event.find('Recording').text
             play_path = 'audio/' + record_name
             omUrl = om_config['om_record_url'] + record_name  # 存储在om上的录音文件地址，给wget下载
 
