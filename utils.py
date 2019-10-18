@@ -152,5 +152,5 @@ om_config = {
 
     # 图片文件所在地
     'img_path': '/root/learngit/images/',                             # 服务器
-    # 'img_path': 'C:/Users/86177/Documents/GitHub/flaskWeb/audio/',      # 本地开发
+    # 'img_path': 'C:/Users/86177/Documents/GitHub/flaskWeb/images/',      # 本地开发
 }
