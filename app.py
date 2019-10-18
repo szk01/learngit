@@ -52,8 +52,6 @@ app.url_map.converters['reg'] = RegexConverter
 # 传输音频wav文件
 @app.route('/audio/<reg("[0-9]{8}"):datatime>/<name>')                   # 解析出两个参数，自动传到方法中
 def audio(name, datatime):                                               # 所以方法要接受两个参数
-    # path = '/root/learngit/audio/' + name  # 音频所在的路径
-    # path = 'C:/Users/86177/Documents/GitHub/flaskWeb/audio/' + name
     path = om_config['audio_path'] + name
     def gen_audio():  # 这是一个生成器
         with open(path, 'rb') as wav:
@@ -205,9 +203,9 @@ def extcute_body(body):
                 auto(body['vid'], setting_phone['pid'])
             else:
                 pid = list(Funcs.p['IDLE'])             # 如果没有设置分机的优先机，就使用allFunc中的写死的默认分机213
-                auto(body['vid'], pid[0])
+                #auto(body['vid'], pid[0])
                 # auto(body['vid'], random.choice(pid))
-                #auto(body['vid'], '220')                    # 指定220分机
+                auto(body['vid'], '220')                    # 指定220分机
 
         elif body.get("status") == 'change_status':         # 分机状态改变
             socketio.emit(event='phone_status', data=body)              # 广播给所有客户端，显示分机的状态
