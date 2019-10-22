@@ -192,7 +192,8 @@ def extcute_body(body):
             log('通话建立')
             seatId = body['pid']
             room = getNumber(seatId, Seat, ws)
-            socketio.emit(event='anwser', data=body, room=room)
+            if room is not None:                       # 如果相应的账号登录
+                socketio.emit(event='anwser', data=body, room=room)
 
         elif body.get("status") == 'Transfer':              # 来电转分机请求
             log('发送来电转分机请求')
