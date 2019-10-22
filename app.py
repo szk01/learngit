@@ -163,9 +163,6 @@ def setting_priority(data):
 
 # 处理各种不同的body
 def extcute_body(body):
-    # if isinstance(body, str):
-    #     log('发送给OM来电转分机请求')
-    #     reqestOM(body)
     if isinstance(body, dict):
 
         if body.get("status") == "RING":  # 有电话接入call-in，客户端显示页面

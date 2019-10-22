@@ -147,11 +147,12 @@ class Funcs(Process_request):
         event = self.getRoot()
         mes = event.find('visitor')
         number = mes.attrib['from']  # 来电id
+        vid = mes.attrib['id']  # vid, 来访者id
         e = event.find('ext')
         pid = e.attrib['id']  # 转接的分机号码
         log('来电号码', number)
         log('被呼叫的分机号码:', pid)
-        res = {"number": number, "pid": pid, "status": "RING"}
+        res = {"number": number, "pid": pid, "status": "RING", 'vid': vid, }
         log('发送给ws', res)
         return res
 
