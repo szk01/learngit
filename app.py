@@ -171,7 +171,7 @@ def extcute_body(body):
         if body.get("status") == "RING":  # 有电话接入call-in，客户端显示页面
             log(body["number"])
             log('有电话接入，显示弹窗')
-
+            ws['tran_id'] = body['vid']  # 将来访者id写入ws字典，供满意度调查按钮使用
             seatId = body['pid']                        # seatId是分机号
             room = getNumber(seatId, Seat, ws)
             socketio.emit(event='ring', data=body, room=room)

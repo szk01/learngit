@@ -267,7 +267,7 @@ class Funcs(Process_request):
             # 'BYE': self.call_end,        # 来电和分机通话结束，返回来电号码
             'ANSWER': self.status_change,  # 来电转分机分机应答，通话建立              2.5.3
             'RING': self.alterWin,  # 来电 弹窗显示号码，正在呼叫               2.5.3
-            'INCOMING': self.autoTransfer,
+            # 'INCOMING': self.autoTransfer,
             'BUSY': self.phone_status,
             'IDLE': self.phone_status,
             'ONLINE': self.phone_status,
