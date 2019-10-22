@@ -171,7 +171,8 @@ def extcute_body(body):
             ws['tran_id'] = body['vid']  # 将来访者id写入ws字典，供满意度调查按钮使用
             seatId = body['pid']                        # seatId是分机号
             room = getNumber(seatId, Seat, ws)
-            socketio.emit(event='ring', data=body, room=room)
+            if room is not None:                        # 如果相应的账号登录
+                socketio.emit(event='ring', data=body, room=room)
 
         elif isinstance(body.get('ws'), dict):
             log('通话结束传过来的body', body)
