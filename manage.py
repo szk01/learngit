@@ -16,7 +16,7 @@ manager.add_command('db', MigrateCommand)
 if __name__ == '__main__':
     manager.run()
 
-# 根据mysql数据库中的表生成orm代码
+# 根据mysql数据库中的表生成orm代码，把这两行代码放到命令行中执行
 # pip install flask-sqlacodegen
-# flask-sqlacodegen mysql+pymysql://root:123456@localhost:3306/nonghao --outfile models.py --flask
+# flask-sqlacodegen mysql+pymysql://root:123456@localhost:3306/nonghao --outfile model3.py --flask
 

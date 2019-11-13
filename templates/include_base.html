@@ -24,13 +24,23 @@
 					<li><a href="javascript:;"><span>删除账号</span></a></li>
 				</ul>
 			</li>
+
+<!--			<li class="nav-item">-->
+<!--				<a href="javascript:;"><i class="my-icon nav-icon icon_2"></i><span>权限功能</span><i class="my-icon nav-more"></i></a>-->
+<!--				<ul>-->
+<!--					<li><a href="javascript:;"><span>功能列表</span></a></li>-->
+<!--					<li><a href="javascript:;"><span>客户信息</span></a></li>-->
+<!--				</ul>-->
+<!--			</li>-->
+
 			<li class="nav-item">
 				<a href="javascript:;"><i class="my-icon nav-icon icon_2"></i><span>客户管理</span><i class="my-icon nav-more"></i></a>
 				<ul>
-					<li class="addClient"><a href="/client"><span>客户信息</span></a></li>
-					<li><a href="javascript:;"><span>删除客户信息</span></a></li>
+					<li><a href="/ccompany"><span>公司信息</span></a></li>
+					<li><a href="/client"><span>客户信息</span></a></li>
 				</ul>
 			</li>
+
 			<li class="nav-item">
 				<a href="javascript:;"><i class="my-icon nav-icon icon_3"></i><span>数据统计</span><i class="my-icon nav-more"></i></a>
 				<ul>
@@ -41,6 +51,7 @@
                     {% endmacro %}
 				</ul>
 			</li>
+
 			<li class="nav-item">
 				<a href="javascript:;"><i class="my-icon nav-icon icon_4"></i><span>话务中心</span><i class="my-icon nav-more"></i></a>
 				<ul>
@@ -49,10 +60,11 @@
 					<li class="voice_record"><a href="/voice_record"><span>通话录音</span></a></li>
 				</ul>
 			</li>
+
 			<li class="nav-item">
 				<a href="javascript:;"><i class="my-icon nav-icon icon_4"></i><span>系统管理</span><i class="my-icon nav-more"></i></a>
 				<ul>
-					<li><a href="javascript:;"><span>订单列表</span></a></li>
+					<li><a href="/power"><span>功能设置</span></a></li>
 					<li><a href="javascript:;"><span>待完善</span></a></li>
 					<li><a href="javascript:;"><span>待完善</span></a></li>
 				</ul>
@@ -62,7 +74,7 @@
 
     <!--弹屏-->
     <style>
-
+        /*来电弹屏样式*/
         .call-note-container {
             position:fixed;
             text-align:center;
@@ -72,7 +84,7 @@
             left: 500px;
             background-color: antiquewhite ;
             box-shadow: 12px -4px 9px 0px black;
-            z-index: 99;
+            z-index: 99;               /*颜色不能被压住*/
         }
 
         .class-note {

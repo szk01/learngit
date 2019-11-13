@@ -74,13 +74,16 @@ class User(db.Model, UserMixin):
     status = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue())
     type = db.Column(db.Integer)
     name = db.Column(db.String(30), nullable=False)  # 昵称
-    number = db.Column(db.String(30, 'utf8mb4_0900_ai_ci'), nullable=False)  # 工号
+    number = db.Column(db.String(30, 'utf8mb4_0900_ai_ci'), nullable=False)  # 账号
     password = db.Column(db.String(60), nullable=False)  # 密码
+    phone = db.Column(db.String(50), nullable=False)  # 手机号
     create_time = db.Column(db.BigInteger)
     update_time = db.Column(db.BigInteger)
     login_ip = db.Column(db.String(20))
     login_time = db.Column(db.BigInteger)
+    phone_count = db.Column(db.Integer)               # 成功接通客户电话的次数
 
     company = db.relationship('Company', primaryjoin='User.cid == Company.id')
     role = db.relationship('Role', primaryjoin='User.rid == Role.id')
+
     client = db.relationship('Client', primaryjoin='User.clid == Client.id')

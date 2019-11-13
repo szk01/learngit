@@ -9,27 +9,32 @@ def log(*args, **kwargs):
     dt = time.strftime(format, value)
     print(dt, *args, **kwargs)
 
+
 # 根据seatId找到number账号,根据number账号找到room房间号
 def getNumber(sid, Model, ws):
     log('执行getNumber函数')
     seat = Model.query.filter_by(number=sid).first()
-    log('找到对应的座机')
     user = seat.user
-    log('分机对应的账号', user.number)
-    roomId = user.number  # 根据分机号找到账号
-    room = ws.get(roomId)
-    log(sid,'座机对应的的room号码', room)
-    return room
+    if user:
+        log('分机对应的账号', user.number)
+        roomId = user.number  # 根据分机号找到账号
+        room = ws.get(roomId)
+        log(sid,'座机对应的的room号码', room)
+        return room
+    else:
+        log('找不到相应的座机号')
 
-# 根据座机号，找到对应的用户id
+
+# 根据座机号，找到对应的用户id。Seat表和user表之间的
 def get_uid(Model, pid):
+    log('pid', type(pid), pid)
     seat = Model.query.filter_by(number=pid).first()
     log('seat是否存在', seat)
     if seat:
-        uid = seat.uid  # 找到seat对应的外键
-    else:
-        uid = 22
+        uid = seat.uid              # 找到seat对应的外键
+    else: uid = 22
     return uid
+
 
 # 给OM服务器发送一个POST请求
 def post_om(body):
@@ -60,6 +65,7 @@ def wget_down(Url):
 # 用于分机优先级
 pri_list = []
 
+
 # 被引入到app.py文件中，找到分机
 def get_phone(data, idle):
     get_pri_list(data)
@@ -67,6 +73,7 @@ def get_phone(data, idle):
     p = find_seat(data, idle, count)
     log('能得到的优先级最高的分机是', p)
     return p
+
 
 # 递归，找到空闲且优先级较高的分机
 def find_seat(data, idle, count):

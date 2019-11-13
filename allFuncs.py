@@ -6,13 +6,14 @@ import subprocess  # 用来调用命令行shell
 from utils import om_config, wget_down, post_om
 from models.record import Call_record, Voice_record, db
 from utils import get_phone
+from features.shortMessage import send_message
 
 
 class Funcs(Process_request):
     # 类变量，所有的实例共享这个变量
     p = {
         'BUSY': set(),
-        'IDLE': set(),                    # 当前端页面设置了分机的优先级，使用此分机进行测试
+        'IDLE': {"221"},                    # 当前端页面设置了分机的优先级，使用此分机进行测试
         'ONLINE': set(),
         'OFFLINE': set(),
         'pid': '213',                         # 写死的默认分机，前端没有设置分机优先的时候，使用此分机
@@ -40,18 +41,19 @@ class Funcs(Process_request):
     # 添加通话记录到mysql数据库
     @staticmethod
     def sql_addCallRecord(cr, uid):
-        if Funcs.time['end_time']:
-
-            log('静态方法，添加通话记录')
-            log('插入到数据库中的字典', cr)
-            call_record = Call_record(phone=cr['phone'], name=cr['name'], type=cr['type'],
-                                      start_time=Funcs.time['start_time'], on_time=Funcs.time['on_time'],
-                                      end_time=Funcs.time['end_time'], uid=uid,
-                                      )
-            log(Funcs.time)
-            db.session.add(call_record)
-            log('在数据库加入一条通话记录...')
-            db.session.commit()
+        log('静态方法，添加通话记录')
+        log('打印传过来的字典', cr)
+        call_record = Call_record(phone=cr['phone'], name=cr['name'], type=cr['type'],
+                                  start_time=Funcs.time['start_time'], on_time=Funcs.time['on_time'],
+                                  end_time=Funcs.time['end_time'], uid=uid,
+                                  )
+        Funcs.time['start_time'] = None
+        Funcs.time['on_time'] = None
+        Funcs.time['end_time'] = None
+        log(Funcs.time)
+        db.session.add(call_record)
+        log('在数据库加入一条通话记录...')
+        db.session.commit()
 
     # 添加录音记录到mysql数据库
     @staticmethod
@@ -75,7 +77,6 @@ class Funcs(Process_request):
         if recording is not None:
             record_name = recording.text                # 语音文件名
             return record_name
-
 
     # 修改分机状态信息
     def phone_status(self):
@@ -128,17 +129,17 @@ class Funcs(Process_request):
         return response
 
     # 对INCOMING事件进行处理,转到分机处理返回请求数据
-    def autoTransfer(self):
+    def incoming(self):
         event = self.getRoot()
         ext = event.find('visitor')
         vid = ext.attrib['id']  # 访问者id
         t = {
             'vid': vid,
-            'status': 'Transfer',
+            'status': 'INCOMING',
         }
         return t
 
-    # 对（来电转分机触发）振铃事件RING 进行处理，发送客户端的号码。显示弹窗
+    # 对振铃事件RING 进行处理，发送客户端的号码。显示弹窗
     def alterWin(self):
         start_time = Funcs.get_time()  # 客户打入时间
         Funcs.time['start_time'] = start_time  # 更新打入时间
@@ -147,9 +148,9 @@ class Funcs(Process_request):
         event = self.getRoot()
         mes = event.find('visitor')
         number = mes.attrib['from']  # 来电id
-        vid = mes.attrib['id']  # vid, 来访者id
+        vid = mes.attrib['id']          # vid, 来访者id
         e = event.find('ext')
-        pid = e.attrib['id']  # 转接的分机号码
+        pid = e.attrib['id']    # 转接的分机号码
         log('来电号码', number)
         log('被呼叫的分机号码:', pid)
         res = {"number": number, "pid": pid, "status": "RING", 'vid': vid, }
@@ -170,67 +171,92 @@ class Funcs(Process_request):
         res = {"pid": pid, "status": "ANWSER"}
         return res
 
-
     # 通话结束后，拿到录音的相对路径，下载录音到服务器上，返回来电号码
     def recording(self):
         event = self.getRoot()
-        # 拿到通话记录
-        cdr_type = event.find('Type').text                      # 只解析IN话单
+
+        cdr_type = event.find('Type').text  # 只解析IN话单
+        duration = event.find("Duration").text
+        log('duration', duration, type(duration))
         if cdr_type == 'IN':
-            Funcs.time['end_time'] = Funcs.get_time()  # 填入结束时间
-            number = event.find('CPN').text  # 来电手机号
-            pid = event.find('CDPN').text  # 分机号
-            record_name = event.find('Recording').text
-            play_path = 'audio/' + record_name
-            omUrl = om_config['om_record_url'] + record_name  # 存储在om上的录音文件地址，给wget下载
+            if duration == "0":                         # 如果duration的值为0，则漏接短信
+                lr = {}
+                number = event.find('CPN').text  # 来电手机号
+                lr['number'] = number
+                pid = event.find('CDPN').text
+                lr['status'] = "lose"
+                lr['pid'] = pid
+                return lr
 
-            log('完整路径：', omUrl)
+            elif duration != "0":
+                Funcs.time['end_time'] = Funcs.get_time()  # 填入结束时间
+                number = event.find('CPN').text  # 来电手机号
+                pid = event.find('CDPN').text  # 分机号
+                record_name = event.find('Recording').text
+                play_path = 'audio/' + record_name
+                omUrl = om_config['om_record_url'] + record_name  # 存储在om上的录音文件地址，给wget下载
 
-            r = {}
-            cr = {  # 通话记录，传到app.py文件中，加上文件
-                "phone": number,
-                "name": "未知",
-                "type": 1,
+                log('完整路径：', omUrl)
 
-            }
+                r = {}
+                cr = {  # 通话记录，传到app.py文件中，加上文件
+                    "phone": number,
+                    "name": "未知",
+                    "type": 1,
 
-            vr = {  # 录音记录，
-                "name": record_name,
-                "url": play_path,
-                "play_count": 0,
-                "down_count": 0,
+                }
 
-            }
+                vr = {  # 录音记录，
+                    "name": record_name,
+                    "url": play_path,
+                    "play_count": 0,
+                    "down_count": 0,
 
-            ws = {  # 发送给ws客户端的消息，传到app.py文件中，传给网页客户端
-                "status": "Cdr",
-                "number": number,
-                "downPath": omUrl,
-                "play": play_path,
-                "pid": pid,  # 分机号
-            }
-            r['cr'] = cr
-            r['vr'] = vr
-            r['ws'] = ws
+                }
 
-            return r
+                ws = {  # 发送给ws客户端的消息，传到app.py文件中，传给网页客户端
+                    "status": "Cdr",
+                    "number": number,
+                    "downPath": omUrl,
+                    "play": play_path,
+                    "pid": pid,                     # 分机号
+                }
+                r['cr'] = cr
+                r['vr'] = vr
+                r['ws'] = ws
 
-    #OM重启会配置满意度调查音乐
+                return r
+
+    # OM重启会配置满意度调查音乐
     def assign(self):
         # 配置menu1,满意度评价
         # 上海OM50的录音文件   user_welcome160431      user_welcome160927     user_welcome160523
         # 深圳OM20的录音文件   user_welcome153149      user_welcome153531     user_offhour153419
-        menu1 = '<Control attribute="Assign"><menu id="1"><voicefile>user_welcome160431</voicefile><repeat>3</repeat' \
+        # user_tts172942  上海泛远欢迎您的来电        user_welcome150646  您的输入有误              userivr1  财务问题请按1，客服问题请按2，操作问题请求按3
+        # 配置menu1，评价这次服务
+        menu1 = '<Control attribute="Assign"><menu id="1"><voicefile>user_welcome153149</voicefile><repeat>3</repeat' \
                 '><infolength>1</infolength><exit>#</exit></menu></Control> '
         post_om(menu1)
         # 配置menu2，超时
-        menu2 = '<Control attribute="Assign"><menu id="2"><voicefile>user_welcome160927</voicefile><repeat>1</repeat' \
+        menu2 = '<Control attribute="Assign"><menu id="2"><voicefile>user_welcome153531</voicefile><repeat>1</repeat' \
                 '><infolength>1</infolength><exit>#</exit></menu></Control> '
         post_om(menu2)
         # 配置menu3，感谢来电
-        menu3 = '<Control attribute="Assign"><menu id="3"><voicefile>user_welcome160523</voicefile><repeat>1</repeat' \
+        menu3 = '<Control attribute="Assign"><menu id="3"><voicefile>user_offhour153419</voicefile><repeat>1</repeat' \
                 '><exit>#</exit></menu></Control> '
         post_om(menu3)
+        # 配置menu4，欢迎词
+        menu4 = '<Control attribute="Assign"><menu id="4"><voicefile>user_tts172942</voicefile><repeat>1</repeat' \
+                '><exit>#</exit></menu></Control> '
+        post_om(menu4)
+        # 配置menu5，输入错误
+        menu5 = '<Control attribute="Assign"><menu id="5"><voicefile>user_welcome150646</voicefile><repeat>1</repeat' \
+                '><exit>#</exit></menu></Control> '
+        post_om(menu5)
+        # 配置menu6，按键事件提示
+        menu6 = '<Control attribute="Assign"><menu id="6"><voicefile>userivr1</voicefile><repeat>1</repeat' \
+                '><exit>#</exit></menu></Control> '
+        post_om(menu6)
 
     # 处理DTMF的事件，接收到客户的按键信息。转到语音文件三
     def satisfy_audio(self):
@@ -264,11 +290,10 @@ class Funcs(Process_request):
     def funcs(self):
         # 可能少了一个判断root的tag
         f = {
-            'Cdr': self.recording,  # 话单请求，返回两个录音文件路径            2.6.2/LO
-            # 'BYE': self.call_end,        # 来电和分机通话结束，返回来电号码
-            'ANSWER': self.status_change,  # 来电转分机分机应答，通话建立              2.5.3
-            'RING': self.alterWin,  # 来电 弹窗显示号码，正在呼叫               2.5.3
-            # 'INCOMING': self.autoTransfer,
+            'Cdr': self.recording,              # 话单请求，返回两个录音文件路径            2.6.2/LO
+            'ANSWER': self.status_change,       # 来电转分机分机应答，通话建立              2.5.3
+            'RING': self.alterWin,              # 来电 弹窗显示号码，正在呼叫               2.5.3
+            # 'INCOMING': self.incoming,
             'BUSY': self.phone_status,
             'IDLE': self.phone_status,
             'ONLINE': self.phone_status,

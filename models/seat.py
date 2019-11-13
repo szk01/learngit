@@ -5,6 +5,8 @@ from sqlalchemy import ForeignKey
 
 
 from . import db
+
+
 class Seat(db.Model):
     __tablename__ = 'seat'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

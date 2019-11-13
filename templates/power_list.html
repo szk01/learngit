@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>功能展示</title>
+    {% from 'include_base.html' import css_js %}
+    {{ css_js() }}
+    <style>
+        .power-list li {
+            margin: 5px;
+        }
+        .power-list {
+            font-size: 20px;
+            left: 10px;
+            top: 10px;
+        }
+
+        .second {
+            position: relative;
+            left: 45px;
+        }
+    </style>
+</head>
+<body>
+     {% include 'include_base.html' %}
+
+    <div class="col-md-4 col-md-offset-3 power-list" >
+    <ul>
+        <li>
+            <span><i class="icon-folder-open"></i> 客户管理</span>
+            <ul class="second">
+                <li>
+                <span><i class="second-power"></i> 添加客户信息</span> <a href=""></a>
+
+                <li>
+                    <span><i class="icon-leaf"></i> 修改客户信息</span> <a href=""></a>
+                </li>
+                <li>
+                    <span><i class="icon-leaf"></i> 删除客户信息</span> <a href=""></a>
+                </li>
+            </ul>
+        </li>
+
+        <li>
+            <span><i class="icon-folder-open"></i> 客户公司管理</span>
+            <ul class="second">
+                <li>
+                <span><i class="icon-minus-sign"></i> 添加客户公司信息</span> <a href=""></a>
+
+                <li>
+                    <span><i class="icon-leaf"></i> 修改客户公司信息</span> <a href=""></a>
+                </li>
+                <li>
+                    <span><i class="icon-leaf"></i> 删除客户公司信息</span> <a href=""></a>
+                </li>
+            </ul>
+        </li>
+
+        <li>
+            <span><i class=""></i> 话务中心</span> <a href=""></a>
+            <ul class="second">
+                <li>
+                    <span><i class="icon-leaf"></i>分机管理</span> <a href=""></a>
+                </li>
+                <li>
+                <span><i class="icon-minus-sign"></i> 通话录音功能</span> <a href=""></a>
+
+                <li>
+                    <span><i class="icon-minus-sign"></i>来电显示弹窗</span> <a href=""></a>
+
+                <li>
+                    <span><i class="icon-leaf"></i>通话记录</span> <a href=""></a>
+                </li>
+            </ul>
+        </li>
+
+        <li>
+            <span><i class=""></i> 用户中心</span> <a href=""></a>
+            <ul class="second">
+                <li>
+                    <span><i class="icon-leaf"></i>添加账号</span> <a href=""></a>
+                </li>
+                <li>
+                <span><i class="icon-minus-sign"></i> 修改账号信息</span> <a href=""></a>
+
+                <li>
+                    <span><i class="icon-minus-sign"></i>删除账号</span> <a href=""></a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    </div>
+
+</body>
+</html>

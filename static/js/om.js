@@ -83,7 +83,7 @@
       return "";
     }
 
-        // 浏览器通知消息
+    // 浏览器通知消息
     var notification = function (body) {
             console.log('浏览器通知消息!!!');
             const NotificationInstance = Notification || window.Notification;
@@ -135,6 +135,7 @@
 
         }
 
+
 //  var url = "http://106.15.44.224:80"
     var url = "/"                                   // 使用相对路径
     console.log(url);
@@ -157,6 +158,7 @@
         var body = '有客户来电'+data["number"]
         notification(body)
         $('.class-note').show()
+
         $('.call-number').text('来电号码'+data["number"])
         $('.status').text('呼叫中')
 
@@ -185,26 +187,3 @@
 //          $("#call-record-container").append(r)
         }
     });
-
-
-    // 来电弹窗上的满意度调查按钮                使用jquery的事件委托的方式，委托给父节点
-    $('.class-note').on('click', '.satisfy', function () {
-        console.log('点击满意度调查按钮...')
-        socket.emit('satisfy', {'data': 'satisfy'})
-    })
-
-
-
-    // 来电弹窗上的关闭按钮，清除计时
-    $(document.body).on('click', '.close', function () {                    // 没有起作用
-        console.log('点击来电弹窗的关闭按钮')
-        $('.call-note-container').hide()                           // 隐藏弹窗
-        clearInterval(window.inter)
-        window.count = 0
-    })
-
-    // 首页测试的满意度调查按钮
-    $('button.satisfy').click(function() {                //按钮点击
-        console.log('点击满意度调查按钮')
-        socket.emit('satisfy', {'data': 'satisfy'})     // 只传递数据，不需要返回的数据。使用websocket协议
-    })

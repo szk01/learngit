@@ -35,12 +35,14 @@ def index():
         log('user', user)
         if user:
             print(number)
-            # response = make_response(render_template('index.html', number=number))
-            # response.set_cookie('number', number)
-            # return response
             session['number'] = number
             return render_template('index.html', number=number)
         else:
             return u'用户名或者密码错误，请确认后重新登录'
 
-
+# 退出登录
+@main.route('/logout', methods=['POST', 'GET'])
+def logout():
+    print('user')
+    session.pop('number')
+    return render_template('login.html')

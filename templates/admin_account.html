@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>账号管理</title>
+    {% from 'include_base.html' import css_js %}
+    {{ css_js() }}
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"/>
+    <script type="text/javascript" src="static/js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="static/js/bootstrap-table.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcss.com/sweetalert/2.1.2/sweetalert.min.js"></script>
+
+    <style type="text/css">
+        .caption span {
+            color: #4985ff;
+            font-weight: bold;
+        }
+        .form-change_account {
+            position: fixed;
+            left: 500px;
+            top: 300px;
+            width: 500px;
+            display: none;
+        }
+        .form-creatUser {
+            position: fixed;
+            display: none;
+            left: 500px;
+            top: 100px;
+            width: 400px;
+
+            border: #e0d2d2 0.05px solid;
+            border-radius: 10px;                    /*这个border-radius对border无效，对box-shadow有效*/
+            padding: 20px 20px 20px 20px;
+            box-shadow: 7px 0px 10px 4px #908c8c;
+            margin: 50px;
+        }
+
+         /*账号没有填  */
+        .ipt-account:invalid{
+
+        }
+        .thumbnail {
+            display: block;
+        }
+
+    </style>
+</head>
+<body>
+    {% include 'include_base.html' %}
+    <!--账号信息显示-->
+    <div class="col-sm-3 col-md-2">            <!--浏览器的 display: block-->
+        <div class="thumbnail">
+            <img src="../images/default_img.gif" alt="default img" style="width: 50px; height:50px">
+            <div class="caption">
+                <h3>用户名 &nbsp<span>{{ user_name }}</span></h3>
+                <p>账号 &nbsp &nbsp<span class="span-account">{{ user_number }}</span></p>
+                <p>角色 &nbsp &nbsp<span>{{ user_role }}</span></p>
+                <p>分配分机 &nbsp &nbsp<span>{{ user_seat }}</span></p>
+                <p><a href="/logout">退出登录</a></p>
+                <p><a href="#" class="btn btn-primary change_info" role="button" data-toggle="modal" data-target="#userModal">修改信息</a>
+                    <a href="#" class="btn btn-primary" role="button" data-toggle="modal" data-target="#myModal">创建用户</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模拟框 用户信息修改更新 user修改信息 -->
+    <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="#myModalLabel">用户信息修改</h4>
+                </div>
+
+            <form id="form-update_user_info">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label >用户名</label>
+                        <input type="text" class="form-control ipt-update-user"  placeholder="userName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label >密码</label>
+                        <input type="password" class="form-control ipt-update-password"  placeholder="Password" required>
+                    </div>
+                    <div class="form-group">
+                        <label >确认密码</label>
+                        <input type="password" class="form-control ipt-update-confirmPassword"  placeholder="confirmPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label >手机号码</label>
+                        <input type="text" class="form-control ipt-update-phone"  placeholder="seatNumber" required>
+                    </div>
+                    <div class="form-group">
+                        <label >分机号</label>
+                        <input type="text" class="form-control ipt-update-seat"  placeholder="seatNumber" required>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        关闭
+                    </button>
+                    <button type="button" class="btn btn-primary btn-update-user_info" data-dismiss="modal">
+                        提交修改
+                    </button>
+                </div>
+            </form>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 模态框中实现表单提交 admin创建user-->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">编辑用户</h4>
+                    </div>
+
+                <form id="form_data">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label >账号</label>
+                            <input type="text" class="form-control ipt-create-account"  placeholder="Account" required>    <!--required为必填项-->
+                        </div>
+                        <div class="form-group">
+                            <label >用户名</label>
+                            <input type="text" class="form-control ipt-create-user"  placeholder="userName" required>
+                        </div>
+                        <div class="form-group">
+                            <label >所属公司</label>
+                            <select class="form-control select-gs">
+                                <option value="shanghai">上海:shanghai</option>
+                                <option value="shengzhen">深圳:shengzhen</option>
+                                <option value="guangxi">广西（崇左）:guangxi</option>
+                                <option value="yuenan">越南:yuenan</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label >角色</label>
+                            <select class="form-control select-create-role">
+                                <option value="Customer_service">客服</option>
+                                <option value="operating">操作</option>
+                                <option value="kefu_manager">客服经理</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label >密码</label>
+                            <input type="password" class="form-control ipt-create-password"  placeholder="Password" required>
+                        </div>
+                        <div class="form-group">
+                            <label >确认密码</label>
+                            <input type="password" class="form-control ipt-create-confirmPassword"  placeholder="confirmPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <label >手机号码</label>
+                            <input type="text" class="form-control ipt-create-phone"  placeholder="phone number" required>
+                        </div>
+                        <div class="form-group">
+                            <label >关联分机号码</label>
+                            <input type="text" class="form-control ipt-create-seat"  placeholder="seatNumber" required>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            关闭
+                        </button>
+                        <button type="button" class="btn btn-primary btn-creatUser" data-dismiss="modal">
+                            创建用户
+                        </button>
+                    </div>
+                </form>
+
+                </div>
+            </div>
+        </div>
+
+    <!--Modal框，修改表中的用户信息-->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="">修改用户信息</h4>
+                </div>
+
+            <form id=" ">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label >用户账号</label>
+                        <input type="text" class="form-control ipt-account"  placeholder="account" required>
+                    </div>
+                    <div class="form-group">
+                        <label >用户昵称</label>
+                        <input type="text" class="form-control ipt-name"  placeholder="userName" required>
+                    </div>
+                    <div class="form-group">
+                        <label >所属公司</label>
+                        <select class="form-control select-update-gs">
+                            <option value="2">上海:shanghai</option>
+                            <option value="1">深圳:shengzhen</option>
+                            <option value="4">广西（崇左）:guangxi</option>
+                            <option value="3">越南:yuenan</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label >账号状态</label>
+                        <select class="form-control select-status">
+                            <option value="1">使用：1</option>
+                            <option value="0">停用：0</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label >用户角色</label>
+                        <select class="form-control select-role">
+                            <option value="1">客服</option>
+                            <option value="3">操作</option>
+                            <option value="4">客服经理</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label >所分配分机</label>
+                        <input type="text" class="form-control ipt-seat"  placeholder="seat" required>
+                    </div>
+                    <div class="form-group">
+                        <label >电话</label>
+                        <input type="text" class="form-control ipt-phone"  placeholder="phone" required>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        关闭
+                    </button>
+                    <button type="button" class="btn btn-primary btn-edit" data-dismiss="modal">
+                        提交修改
+                    </button>
+                </div>
+            </form>
+
+            </div>
+        </div>
+    </div>
+
+    <!--所有用户信息表 bootstrap-table -->
+    <div class="col-md-8 container">
+        <table class="table table-hover">
+            <caption>用户信息表</caption>
+
+            <tr class="head">
+                <th>用户id</th>
+                <th>用户账号</th>
+                <th>用户昵称</th>
+                <th>用户所在公司</th>
+                <th>账号状态</th>
+                <th>用户角色</th>
+                <th>所分配分机</th>
+                <th>电话</th>
+                <th>操作</th>
+            </tr>
+
+            {% for u in users %}
+            <tr>
+                <td>{{ u.id }}</td>
+                <td>{{ u.number }}</td>
+                <td>{{ u.name }}</td>
+                <td>{{ u.company.name }}</td>
+                <td>{{ u.status }}</td>
+                <td>{{ u.role.name }}</td>
+                <td>{{ u.id }}</td>
+                <td>{{ u.phone }}</td>
+                <td>
+                    <button class="btn btn-primary edit" data-toggle="modal" data-target="#editModal">修改</button>
+                    <button class="btn btn-danger delete">删除</button>
+                </td>
+            </tr>
+            {% endfor %}
+            </table>
+
+        <nav aria-label="...">
+		    <ul class="pagination">
+				<li>
+					{% if pagination.has_prev %}
+				    <a href="?page={{ pagination.prev_num }}" aria-label="Previous">
+						<span aria-hidden="true">&laquo;</span>
+					</a>
+					{% else %}
+                        <span aria-hidden="true">&laquo;</span>
+                    {% endif %}
+				</li>
+
+				<li class="">
+					<a href="?page=1"><span>1</span></a>
+				</li>
+				<li >
+				    <a href="?page=2"><span>2</span></a>
+				</li>
+				<li >
+				    <a href="?page=3"><span>3</span></a>
+				</li>
+				<li >
+				    <span>... <span class="sr-only">(current)</span></span>
+				</li>
+				<li >
+				    <a href="?page={{ pagination.pages }}"><span>{{ pagination.pages }}</span></a>
+				</li>
+
+				<li>
+					{% if pagination.has_next %}
+				    <a href="?page={{ pagination.next_num }}" aria-label="Previous">
+						<span aria-hidden="true">&raquo;</span>
+					</a>
+					{% else %}
+                        <span aria-hidden="true">&raquo;</span>
+                    {% endif %}
+				</li>
+			</ul>
+
+			<p>共有{{ pagination.pages }}页， 当前是第<span style="color: #ff4966">{{ pagination.page }}</span>页</p>
+		</nav>
+    </div>
+
+    <!--工具函数-->
+
+    <!--用户信息修改-->
+    <script>
+        $('.edit').click(function () {
+            log('点击按钮')
+            // 拿到一行内的所有信息
+            var $td = $(this).parent().siblings(":first")
+            log('td', $td.text())
+            var id = $td.text()
+
+            $(".btn-edit").click(function() {
+                var account = $('.ipt-account').val()
+                var name = $(".ipt-name").val()
+                var gs = $('.select-update-gs').find('option:selected').val()
+                var status = $('.select-status').find('option:selected').val()
+                var role = $('.select-role').find('option:selected').val()
+                var seat = $('.ipt-seat').val()
+                var phone = $('.ipt-phone').val()
+                log("name", account, name, gs, status, seat, phone)
+
+                var data = {}
+                data.id = id
+                data.account = account
+                data.name = name
+                data.gs = gs
+                data.status = status
+                data.role = role
+                data.seat = seat
+                data.phone = phone
+
+                ajax('post', '/update/user', data, function (r) {
+                   if (r === 'update success') {
+                       log('修改成功')
+                   } else if (r === 'seat none') {
+                       log('分机不存在或分机已被使用')
+                   }
+                })
+            })
+        })
+    </script>
+
+    <!--用户信息基本编辑-->
+    <script>
+        $('button.btn-update-user_info').click(function () {
+            log('点击更新用户信息按钮')
+            var p1 = $('.ipt-update-password').val()
+            var p2 = $('.ipt-update-confirmPassword').val()
+            log('p1, p2', p1, p2)
+            if (p1 !== p2) {
+                alert('请确认两次密码相同...')
+                return
+            }
+
+            var user_name = $('.ipt-update-user').val()
+            var password = $('.ipt-update-password').val()
+            var seat = $('.ipt-update-seat').val()
+            var phone = $('.ipt-update-phone').val()
+
+            ud = {}
+            ud.user_name = user_name
+            ud.password = password
+            ud.seat = seat
+            ud.phone = phone
+
+            log('更新的信息', ud)
+            ajax('post', '/update/user_info', ud, function (r) {
+                if (r === 'sucess') {
+                    log("用户信息修改成功")
+                }
+            })
+        })
+    </script>
+
+    <!--创建用户user-->
+    <script>
+        var log = console.log.bind(console)
+
+        // 发送ajax请求
+        var ajax = function(type, url, data, callback) {
+            $.ajax({
+                type: type,
+                url: url,
+                data: data,
+                success: callback
+      	    })
+        }
+
+        // 验证手机号码
+        var checkPhone = function(number) {
+            if(!(/^1[3456789]\d{9}$/.test(number))){                 // 1开头（3456789）中某一个，剩下随意9个数字
+                alert("手机号码有误，请重填");
+                return false;
+            }
+        }
+
+        // admin创建用户，前端验证
+        $('.btn-creatUser').click(function () {
+            var p1 = $('.ipt-create-password').val()
+            var p2 = $('.ipt-create-confirmPassword').val()
+            log("p1, p2", p1, p2)
+            if (p1 !== p2) {
+                alert('请确认两次密码相同...')
+                return
+            }
+            var data = {}
+            var account = $('.ipt-create-account').val()
+            var userName = $('.ipt-create-user').val()
+            var password = $('.ipt-create-password').val()
+            var seatNumber = $('.ipt-create-seat').val()
+            var phone = $('.ipt-create-phone').val()
+            var gs = $('.select-gs').find('option:selected').val()
+            var role = $('.select-role').find('option:selected').val()
+
+            data.account = account
+            data.username = userName
+            data.password = password
+            data.seatNumber = seatNumber
+            data.phone = phone
+            data.gs = gs
+            data.role = role
+            // 验证手机号
+            checkPhone(phone)
+            log('a, u, s', account, userName, seatNumber)
+            // h5的required验证不完整，直接先用js验证
+            if (account === ""  || userName === "" || seatNumber === "" || phone === "") {
+                alert('请将信息填完整，全部为必填项')
+                 return;
+            }
+            log('data数据', data)
+            ajax("post", "/create_user", data, function (r) {
+                if (r === "create sucess") {
+                    alert("创建用户成功")
+                } else if (r === "you have no permission") {
+                    alert("你无此权限")
+                }
+            })
+        })
+
+    </script>
+
+    <!--用户删除-->
+    <script>
+        $('.delete').click(function () {
+            log('点击删除')
+            swal({
+				title: "确定删除？",
+				text: "删除后不恢复，确定是否删除此用户!",
+				icon: "warning",
+				buttons: true,
+				dangerMode: true,
+			})
+			.then((willDelete) => {
+				if (willDelete) {
+					// 前端删除
+					$td = $(this).parent().siblings(":first")
+					$tr = $td.parent()
+					$tr.remove()
+
+					// 后端删除
+					var id = $td.text()
+					var data = {}
+					data.id = id
+                    log('data', data)
+					ajax('post', '/delete/user', data, function(r) {
+						// 提示删除成功
+                        log('删除客户')
+						if (r === 'delete success') {
+							swal('您已成功删除用户！', {
+								icon: "success",
+							});
+						}
+					})
+				}
+				else {
+					swal("您的操作已取消")
+				}
+			});
+        })
+    </script>
+    <!--bootstrap-table 所有用户信息表-->
+    <script>
+        function operateFormatter(value, row, index) {
+            return '<buttton id="TableDelete" class="btn btn-danger" type="button" >删除</buttton>'
+        }
+
+        // 按钮操作
+        operateEvents = {
+            "click #TableDelete": function (e, value, row, index) {
+                log("点击编辑按钮")
+                log('row', row.id)
+                var r = confirm("确定删除这个用户吗？")
+                var ud = {}
+                ud.id = row.id
+                if (r === true) {
+                    ajax('POST', '/remove/user', ud, function (r) {
+                        if (r === 'remove sucess') {
+                            alert("删除用户成功")
+                        }
+                    })
+                }
+            }
+        }
+
+        $('#table').bootstrapTable({
+
+        url: '/user/list',//获取所有数据的接口
+        method: 'get',                      //请求方式（*）
+        toolbar: '#toolbar',                //工具按钮用哪个容器
+        pagination: true,                   //是否显示分页（*）
+        striped: true,                      //是否显示行间隔色
+        //sortOrder: "asc",                   //排序方式
+        uniqueId: "id",                 //每一行的唯一标识，一般为主键列
+        pageSize: 10,                       //每页的记录行数（*）
+        pageList: [5,10,20],//可供选择的每页的行数（*）
+        showRefresh: false,                  //是否显示刷新按钮
+        showToggle:false,                    //是否显示详细视图和列表视图的切换按钮
+        search: true,
+        columns: [
+            {
+            field: 'id',//与返回数据对象属性一致
+            title: '用户id',//表头显示
+        }, {
+            field: 'account',
+            title: '账号'
+        }, {
+            field: 'name',
+            title: '用户昵称',
+        }, {
+            field: 'gs',
+            title: '用户所在公司',
+        },{
+            field: 'status',
+            title: '账号状态',
+        },{
+            field: 'role',
+            title: '用户角色',
+        },{
+            field: 'seat',
+            title: '所分配的分机',
+        },{
+            field: 'phone',
+            title: '电话',
+        },{
+            field: 'button',
+            title: '操作',
+            events: operateEvents,        // 给按钮注册事件
+            formatter: operateFormatter,           // 表格中增加按钮，addButton
+        },
+
+
+        ],
+
+            // 表格内的编辑
+        // onClickCell: function(field, value, row, $element) {
+        //     $element.attr('contenteditable', true);             // 点击使得元素可编辑
+        //     $element.blur(function() {                          // blur失去焦点，执行以下的函数
+        //         let index = $element.parent().data('index');
+        //         let tdValue = $element.html();
+        //
+        //         saveData(index, field, tdValue);
+        //     })
+        // },
+
+    });
+
+        // var saveDate = function (index, field, value) {              // 保存更新的数据
+        //     $table.bootstrapTable('updateCell', {
+        //         index: index,       //行索引
+        //         field: field,       //列名
+        //         value: value        //cell值
+        //     })
+        // }
+
+
+
+    </script>
+</body>
+</html>

@@ -6,7 +6,10 @@
 	{% from 'include_base.html' import css_js %}
     {{ css_js() }}
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"/>
-    <script type="text/javascript" src="static/js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script>
+	<script type="text/javascript" src="static/js/bootstrap-table.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+	<script src="https://cdn.bootcss.com/sweetalert/2.1.2/sweetalert.min.js"></script>
 	<style type="text/css">
 		/*编辑按钮*/
 			.form-container {
@@ -56,459 +59,406 @@
 				margin: 0 100px 0 10px;			/*上右下左 和浏览器显示的不一样*/
 				display: block;
 			}
+
+            .class-li {
+                height: 34px;
+            }
+
+            #id-ul {
+
+                top: 10px;
+                background: #FFFFFF;
+                border: 1px solid #71798a;
+                width: 100%;
+                height:150px;
+                border-radius: 5px;
+                overflow: scroll;
+                display: none;
+            }
 	</style>
 </head>
 <body>
 	<!--左侧导航栏-->
     {% include 'include_base.html' %}
 
-	<!--bootstrap搜索框，栅格系统使用了浮动float: left-->
-	<div class="col-md-offset-9 search">						<!--搜索框无法独占一行，已经脱离文档流，使用l了浮动,float:。加上display: block也无法改变-->
-		<form class="navbar-form navbar-left " role="search">
-		<div class="form-group">
-			<span class="glyphicon glyphicon-search" style="background-color: #FFFFFF"></span>
-			<input type="text" class="form-control" placeholder="输入姓名，手机号，qq">
-		</div>
-		<button type="submit" class="btn btn-primary">Search</button>
-		</form>
-	</div>
 
-	<div id="j_mask" class="mask"></div>
+	<!--modal框，新增一个客户-->
+	<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" >新增客户</h4>
+                </div>
 
-	<!--增加客户按钮-->
-	<div class="add_client">
-		<p>如果你想增加一个客户信息, 请点击</p>
-		<button class="bt-add-client btn btn-primary">增加+</button>
-	</div>
+            <form >
+                <div class="modal-body">
 
-	<!--下面是搜索的客户结果-->
-	<div class="find_clients">
-		<table class="find-table">
-		</table>
-	</div>
+                    <div class="form-group" style="position: relative;">
+                        <label >客户名</label>
+                        <input type="text" class="form-control ipt-add-name"  placeholder="client name" required>
+                        <ul id="id-ul">
 
-    <!--bootstrap表格，显示所有客户信息-->
+                        </ul>
+                    </div>
+
+                    <div class="form-group">
+                        <label >客户所在公司</label>
+                        <input type="text" class="form-control ipt-add-company" id="company" placeholder="(必填)company" required>
+                    </div>
+                    <div class="form-group">
+                        <label >性别</label>
+                        <select class="form-control select-sex">
+                            <option value="男">男</option>
+                            <option value="女">女</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label >联系电话</label>
+                        <input type="text" class="form-control ipt-add-phone"  placeholder="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label >职位</label>
+                        <input type="text" class="form-control ipt-add-position"  placeholder="position" required>
+                    </div>
+                    <div class="form-group">
+                        <label >qq</label>
+                        <input type="text" class="form-control ipt-add-qq"  placeholder="qq" required>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        关闭
+                    </button>
+                    <button type="button" class="btn btn-primary btn-add-company" data-dismiss="modal">
+                        增加新客户
+                    </button>
+                </div>
+            </form>
+
+            </div>
+        </div>
+    </div>
+
+
+	<!--modal框，修改客户信息-->
+	<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="#myModalLabel">修改客户名字</h4>
+                </div>
+
+            <form id="form-update_user_info">
+                <div class="modal-body">
+					<div class="form-group">
+                        <label >id</label>
+                        <input type="text" class="form-control ipt-id"  placeholder="请一定保证正确" required>
+                    </div>
+                    <div class="form-group">
+                        <label >客户名</label>
+                        <input type="text" class="form-control ipt-update-name"  placeholder="company name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label >客户所在公司</label>
+                        <input type="text" class="form-control ipt-update-phone"  placeholder="company phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label >性别</label>
+                        <input type="text" class="form-control ipt-update-address"  placeholder="company address" required>
+                    </div>
+                    <div class="form-group">
+                        <label >联系电话</label>
+                        <input type="text" class="form-control ipt-update-industry"  placeholder="industy" required>
+                    </div>
+                    <div class="form-group">
+                        <label >客户email</label>
+                        <input type="text" class="form-control ipt-update-range"  placeholder="route range" required>
+                    </div>
+                    <div class="form-group">
+                        <label >职位</label>
+                        <input type="text" class="form-control ipt-update-range"  placeholder="route range" required>
+                    </div>
+                    <div class="form-group">
+                        <label >qq</label>
+                        <input type="text" class="form-control ipt-update-range"  placeholder="route range" required>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        关闭
+                    </button>
+                    <button type="button" class="btn btn-primary btn-update-company" data-dismiss="modal">
+                        提交修改
+                    </button>
+                </div>
+            </form>
+
+            </div>
+        </div>
+    </div>
+
+    <!--toolbar工具集  bootstrap表格，显示所有客户信息-->
 	<div class="client col-md-10">
+		 <div class="panel-body form-inline">
+			 <span class="glyphicon glyphicon-search"></span>
+				<label>
+					<input type="text" class="form-control ipt-search">
+				</label>
+				<button type="submit" class="btn btn-primary">Search</button>
+			 <label style="position: relative; left: 300px">增加新客户</label>
+			 <button class="btn btn-primary" style="position: relative; left: 300px" data-toggle="modal" data-target="#addModal">new client</button>
+		 </div>
 		<table class="table table-hover client">
 			<caption>客户信息表</caption>
 			<tr class="head">
-				<th>序列</th>
-				<th>客户姓名</th>
-				<th>客户手机号码</th>
-				<th>客户公司</th>
-				<th>客户微信</th>
-				<th>客户qq</th>
-				<th>客户邮箱</th>
-				<th>操作</th>
+				<th>id</th>
+				<th>客户名</th>
+				<th>客户所在公司</th>
+				<th>性别</th>
+				<th>联系电话</th>
+                <th>客户email</th>
+				<th>职位</th>
+				<th>qq</th>
+
 			</tr>
-			<tr class="infos">
-				<td class="td-cid">0</td>
-				<td>test</td>
-				<td>123456789101</td>
-				<td>szfy</td>
-				<td>wechat</td>
-				<td>87877897,386428934</td>
-				<td>32043789@syfy</td>
-				<td><button class="edit btn btn-info">修改</button></td>
-			</tr>
+
+			{% for c in clients %}
+				<tr class="infos">
+					<td class="td-cid">{{ c.id }}</td>
+					<td>{{ c.name }}</td>
+                    <td>{{ c.com.name }}</td>
+					<td>{{ c.sex }}</td>
+					<td>{{ c.phone }}</td>
+					<td>{{ c.email }}</td>
+                    <td>{{ c.position }}</td>
+                    <td>{{ c.qq }}</td>
+
+					<td><button class="edit btn btn-info" data-toggle="modal" data-target="#editModal">修改</button>
+						<button class="delete btn btn-danger" >删除</button></td>
+				</tr>
+			{% endfor%}
+
 		</table>
+
+		<nav aria-label="...">
+		    <ul class="pagination">
+				<li>
+					{% if pagination.has_prev %}
+				    <a href="?page={{ pagination.prev_num }}" aria-label="Previous">
+						<span aria-hidden="true">&laquo;</span>
+					</a>
+					{% else %}
+                        <span aria-hidden="true">&laquo;</span>
+                    {% endif %}
+				</li>
+
+				<li class="">
+					<a href="?page=1"><span>1</span></a>
+				</li>
+				<li >
+				    <a href="?page=2"><span>2</span></a>
+				</li>
+				<li >
+				    <a href="?page=3"><span>3</span></a>
+				</li>
+				<li >
+				    <span>... <span class="sr-only">(current)</span></span>
+				</li>
+				<li >
+				    <a href="?page={{ pagination.pages }}"><span>{{ pagination.pages }}</span></a>
+				</li>
+
+				<li>
+					{% if pagination.has_next %}
+				    <a href="?page={{ pagination.next_num }}" aria-label="Previous">
+						<span aria-hidden="true">&raquo;</span>
+					</a>
+					{% else %}
+                        <span aria-hidden="true">&raquo;</span>
+                    {% endif %}
+				</li>
+			</ul>
+
+			<p>共有{{ pagination.pages }}页， 当前是第<span style="color: #ff4966">{{ pagination.page }}</span>页</p>
+		</nav>
 	</div>
 
-	<!--bootstrap编辑弹窗，和增加客户编辑框是一样的，有span增加按钮-->
-	<div class="form-container">
-		<form class="form-horizontal">
-		  <div class="form-group " style="display: none">							<!--这个序列表单不显示-->
-			<label for="inputEmail3" class="col-sm-2 control-label">序列</label>
-			<div class="input-group col-sm-8">
-			  <input type="text" class="form-control ipt-id" id="inputEmail3" placeholder="id">
-			</div>
-		  </div>
 
-		  <div class="form-group">									<!--表单组-->
-		      <label for="inputEmail3" class="col-sm-2 control-label">姓名</label>
-		      <div class="input-group col-sm-8">							<!--输入框组-->
-		          <input type="text" class="form-control ipt-name" id="inputEmail3" placeholder="Name">
-		      </div>
-		  </div>
-
-		  <div class="form-group form-phone">
-		    <label for="inputPassword3" class="col-sm-2 control-label">手机号</label>
-		    <div class="input-group col-sm-8">
-		      <input type="tel" class="form-control ipt-phone" id="inputPassword3" placeholder="Tel">
-		      <span class="input-group-addon">增加</span>
-		    </div>
-		  </div>
-
-		  <div class="form-group">
-		    <label for="inputPassword3" class="col-sm-2 control-label">公司</label>
-		    <div class="input-group col-sm-8">
-		      <input type="tel" class="form-control ipt-gs" id="inputPassword3" placeholder="Company">
-
-		    </div>
-		  </div>
-
-		  <div class="form-group form-wechat">
-		    <label for="inputPassword3" class="col-sm-2 control-label">微信</label>
-		    <div class="input-group col-sm-8">
-		      <input type="text" class="form-control ipt-wechat" id="inputPassword3" placeholder="Wechat">
-		      <span class="input-group-addon">增加</span>
-		    </div>
-		  </div>
-
-		  <div class="form-group form-qq">
-		    <label for="inputPassword3" class="col-sm-2 control-label">QQ</label>
-		    <div class="input-group col-sm-8">
-		      <input type="qq" class="form-control ipt-qq" id="inputPassword3" placeholder="QQ">
-		      <span class="input-group-addon">增加</span>
-		    </div>
-		  </div>
-
-		  <div class="form-group form-email">
-		    <label for="inputPassword3" class="col-sm-2 control-label">邮箱</label>
-		    <div class="input-group col-sm-8">
-		      <input type="email" class="form-control ipt-email" id="inputPassword3" placeholder="Email">
-		      <span class="input-group-addon">增加</span>
-		    </div>
-		  </div>
-			<!--<input class="btn btn-default" type="submit" value="Submit" id="bt-submit">-->
-		</form>
-
-		<div class="bt">						<!--在一个div中两个input类型的button是并联的-->
-			<input type="button" class="btn btn-primary btn-confirm" value="确认" />
-			<input type="button" class="btn btn-primary btn-cancel" value="取消" />
-		</div>
-	</div>
-
-	<!--bootstrap增加按钮 的编辑弹窗，无增加按钮-->
-	<div class="form-add-container">
-		<form class="form-horizontal">
-
-		  <div class="form-group">										<!--表单组 form-group是不能变的-->
-		      <label for="inputEmail3" class="col-sm-2 control-label">姓名</label>
-		      <div class="input-group col-sm-8">							<!--输入框组-->
-		          <input type="text" class="form-control ipt-add-name" id="inputEmail3" placeholder="Name">
-		      </div>
-		  </div>
-
-		  <div class="form-group add-form-phone">
-		    <label for="inputPassword3" class="col-sm-2 control-label">手机号</label>
-		    <div class="input-group col-sm-8">
-		      <input type="tel" class="form-control ipt-add-phone" id="inputPassword3" placeholder="Tel">
-		    </div>
-		  </div>
-
-
-		  <div class="form-group">
-		    <label for="inputPassword3" class="col-sm-2 control-label">公司</label>
-		    <div class="input-group col-sm-8">
-		      <input type="text" class="form-control ipt-add-gs" id="inputPassword3" placeholder="Company">
-		    </div>
-		  </div>
-
-
-		  <div class="form-group form-add-wechat">
-		    <label for="inputPassword3" class="col-sm-2 control-label">微信</label>
-		    <div class="input-group col-sm-8">
-		      <input type="text" class="form-control ipt-add-wechat" id="inputPassword3" placeholder="Wechat">
-		    </div>
-		  </div>
-
-
-		  <div class="form-group form-add-qq">
-		    <label for="inputPassword3" class="col-sm-2 control-label">QQ</label>
-		    <div class="input-group col-sm-8">
-		      <input type="qq" class="form-control ipt-add-qq" id="inputPassword3" placeholder="QQ">
-		    </div>
-		  </div>
-
-
-
-		  <div class="form-group form-add-email">
-		    <label for="inputPassword3" class="col-sm-2 control-label">邮箱</label>
-		    <div class="input-group col-sm-8">
-		      <input type="email" class="form-control ipt-add-email" id="inputPassword3" placeholder="Email">
-		    </div>
-		  </div>
-			<!--<input class="btn btn-default" type="submit" value="Submit" id="bt-submit">-->
-		</form>
-
-		<div class="bt">						<!--在一个div中两个input类型的button是并联的-->
-			<input type="button" class="btn btn-primary btn-add-confirm" value="确认" />
-			<input type="button" class="btn btn-primary btn-add-cancel" value="取消" />
-		</div>
-	</div>
 </body>
 
+	<!--工具函数-->
+	<script>
+		var ajax = function (url, type, data, callback) {
+			$.ajax({
+				type: type,
+				url: url,
+				data: data,
+				success: callback,
+      		});
+		}
 
-<script>
-	var log = console.log.bind(console)
+		var log = console.log.bind(console)
+	</script>
 
-	// 点击增加客户按钮 显示编辑弹窗
-	$('.bt-add-client').click(function () {
-		$('.form-add-container').show()
-		$('.mask').show()
-	})
+    <!--oninput事件，发送ajax请求，动态生成很多备选项-->
+    <script>
+        var ipt = document.querySelector("#company")
+        ipt.oninput = function () {
+            var v = $("#company").val()
+            log("value", v)
+            ajax('find/companys', 'post', {'data': v}, function (r) {
+                // 动态生成很多的li
+                //log(r, typeof r)
+                var ul = $("#id-ul")
+                var li = ''
+                for (var i = 0; i < r.length; i++) {
+                    li += `<li class="class-li">${r[i]}</li>`
+                    ul.html(li)
+                }
+                ul.on("mouseover",'.class-li',  function () {
+                    console.log($(this));
+                    $(this).css("color", "white")
+                    $(this).css("background-color","#286090");
+                })
 
-	/*点击增加客户的确认按钮，显示编辑弹窗，拿到编辑弹窗中的信息，发送ajax请求，增加一条客户记录，重新加载所有客户*/
-	$('.btn-add-confirm').click(function () {
-		// var cid = $('.in-ad-cid').val()							// 序列号
-		var name = $('.ipt-add-name').val()						// 姓名
-		var phone = $('.ipt-add-phone').val()						// 手机号
-		var gs = $('.ipt-add-gs').val()							// 公司
-		var wechat = $('.ipt-add-wechat').val()					// 微信
-		var qq = $('.ipt-add-qq').val()							// qq
-		var email = $('.ipt-add-email').val()						// email
-		//console.log('确认增加按钮获取的消息', cid, name, phone, gs, wechat, qq, email)
-		var add_data = {}
-		// add_data.cid = cid
-		add_data.name = name
-		add_data.phone = phone
-		add_data.gs = gs
-		add_data.wechat = wechat
-		add_data.qq = qq
-		add_data.email = email
-		 $.ajax({
-      		type:"post",
-      		url:"/add_client",
-      		data: add_data,
-      		success: function(r){
-      			console.log('成功增加新客户...', r)
-				load_clients()				// 重新加载所有的客户
-      		}
-      	});
-		log('编辑框中的信息', add_data)
-		reset_edit()						//
-		$('.form-add-container').hide()			// 隐藏增加客户编辑弹窗
-		$('.mask').hide()
-
-	})
-
-	/*点击增加客户编辑框的取消功能*/
-	$('.btn-add-cancel').click(function () {
-		$('.form-add-container').hide()
-		$('.mask').hide()
-		reset_add_edit()
-	})
-
-	// 查找客户功能
-    $('.search').keyup(function(event){
-        console.log('检查到按下了按钮...')
-        if(event.keyCode === 13){
-            var $val = $('.search').val()
-            var d = sort_data($val)
-            //console.log($val)
-            $.ajax({
-      		type:"post",
-      		url:"/find_client",
-      		data: d,
-      		success: function(r){
-      			dom_table(r)
-      			console.log('查找客户...', r)
-      		}
-      	});
+                ul.on("mouseout", '.class-li', function () {
+                    $(this).css("color", "black")
+                    $(this).css("background-color","white");
+                })
+                ul.on("click", '.class-li',function () {
+                    $t = $(this).text()
+                    log("文字", $t)
+                    $("#company").val($t)
+                    $('#id-ul').hide()
+                })
+                ul.show()
+            })
         }
-    })
+    </script>
 
+	<!--新增客户-->
+	<script>
+		$(".btn-add-company").click(function() {
 
-	//重新加载所有的客户
-    function load_clients(){
-    	$('.clients td').remove()			// 清空以前的ajax请求，以免重复显示
-    	$.ajax({
-    		type:"post",
-    		url:"/load_clients",
-    		success: function(result){
-    			console.log('接收数据成功...')
-    			console.log('接受到的数据', result)
-    			var data = JSON.parse(result)           // 解析得到的字符串为json对象
-    			for(var i=0; i < data.length; i++){
-	      			var infos = $('<tr>' +
-			      					'<td class="td-cid">'+data[i].id+'</td>'+
-			      					'<td>'+data[i].name+'</td>'+
-			      					'<td>'+data[i].phone+'</td>'+
-			      					'<td>'+data[i].company+'</td>'+
-			      					'<td>'+data[i].wechat+'</td>'+
-			      					'<td>'+data[i].qq+'</td>'+
-			      					'<td>'+data[i].email+'</td>'+
-			      					'<td><button class="edit btn btn-info">修改</button></td>'+
-								'/tr>')
+			var name = $(".ipt-add-name").val()
+            var company = $(".ipt-add-company").val()
+            var sex = $('.select-sex').find('option:selected').val()
+			var phone = $(".ipt-add-phone").val()
+			var position = $(".ipt-add-position").val()
+			var qq  = $(".ipt-add-position").val()
 
-      				$('table.client').append(infos)
+			data = {}
+			data.name = name
+            data.company = company
+            data.sex = sex
+            data.phone = phone
+            data.position = position
+            data.qq = qq
+            log("data", data)
+			ajax('new/client', 'post', data, function(r) {
+				if (r === 'new success') {
+					log("创建新客户成功")
+                    swal('创建新客户成功！', {
+                        icon: "success",
+                    });
+
+					setTimeout(function () {                // 2秒之后刷新页面
+                        location.reload()
+                    }, 2000)
 				}
-    		}
-        	//console.log('是否执行了...')
-    	})
-    }
+			})
+		})
+	</script>
 
-    //表格中的数据，生成多个联系方式input模板
-    function template_input(name, info){
-    var t = `
-    <div class="new_ipt">
-        <label for="inputPassword3" class="col-sm-2 control-label">${name}</label>
-        <div class="input-group col-sm-8">
-            <input type="email" class="form-control ipt-${name}" id="inputPassword3" value="${info}" placeholder="">
-        </div>
-    </div>
-    `
-    return t
-}
+	<!--删除client，弹出sweet-alert提示框-->
+	<script>
+		$('.delete').click(function () {
+			swal({
+				title: "确定删除？",
+				text: "删除后不恢复，确定是否删除这家公司!",
+				icon: "warning",
+				buttons: true,
+				dangerMode: true,
+			})
+			.then((willDelete) => {
+				if (willDelete) {
+					// 前端删除
+					$td = $(this).parent().siblings(":first")
+					$tr = $td.parent()
+                    log('td', $tr)
+					$tr.remove()
 
-	// 有多个信息, 那么就新建多个input标签
-	function spilt_infos(str, className){
-		var infos = str.split(',')
-		if(infos.length > 1){
-			$('.ipt-'+className)[0].value = infos[0]					//将第一个信息加到原本的input中
-			for (var i = 0; i < infos.length-1; i++){					//将第二个+信息加到新生成的input中
-				var ipt = template_input(className, infos[i+1])
-				$('.form-'+className).append(ipt)
-			}
-			return false
-		}else if(infos.length === 1){
-			return true
-		}
-	}
+					// 后端删除
+					var id = $td.text()
+					log('id', id)
+					d = {}
+					d.id = id
+					ajax('delete/client', 'post', d, function(r) {
+					    // 提示删除成功
+						if (r === 'delete success') {
+							swal('您已成功删除这家公司！', {
+								icon: "success",
+							});
+						}
+					})
+				}
+				else {
+					swal("您的操作已取消")
+				}
+			});
 
-	// 恢复编辑弹窗原样
-	function reset_edit(){
-		log('编辑框的取消按钮')
-		$('.new_ipt').remove()						// 去除动态生成的input
-		var ipts = $('.form-container input.form-control')				// 清空数据
-		for(var i = 0; i < ipts.length; i++){
-			ipts[i].value = ""
-		}
-	}
+		})
+	</script>
 
-	// 重置增加客户弹窗编辑框
-	function reset_add_edit(){
-		var add_ipts = $('.form-add-container input.form-control')
-		for(var i = 0; i < add_ipts.length; i++){
-			add_ipts[i].value = ""
-		}
-	}
+	<!--编辑公司信息-->
+	<script>
+		$('button.btn-update-company').click(function () {
+			var c_id = $('.ipt-id').val()
+			var c_name = $('.ipt-update-name').val()
+			var c_phone = $('.ipt-update-phone').val()
+			var c_address = $('.ipt-update-address').val()
+			var c_industry = $('.ipt-update-industry').val()
+			var c_range = $('.ipt-update-range').val()
 
-    // 编辑客户信息按钮，将表格中的信息填入编辑弹窗中
-    $('body').on('click', '.edit', function(){							// 动态生成的节点要用on方式
-    	log('点击编辑按钮...')
-		// $('form-container').show()
-    	var tds = $(this).parent().siblings()
-        $('.ipt-id')[0].value = tds[0].innerText              			//拿到当前的序列
+			data = {}
+			data.c_id = c_id
+			data.c_name = c_name
+			data.c_phone = c_phone
+			data.c_address = c_address
+			data.c_industry = c_industry
+			data.c_range = c_range
+			log('点击提交按钮', data)
+			ajax('/update/company', 'post', data, function (r) {
+				if (r === 'update success') {
+					log('编辑成功')
+				}
+			})
+		})
+	</script>
 
-    	$('.ipt-name')[0].value = tds[1].innerText						// 将姓名填入其中
-
-		var is_one_phone = spilt_infos(tds[2].innerText, 'phone') 		// 将多个号码填入其中
-		if (is_one_phone) {
-			$('.ipt-phone')[0].value = tds[2].innerText
-		}
-
-		$('.ipt-gs')[0].value = tds[3].innerText								// 将公司名填入其中
-
-		var is_one_wechat = spilt_infos(tds[4].innerText, 'wechat') 		// 将多个wechat填入其中
-		if (is_one_wechat) {
-			$('.ipt-wechat')[0].value = tds[4].innerText
-		}
-
-		var is_one_qq = spilt_infos(tds[5].innerText, 'qq') 				// 将多个qq填入其中
-		console.log(tds[5].innerText)
-		if (is_one_qq) {
-			$('.ipt-qq')[0].value = tds[5].innerText
-		}
-
-		var is_one_email = spilt_infos(tds[6].innerText, 'email') 			// 将多个邮箱填入其中
-		if (is_one_email) {
-			$('.ipt-email')[0].value = tds[6].innerText
-		}
-		$('.form-container').show()
-		$('.mask').show()
-
-	})
-
-	// 编辑弹窗的取消按钮，将数据清空以及将动态生成的input去掉，
-	// 隐藏编辑弹窗，去掉遮罩层,dispaly设为none;
-	$('.btn-cancel').click(function () {
-		log('编辑框的取消按钮')
-		$('.new_ipt').remove()						// 去除动态生成的input
-		var ipts = $('.form-container input.form-control')				// 清空数据
-		for(var i = 0; i < ipts.length; i++){
-			ipts[i].value = ""
-		}
-		$('.form-container').hide()
-		$('.mask').css('display', 'none')			// 去掉遮罩层,dispaly设为none
-	})
-
-	// 整理表格数据，去除最后一个,
-    function del_last(str) {
-        var last_index = str.lastIndexOf(',')
-		return str.slice(0, last_index)
-    }
-
-    // 拿到输入框中的多个信息,拼接成字符串
-	function get_ipt_info(ipt){
-		var one_ipt_info = ''
-		for (var i = 0; i<ipt.length; i++){
-			//console.log(ipt[i].value)
-			one_ipt_info += ipt[i].value+','
-		}
-		one_ipt_info = del_last(one_ipt_info)
-
-		return one_ipt_info
-	}
-
-	//给确认按钮加上点击事件, 拿到所有的信息， 发送ajax请求，载入所有修改好的客户信息。最后隐藏编辑弹窗
-	$('body').on('click', '.btn-confirm', function(){
-        var cid = $('.ipt-id').val()
-		log('id号', cid)
-		var c_name = $('.ipt-name').val()					// 客户姓名
-		log('姓名', c_name)
-		var $in_phones = $('.ipt-phone')
-		var c_phones =  get_ipt_info($in_phones)			// 电话号码
-
-		var c_gs = $('.ipt-gs').val()						// 公司
-
-		var $in_wechat = $('.ipt-wechat')
-		var c_wechats =  get_ipt_info($in_wechat)			// 微信
-
-		var $in_qqs = $('.ipt-qq')
-		var c_qqs =  get_ipt_info($in_qqs)					//qq
-		log('编辑框中的qq', c_qqs)
-
-		var $in_emails = $('.ipt-email')
-		var c_emails =  get_ipt_info($in_emails)			// 邮箱
-
-		var client_info = {}						// 将信息加入一个字典
-		client_info.c_cid = cid
-		client_info.c_name = c_name
-		client_info.c_phones = c_phones
-		client_info.c_gs = c_gs
-		client_info.c_wechats = c_wechats
-		client_info.c_qqs = c_qqs
-		client_info.c_mails = c_emails
-		console.log('客户所有信息', client_info)
-
-		// $('#tc').hide()
-		// 发送ajax请求
-		//ajax_save(client_info)
-		reset_edit()
-		$('.form-container').hide()
-		$('.mask').css('display', 'none')			// 去掉遮罩层,dispaly设为none
-
-	})
-
-      //点击保存按钮，发送post请求，将新增客户信息填入数据库
-    function ajax_save(data) {
-      	$.ajax({
-      		type:"post",
-      		url:"/client_update",
-      		data: data,
-      		success: function(result){
-      			console.log('接收数据成功...', result)
-      			load_clients()
-      		}
-      	});
-    }
+	<!--search搜索框-->
+	<script>
+        $(".ipt-search").change(function () {
+            var value = $(this).val()
+            log("value", value)
+            ajax('search/company', 'post', function (r) {
+                var d = JSON.parse(r)
+                var result = `<td>${d.id}</td>
+                                <td>${d.name}</td>
+                                <td>${d.company}</td>
+                                <td>${d.sex}</td>
+                                <td>${d.phone}</td>
+                                <td>${d.email}</td>
+                                <td>${d.position}</td>
+                                <td>${d.qq}</td>`
+                $("tr.infos").html(result)
+            })
+        })
+	</script>
 
 
-    load_clients()              //先载入所有的客户
-
-
-</script>
-	<script src="../static/js/client.js"></script>
-</html>

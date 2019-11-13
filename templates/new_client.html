@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>客户表</title>
+    {% from 'include_base.html' import css_js %}
+    {{ css_js() }}
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"/>
+    <script type="text/javascript" src="static/js/jquery-3.4.1.min.js"></script>
+    <script src="./static/lib/vue.min.js"></script>
+</head>
+<body>
+    <!--左侧导航栏-->
+    {% include 'include_base.html' %}
+
+    <div id="table">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">客户公司信息表</h4>
+            </div>
+            <div class="panel-body form-inline">
+                <label>
+                    Search keywords
+                    <input type="text" class="form-control">
+                </label>
+            </div>
+        </div>
+
+        <table class="table table-hover table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>客户公司名</th>
+                    <th>公司邮箱</th>
+                    <th>公司电话</th>
+                    <th>公司地址</th>
+                    <th>航线范围</th>
+                    <th>主打行业</th>
+                    <th>网址</th>
+                    <th>联系人姓名</th>
+                    <th>联系人性别</th>
+                    <th>联系人手机</th>
+                    <th>联系人私人邮件</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+
+
+
+    <template>
+        <div class="tmp1">
+
+        </div>
+    </template>
+
+    <script>
+        // 使用Vue.extend 来创建全局的Vue组件
+        var coml = Vue.extend({
+            template: '<h3>这是使用Vue.extend</h3>'
+        })
+
+        // 使用第二种方式创建组件
+        // 使用标签形式引入组件 <mycom2></mycom2>
+        // 模板最外面只能有一个根标签 <div></div>
+        Vue.component('mycom2', {
+            template: '<h2>这是创建组件的第二种方式</h2>'
+        })
+
+        // 第三种创建组件的方式，将template放在外面
+        // 最后还需要把组件名mycom3调用到body中
+
+        Vue.component('mycom3', {
+            template: '#tmp1'
+        })
+
+
+        // 定义私有组件，为什么会有私有组件？不和别人共享，自己使用。
+        // 使用在Vue实例中，使用components()方法定义组件，这个私有组件就只能在这个Vue实例中使用
+
+        var vm = new Vue({
+            el: '#table',
+            data: {
+
+            },
+            methods: {
+
+            },
+
+            components: {               // 定义一个私有的组件
+                login: {
+                    template: '#tmp3'
+                }
+            }
+        })
+
+        // 在组件中使用data(要被定义为方法函数，并且要返回一个对象)
+        // 组件的data和实例的data有些不一样，data函数返回一定是一个对象，{img: '我是照片'}
+        // data
+        Vue.component('com_data', {
+            data: function () {
+                return {
+                    msg: 'data中的使用，data定义的数据使用在com_data的组件中'
+                }
+            }
+        })
+
+        // 不同组件之间的切换
+
+    </script>
+
+</body>
+</html>

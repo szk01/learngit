@@ -29,7 +29,6 @@ def formatted(cs):
         # 接通时间
         et = time.localtime(c.end_time)
         c.end_time = time.strftime(format, et)
-        log('c', c.end_time)
 
 # 通话记录
 @main.route('/call_record')
@@ -37,19 +36,18 @@ def page_cr():
     authNumber = session['number']
     log('session', authNumber)
     content = {}
-    current_page = request.args.get('page', 1, type=int)  # 从查询字符串获取当前页数  current_page是1
-    global pagination
-    log('查询参数', current_page)
+    current_page = request.args.get('page', 1, type=int)  # 获取查询参数
+    global pagination                               # 先全局声明变量，然后才能在if条件下修改这个变量
 
-    if authNumber == '10000':  # 如果是管理员登录
+    if authNumber == '10000':                       # 如果是管理员登录
         pagination = Call_record.query.paginate(current_page, per_page=10)  # 分页对象
 
-    else:  # 如果是客服登录
+    else:                                           # 如果是客服登录
         user = User.query.filter_by(number=authNumber).first()
         pagination = Call_record.query.filter_by(uid=user.id).paginate(current_page, per_page=10)
 
-    cs = pagination.items  # 当前页数的记录列表
-    formatted(cs)  # 格式化时间戳
+    cs = pagination.items           # 当前页数的记录列表
+    formatted(cs)                   # 格式化时间戳
     content['pagination'] = pagination
     content['cs'] = cs
 
@@ -69,8 +67,6 @@ def page_vr():
     log('cookie voice', authNumber)
     content = {}
     current_page = request.args.get('page', 1, type=int)  # 从查询字符串获取当前页数
-    global pagination
-
 
     # 如果用户存在，找到对应的录音文件
     if authNumber == '10000':
@@ -79,7 +75,6 @@ def page_vr():
     else:
         user = User.query.filter_by(number=authNumber).first()
         pagination = Voice_record.query.filter_by(uid = user.id).paginate(current_page, per_page=10)
-
 
     vs = pagination.items  # 当前页数的记录列表
     v_format(vs)
@@ -150,3 +145,25 @@ def remove_voiceReocrd():
 @main.route('/addClient', methods=['GET'])
 def addclient():
     return render_template('addClient.html')
+
+
+# # 测试客户端信息页面
+# @main.route('/test_client', methods=['GET'])
+# def client():
+#     return render_template('new_client.html')
+
+
+@main.route('/client/list', methods=['GET'])
+def all_clients():
+    data = []
+    sc = {}
+    sc['id'] = 1
+    sc['name'] = 'c_name'
+    sc['gs'] = 'c_gs'
+    sc['wechat'] = 'c_wechat'
+    sc['qq'] = '1223'
+    sc['email'] = '123@syfy.cn'
+    data.append(sc)
+    d = json.dumps(data)
+    return d
+
