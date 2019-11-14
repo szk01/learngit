@@ -81,7 +81,7 @@ def find_companys():
 
     n = len(coms)
 
-    if n == 0:
+    if n != 0:
         companys = []
         for c in coms:
             log('name', c)
