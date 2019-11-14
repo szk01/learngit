@@ -71,21 +71,21 @@ def new_client():
 # ajax查找公司， 模糊查询，只要前10个
 @main.route('/find/companys', methods=['POST'])
 def find_companys():
+
     data = request.form.get("data")
     log("data", data)
-    coms = Ccompany1.query.filter(Ccompany1.name.like("%" + data + "%")).all()
+    coms = Ccompany1.query.with_entities(Ccompany1.id, Ccompany1.name).filter(
+            Ccompany1.name.like('%'+data + "%") if data is not None else ""
+
+        ).limit(10).all()
+
     n = len(coms)
 
-    if 0 < n < 10:
+    if n == 0:
         companys = []
         for c in coms:
+            log('name', c)
             companys.append(c.name)
-            return jsonify(companys)
-    if n > 10:
-        companys = []
-        for i in range(0, 10):
-            companys.append(coms[i].name)
-        log("companys", jsonify(companys))
         return jsonify(companys)
     else:
         return ''
