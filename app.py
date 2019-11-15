@@ -155,8 +155,8 @@ if __name__ == '__main__':
     # app.wsgi_app = ProxyFix(app.wsgi_app)
     config = dict(
         debug=True,
-        # host='0.0.0.0',
-        # port=80,
+        host='0.0.0.0',
+        port=10030,
         app=app,
     )
     socketio.run(**config)
