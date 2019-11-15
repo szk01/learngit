@@ -14,7 +14,7 @@ from app import app
 # gunicorn 就要这个变量
 # 这个变量的值必须是 Flask 实例
 # 这是规定的套路(协议)
-application = app.app
+application = app
 
 if __name__ == '__main__':
     application.run()
