@@ -8,13 +8,16 @@ from os.path import dirname
 sys.path.insert(0, abspath(dirname(__file__)))
 
 # 引入 app.py
-import app
+from app import app
 
 # 必须有一个叫做 application 的变量
 # gunicorn 就要这个变量
 # 这个变量的值必须是 Flask 实例
 # 这是规定的套路(协议)
 application = app.app
+
+if __name__ == '__main__':
+    application.run()
 
 # 这是把代码部署到 apache gunicorn nginx 后面的套路
 """

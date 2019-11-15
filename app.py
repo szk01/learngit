@@ -151,12 +151,11 @@ if __name__ == '__main__':
     # host 参数指定为 '0.0.0.0' 可以让别的机器访问你的代码
     # qs = Query_Seats()
     # qs.query_all_seats()
+    # from werkzeug.contrib.fixers import  ProxyFix
+    # app.wsgi_app = ProxyFix(app.wsgi_app)
     config = dict(
         debug=True,
-        # host='127.0.0.1',
-        # local_host='106.15.44.224',
         host='0.0.0.0',
-        # host='192.168.101.39',
         port=80,
         app=app,
     )
