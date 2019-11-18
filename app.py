@@ -155,7 +155,7 @@ if __name__ == '__main__':
     # app.wsgi_app = ProxyFix(app.wsgi_app)
     config = dict(
         debug=True,
-        host='0.0.0.0',
+        host='127.0.0.1',
         port=10030,
         app=app,
     )
