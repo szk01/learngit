@@ -57,31 +57,6 @@
         return t
     }
 
-    // 生成来电弹窗模板
-    // function add_note() {
-    //     console.log('加上来电通知...')
-    //     var note = `
-    //         <div class="call-note-container" style="position:fixed;text-align:center; width:500px; height:250px; top:300px; left: 500px; background-color: antiquewhite ">
-    //             <button class="close">关闭</button>
-    //             <div class="call-number" style="font-size: 20px;  margin: 30px 30px; color:red;">来电号码</div>
-    //             <div class="time" style="font-size: 20px; text-align:center; margin: 30px 30px;">通话时间</div>
-    //             <div class="status" style="font-size: 20px; text-align:center; margin: 30px 30px;">状态</div>
-    //             <button class=".satisfy">满意度调查</button>
-	// 	    </div>
-    //     `
-    //     return note
-    // }
-
-    // 获取到cookie
-    function getCookie(cname) {
-        var name = cname + "=";
-        var ca = document.cookie.split(';');
-        for(var i=0; i<ca.length; i++) {
-            var c = ca[i].trim();
-            if (c.indexOf(name)===0) return c.substring(name.length,c.length);
-        }
-      return "";
-    }
 
     // 浏览器通知消息
     var notification = function (body) {
@@ -136,8 +111,9 @@
         }
 
 
-//  var url = "http://106.15.44.224:80"
-    var url = "/"                                   // 使用相对路径
+
+    //var url = "/"                                   // 使用相对路径
+    var url = 'wss://0.0.0.0:10030/'
     console.log(url);
     var socket = io.connect(url);
     // 告诉服务器是谁登陆

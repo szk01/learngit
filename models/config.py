@@ -2,4 +2,5 @@
 SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:123456@localhost:3306/nonghao_backup'
 # 设置这一项是每次请求结束后都会自动提交数据库中的变动
 SQLALCHEMY_TRACK_MODIFICATIONS = True
+TEMPLATES_AUTO_RELOAD = True                                # 自动更新页面样式的改变
 # SQLALCHEMY_ECHO = True                                    # 显示mysql的
