@@ -113,7 +113,7 @@
 
 
     //var url = "/"                                   // 使用相对路径
-    var url = 'wss://0.0.0.0:10030/'
+    var url = 'wss://crm.dadaex.cn/'
     console.log(url);
     var socket = io.connect(url);
     // 告诉服务器是谁登陆
