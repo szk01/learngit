@@ -23,6 +23,7 @@ def login():
 # 登录 根据用户的不同给予不同的数据
 @main.route('/index', methods=['GET', 'POST'])
 def index():
+    log('数据', request.data)
     if request.method == 'GET':
         # 重定向到login登录页面，不明白为什么是.login，算是保护路由
         return redirect(url_for('.login'))
