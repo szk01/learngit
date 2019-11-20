@@ -118,9 +118,6 @@
     var socket = io.connect(url);
     // 告诉服务器是谁登陆
     socket.on('connect', function() {
-        var cookie = getCookie('session')
-        console.log('js获取的cookie是', cookie)   // 找到工号，判断相应的分机号
-        console.log('发送给应用服务器的id是', cookie)
         socket.emit('login', cookie);
     });                                                          // 这些都是套路函数，建立通道，发送提示消息
 
