@@ -112,8 +112,8 @@
 
 
 
-    //var url = "/"                                   // 使用相对路径
-    var url = 'wss://crm.dadaex.cn/'
+    var url = "/"                                   // 使用相对路径
+    //var url = 'ws://crm.dadaex.cn/'
     console.log(url);
     var socket = io.connect(url);
     // 告诉服务器是谁登陆
