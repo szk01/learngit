@@ -113,7 +113,7 @@
 
 
                                        // 使用相对路径
-    var url = 'http://106.15.44.224:8080/'
+    var url = '/'
     console.log(url);
     var socket = io.connect(url);
     // 告诉服务器是谁登陆
