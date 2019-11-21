@@ -118,7 +118,7 @@
     var socket = io.connect(url);
     // 告诉服务器是谁登陆
     socket.on('connect', function() {
-        socket.emit('login', cookie);
+        socket.emit('login', '登录');
     });                                                          // 这些都是套路函数，建立通道，发送提示消息
 
     socket.on("test_room", function(data) {
