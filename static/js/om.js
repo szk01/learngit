@@ -113,8 +113,8 @@
 
 
                                        // 使用相对路径
-    var url = '/'
-    //var url = 'wss://crm.dadaex.cn/socket.io/'
+    // var url = '/'
+    var url = 'wss://crm.dadaex.cn/socket.io/'
     console.log(url);
     var socket = io.connect(url, {transports: ['websocket']});
     // 告诉服务器是谁登陆
