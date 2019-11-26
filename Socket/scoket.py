@@ -29,7 +29,7 @@ def post_om(body):
 def send(data):
     log('use webScoket receive sucessful', data)
     log('接收到登录信息中的工号', data)
-    data = session['number']
+    data = session.get('number')
     sid = request.sid  # io的客户端，用来标识唯一客户端。也是会话id
     ws[data] = sid
     log('查看ws字典', ws)
