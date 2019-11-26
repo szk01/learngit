@@ -113,7 +113,8 @@
 
 
                                        // 使用相对路径
-    var url = '/'
+    // var url = '/'
+    var url = 'https://crm.dadaex.cn/socket.io/'
     console.log(url);
     var socket = io.connect(url);
     // 告诉服务器是谁登陆
