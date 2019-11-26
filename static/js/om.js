@@ -116,7 +116,7 @@
     // var url = '/'
     var url = 'wss://crm.dadaex.cn/'
     console.log(url);
-    var socket = io.connect(url, {transports: ['websocket']}, {path: '/socket/socket.io'});
+    var socket = io.connect(url, {transports: ['websocket']});
     // 告诉服务器是谁登陆
     socket.on('connect', function() {
         socket.emit('login', '登录');
