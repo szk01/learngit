@@ -22,13 +22,17 @@ main = Blueprint('rtc', __name__)
 
 parser = OptionParser()
 # parser.add_option("-a", "--listen", dest="listen", help="Listen port")
-parser.add_option("-d", "--appid", dest="zk46xnwd", help="ID of app")
-parser.add_option("-k", "--appkey", dest="dde07e3682c1ea002a70a2d7d743edbd", help="Key of app")
-parser.add_option("-e", "--gslb", dest="gslb", help="URL of GSLB")
+# parser.add_option("-d", "--appid", dest="zk46xnwd", help="ID of app")
+# parser.add_option("-k", "--appkey", dest="dde07e3682c1ea002a70a2d7d743edbd", help="Key of app")
+# parser.add_option("-e", "--gslb", dest="gslb", help="URL of GSLB")
+#
+# (options, args) = parser.parse_args()
+# # (listen, app_id, app_key, gslb) = (options.listen, options.appID, options.appKey, options.gslb)
+# (app_id, app_key, gslb) = (options.appID, options.appKey, options.gslb)
 
-(options, args) = parser.parse_args()
-# (listen, app_id, app_key, gslb) = (options.listen, options.appID, options.appKey, options.gslb)
-(app_id, app_key, gslb) = (options.appID, options.appKey, options.gslb)
+app_id = 'zk46xnwd',
+app_key = 'dde07e3682c1ea002a70a2d7d743edbd',
+
 '''
 客服端发送过来的参数有：
     
