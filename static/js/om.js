@@ -43,20 +43,6 @@
         return d
     }
 
-    // 生成通话记录模板
-    function template(number, alltme, recordUrl, audioUrl) {
-        var t = `
-        <ul class="phone-note">
-            <li class="cdr">通话记录</li>
-            <li class="number"><em>${number}</em></li>
-            <li class="all-time">${alltme}</li>
-            <li ><a href="${recordUrl}" class="record">录音</a></li>
-            <li ><a href="${audioUrl}" class="play">播放</a></li>
-        </ul>
-        `
-        return t
-    }
-
 
     // 浏览器通知消息
     var notification = function (body) {
@@ -110,17 +96,16 @@
 
         }
 
-
-
-                                       // 使用相对路径
+//  var url = "http://106.15.44.224:80"
+//  https://crm.dadaex.cn/ccompany
+    var url = "http://127.0.0.1/"                                                   // 使用相对路径
     // var url = '/'
-    var url = 'wss://crm.dadaex.cn/'
     console.log(url);
     var socket = io.connect(url);
     // 告诉服务器是谁登陆
     socket.on('connect', function() {
         socket.emit('login', '登录');
-    });                                                          // 这些都是套路函数，建立通道，发送提示消息
+    });                                                             // 这些都是套路函数，建立通道，发送提示消息
 
     socket.on("test_room", function(data) {
         console.log(data)
@@ -133,8 +118,22 @@
         notification(body)
         $('.class-note').show()
 
-        $('.call-number').text('来电号码'+data["number"])
+        $('.call-number').text('来电号码：'+data["number"])
         $('.status').text('呼叫中')
+
+        // 客户名
+        $('li.name').text('姓名：'+data["name"])
+        $('li.company').text('所属公司：'+data["c_name"])
+        $('li.sex').text('性别：'+data["sex"])
+        $('li.position').text('职位：'+data["position"])
+
+        // 公司名
+        $('li.c_name').text('公司名：'+data["c_name"])
+        $('li.c_phone').text('公司电话：'+data["c_phone"])
+        $('li.c_address').text('公司地址：'+data["c_address"])
+        $('li.c_industry').text('航线范围：'+data["c_industry"])
+        $('li.c_route_range').text('主打行业：'+data["c_route_range"])
+        $('li.c_principal_name').text('联系人姓名：'+data["c_principal_name"])
 
     });
 
@@ -148,6 +147,7 @@
     });
 
     // 服务器通知通话挂断,清除弹窗计时数
+
     socket.on("off", function(data) {                             // 分机或者来访者挂断
         console.log('结束通话...')
         if (data["status"] === 'Cdr') {

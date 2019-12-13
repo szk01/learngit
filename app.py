@@ -22,6 +22,7 @@ from extension import login_manager
 from models.seat import Seat
 from features.shortMessage import send_message
 from features.test_welcome import welcome
+from routes.rtc import main as rtc_routes
 
 
 app = Flask(__name__)
@@ -41,6 +42,7 @@ app.register_blueprint(client_routes, url_prefix='')
 app.register_blueprint(account_routes, url_prefix='')
 app.register_blueprint(ccompany_routes, url_prefix='')
 app.register_blueprint(power_routes, url_prefix='')
+app.register_blueprint(rtc_routes, url_prefix='')
 
 
 # 注册正则表达式匹配路由
