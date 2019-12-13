@@ -21,9 +21,9 @@ main = Blueprint('rtc', __name__)
 
 
 parser = OptionParser()
-parser.add_option("-a", "--listen", dest="listen", help="Listen port")
-parser.add_option("-d", "--appid", dest="appID", help="ID of app")
-parser.add_option("-k", "--appkey", dest="appKey", help="Key of app")
+parser.add_option("-a", "--listen", dest="10030", help="Listen port")
+parser.add_option("-d", "--appid", dest="zk46xnwd", help="ID of app")
+parser.add_option("-k", "--appkey", dest="dde07e3682c1ea002a70a2d7d743edbd", help="Key of app")
 parser.add_option("-e", "--gslb", dest="gslb", help="URL of GSLB")
 
 (options, args) = parser.parse_args()
@@ -95,6 +95,7 @@ def rtc():
             "password": token
         }
     }})
+    log("ret", ret)
     response = make_response(ret)
     response.headers["Content-Type"] = "application/json"
     return response
