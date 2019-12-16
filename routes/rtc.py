@@ -64,7 +64,7 @@ def create_token(app_id, app_key, channel_id, user_id, nonce, timestamp):
 
 # 将get的查询参数组成字典
 def all_querys(args):
-    query_list =  args.items().__str__()
+    query_list = args.items().__str__()
     query_dict = {}
     for query in query_list:
         query_dict[query[0]] = query[1]
@@ -79,6 +79,8 @@ def index():
 # ajax请求
 @main.route('/app/v1/login', methods=['POST', 'GET'])
 def rtc():
+    if request.method == 'POST':
+        log('post', request.get_data())
     querys = all_querys(request.args)
     channel_id = querys.get("room")
     user_id = create_user_id(channel_id, querys.get("user"))
