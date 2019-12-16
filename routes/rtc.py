@@ -39,6 +39,19 @@ app_key = 'dde07e3682c1ea002a70a2d7d743edbd'.encode('utf-8'),
 '''
 
 
+class MyEncoder(json.JSONEncoder):
+
+    def default(self, obj):
+        """
+        只要检查到了是bytes类型的数据就把它转为str类型
+        :param obj:
+        :return:
+        """
+        if isinstance(obj, bytes):
+            return str(obj, encoding='utf-8')
+        return json.JSONEncoder.default(self, obj)
+
+
 # 创建user_id
 def create_user_id(channel_id, user):
     h = hashlib.sha256()
@@ -101,7 +114,7 @@ def rtc():
             "username": username,
             "password": token.encode('utf-8'),
         }
-    }})
+    }}, cls=MyEncoder, indent=4)
     log("ret", ret)
     response = make_response(ret)
     response.headers["Content-Type"] = "application/json"
