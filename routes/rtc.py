@@ -112,7 +112,7 @@ def rtc():
         "token": token, "nonce": nonce, "timestamp": timestamp,
         "turn": {
             "username": username,
-            "password": token.encode('utf-8'),
+            "password": token,
         }
     }}, cls=MyEncoder, indent=4)
     log("ret", ret)
