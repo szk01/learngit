@@ -80,6 +80,7 @@ def index():
 @main.route('/app/v1/login', methods=['POST', 'GET'])
 def rtc():
     data = request.form
+    log('data', data)
     channel_id = data.get("room").encode('utf-8')
     log('channel_id', channel_id, type(channel_id))
     user = data.get("user").encode('utf-8')
