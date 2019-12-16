@@ -96,12 +96,12 @@ def rtc():
 
     ret = json.dumps({"code": 0, "data": {
         "appid": app_id, "userid": user_id,
-        "token": token, "nonce": nonce, "timestamp": timestamp,
+        "token": token.decode('utf-8'), "nonce": nonce, "timestamp": timestamp,
         "turn": {
             "username": username,
-            "password": token
+            "password": token.decode('utf-8')
         }
-    }}, encoding='utf-8')
+    }})
     log("ret", ret)
     response = make_response(ret)
     response.headers["Content-Type"] = "application/json"
