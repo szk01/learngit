@@ -30,8 +30,8 @@ parser = OptionParser()
 # # (listen, app_id, app_key, gslb) = (options.listen, options.appID, options.appKey, options.gslb)
 # (app_id, app_key, gslb) = (options.appID, options.appKey, options.gslb)
 
-app_id = 'zk46xnwd',
-app_key = 'dde07e3682c1ea002a70a2d7d743edbd',
+app_id = 'zk46xnwd'.encode("utf-8"),
+app_key = 'dde07e3682c1ea002a70a2d7d743edbd'.encode("utf-8"),
 
 '''
 客服端发送过来的参数有：
@@ -82,7 +82,7 @@ def rtc():
     data = request.form
     channel_id = data.get("room").encode('utf-8')
     user = data.get("user").encode('utf-8')
-    user_id = create_user_id(channel_id, user)
+    user_id = create_user_id(channel_id.encode("utf-8"), user.encode("utf-8"))
     nonce = "AK-%s" % str(uuid.uuid4())
     expire = datetime.datetime.now() + datetime.timedelta(days=2)  # expire 到期
     timestamp = int(time.mktime(expire.timetuple()))
