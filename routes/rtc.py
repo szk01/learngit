@@ -101,7 +101,7 @@ def rtc():
             "username": username,
             "password": token
         }
-    }})
+    }}, encoding='utf-8')
     log("ret", ret)
     response = make_response(ret)
     response.headers["Content-Type"] = "application/json"
