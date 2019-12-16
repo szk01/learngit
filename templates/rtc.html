@@ -236,8 +236,6 @@
             $.ajax({
                 url: AppServerUrl + "?room=" + channelId + "&user=" + userName + "&passwd=1234",
                 type: 'GET',
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
                 success: (data) => {
                     data.data.channel = channelId;              // 增加一项channel数据
                     resolve(data.data);
