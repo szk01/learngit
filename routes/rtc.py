@@ -80,8 +80,8 @@ def index():
 @main.route('/app/v1/login', methods=['POST', 'GET'])
 def rtc():
     data = request.form
-    channel_id = data.get("room")
-    user = data.get("user")
+    channel_id = data.get("room").encode('utf-8')
+    user = data.get("user").encode('utf-8')
     user_id = create_user_id(channel_id, user)
     nonce = "AK-%s" % str(uuid.uuid4())
     expire = datetime.datetime.now() + datetime.timedelta(days=2)  # expire 到期
