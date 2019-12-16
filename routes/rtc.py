@@ -72,12 +72,12 @@ def all_querys(args):
 
 
 # 首页
-@main.route('/rtc')
+@main.route('/rtc', methods=['POST', 'GET'])
 def index():
     return render_template('rtc.html')
 
 # ajax请求
-@main.route('/app/v1/login')
+@main.route('/app/v1/login', methods=['POST', 'GET'])
 def rtc():
     querys = all_querys(request.args)
     channel_id = querys.get("room")
