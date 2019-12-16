@@ -30,8 +30,8 @@ parser = OptionParser()
 # # (listen, app_id, app_key, gslb) = (options.listen, options.appID, options.appKey, options.gslb)
 # (app_id, app_key, gslb) = (options.appID, options.appKey, options.gslb)
 
-app_id = 'zk46xnwd',
-app_key = 'dde07e3682c1ea002a70a2d7d743edbd',
+app_id = 'zk46xnwd'.encode('utf-8'),
+app_key = 'dde07e3682c1ea002a70a2d7d743edbd'.encode('utf-8'),
 
 '''
 客服端发送过来的参数有：
@@ -57,7 +57,7 @@ def create_token(app_id, app_key, channel_id, user_id, nonce, timestamp):
     h.update(channel_id)
     h.update(user_id)
     h.update(nonce)
-    h.update(str(timestamp))
+    h.update(str(timestamp).encode('utf-8'))
     token = h.hexdigest()
     return token
 
@@ -84,8 +84,8 @@ def rtc():
     channel_id = data.get("room").encode('utf-8')
     log('channel_id', channel_id, type(channel_id))
     user = data.get("user").encode('utf-8')
-    user_id = create_user_id(channel_id, user)
-    nonce = "AK-%s" % str(uuid.uuid4())
+    user_id = create_user_id(channel_id, user).encode('utf-8')
+    nonce = "AK-%s" % str(uuid.uuid4()).encode('utf-8')
     expire = datetime.datetime.now() + datetime.timedelta(days=2)  # expire 到期
     timestamp = int(time.mktime(expire.timetuple()))
     token = create_token(app_id, app_key, channel_id, user_id, nonce, timestamp)
