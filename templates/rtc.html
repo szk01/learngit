@@ -40,7 +40,7 @@
             <div class='publisher'>
                 <button class="select-preview">关闭预览</button>
                 <button class="push-stream">停止推流</button>&nbsp;&nbsp;
-                <span class="streamType" style="visibility: hidden;">
+                <span class="streamType">
                     <label for="cameraPublisher">推视频流</label>
                     <input id="cameraPublisher"
                         type="radio"
@@ -490,6 +490,7 @@
             aliWebrtc.configLocalAudioPublish = true
             aliWebrtc.configLocalCameraPublish = true
             aliWebrtc.configLocalScreenPublish = false
+
         }else {
             aliWebrtc.configLocalAudioPublish = false
             aliWebrtc.configLocalCameraPublish = false

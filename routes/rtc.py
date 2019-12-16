@@ -92,7 +92,7 @@ def rtc():
     )
 
     ret = json.dumps({"code": 0, "data": {
-        "appid": app_id, "userid": user_id, "gslb": [gslb],
+        "appid": app_id, "userid": user_id,
         "token": token, "nonce": nonce, "timestamp": timestamp,
         "turn": {
             "username": username,
@@ -100,6 +100,21 @@ def rtc():
         }
     }})
     log("ret", ret)
+    response = make_response(ret)
+    response.headers["Content-Type"] = "application/json"
+    return response
+
+
+# ajax共享屏幕请求
+@main.route('/app/v1/screenTrack')
+def screenTrack():
+    querys = all_querys(request.args)
+    channel_id = querys.get("room")
+    user_id = create_user_id(channel_id, querys.get("user"))
+
+    ret = json.dumps({"code": 101, "data": {
+             "userId": user_id, "label": "sophon_video_screen_share",
+        }})
     response = make_response(ret)
     response.headers["Content-Type"] = "application/json"
     return response
