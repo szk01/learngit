@@ -79,13 +79,14 @@ def index():
 # ajax请求
 @main.route('/app/v1/login', methods=['POST', 'GET'])
 def rtc():
-    querys = all_querys(request.get_json())
-    channel_id = querys.get("room")
-    user_id = create_user_id(channel_id, querys.get("user"))
+    data = request.form
+    channel_id = data.get("room")
+    user = data.get("user")
+    user_id = create_user_id(channel_id, user)
     nonce = "AK-%s" % str(uuid.uuid4())
     expire = datetime.datetime.now() + datetime.timedelta(days=2)  # expire 到期
     timestamp = int(time.mktime(expire.timetuple()))
-    token = create_token(app_id, app_key, querys.get("room"), user_id, nonce, timestamp)
+    token = create_token(app_id, app_key, channel_id, user_id, nonce, timestamp)
 
     username = "%s?appid=%s&channel=%s&nonce=%s&timestamp=%d" % (
         user_id, app_id, channel_id, nonce, timestamp

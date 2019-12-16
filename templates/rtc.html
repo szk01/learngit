@@ -234,8 +234,9 @@
     var getRTCAuthInfo = () => {
         return new Promise(function (resolve, reject) {
             $.ajax({
-                url: AppServerUrl + "?room=" + channelId + "&user=" + userName + "&passwd=1234",
-                type: 'GET',
+                url: AppServerUrl,
+                type: 'POST',
+                data: {'room': channelId, 'user': userName, 'passwd': '1234'},
                 success: (data) => {
                     data.data.channel = channelId;              // 增加一项channel数据
                     resolve(data.data);
