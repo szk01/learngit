@@ -81,6 +81,7 @@ def index():
 def rtc():
     data = request.form
     channel_id = data.get("room").encode('utf-8')
+    log('channel_id', channel_id, type(channel_id))
     user = data.get("user").decode('utf-8')
     user_id = create_user_id(channel_id.encode("utf-8"), user.decode("utf-8"))
     nonce = "AK-%s" % str(uuid.uuid4())
