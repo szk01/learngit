@@ -88,7 +88,7 @@ def rtc():
     nonce = "AK-%s" % str(uuid.uuid4()).encode('utf-8')
     expire = datetime.datetime.now() + datetime.timedelta(days=2)  # expire 到期
     timestamp = int(time.mktime(expire.timetuple()))
-    token = create_token(app_id, app_key, channel_id, user_id, nonce, timestamp)
+    token = create_token('zk46xnwd'.encode('utf-8'), 'dde07e3682c1ea002a70a2d7d743edbd'.encode('utf-8'), channel_id, user_id, nonce, timestamp)
 
     username = "%s?appid=%s&channel=%s&nonce=%s&timestamp=%d" % (
         user_id, app_id, channel_id, nonce, timestamp
