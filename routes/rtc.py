@@ -43,7 +43,7 @@ app_key = 'dde07e3682c1ea002a70a2d7d743edbd',
 def create_user_id(channel_id, user):
     h = hashlib.sha256()
     h.update(channel_id)
-    h.update('/')
+    h.update('/'.encode('utf-8'))
     h.update(user)
     uid = h.hexdigest()
     return str(uid[0:16])
