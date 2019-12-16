@@ -108,7 +108,7 @@ def rtc():
     )
 
     ret = json.dumps({"code": 0, "data": {
-        "appid": app_id, "userid": user_id,
+        "appid": app_id, "userid": user_id, "gslb": 'https://rgslb.rtc.aliyuncs.com',
         "token": token, "nonce": nonce, "timestamp": timestamp,
         "turn": {
             "username": username,
