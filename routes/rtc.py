@@ -96,10 +96,10 @@ def rtc():
 
     ret = json.dumps({"code": 0, "data": {
         "appid": app_id, "userid": user_id,
-        "token": token.decode('utf-8'), "nonce": nonce, "timestamp": timestamp,
+        "token": token, "nonce": nonce, "timestamp": timestamp,
         "turn": {
             "username": username,
-            "password": token.decode('utf-8')
+            "password": token.decode('utf-8'),
         }
     }})
     log("ret", ret)
