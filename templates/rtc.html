@@ -235,7 +235,7 @@
         return new Promise(function (resolve, reject) {
             $.ajax({
                 url: AppServerUrl + "?room=" + channelId + "&user=" + userName + "&passwd=1234",
-                type: 'POST',
+                type: 'GET',
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
                 success: (data) => {

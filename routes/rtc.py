@@ -79,9 +79,7 @@ def index():
 # ajax请求
 @main.route('/app/v1/login', methods=['POST', 'GET'])
 def rtc():
-    if request.method == 'POST':
-        log('post', request.get_data())
-    querys = all_querys(request.args)
+    querys = all_querys(request.get_json())
     channel_id = querys.get("room")
     user_id = create_user_id(channel_id, querys.get("user"))
     nonce = "AK-%s" % str(uuid.uuid4())
