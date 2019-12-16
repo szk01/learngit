@@ -99,7 +99,7 @@ def rtc():
         "token": token, "nonce": nonce, "timestamp": timestamp,
         "turn": {
             "username": username,
-            "password": token.decode('utf-8'),
+            "password": token,
         }
     }})
     log("ret", ret)
