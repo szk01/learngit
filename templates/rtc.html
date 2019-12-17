@@ -111,6 +111,16 @@
                 console.log('将该用户新增到推流列表')
                 publisherList.push(publisher);
             }
+            console.log("publisherList", publisherList);
+            for (var i = 0; i < publisherList.length; i++) {
+                console.log('开始订阅全部频道')
+                aliWebrtc.subscribe(publisherList[i].userId).then(re => {
+                    resolve();
+                }).catch((err) => {
+                    reject(err);
+                    alert(err.message);
+                });
+            }
         });
 
         /**
