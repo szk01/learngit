@@ -73,7 +73,7 @@
     var AppServerUrl = "/app/v1/login"
     var channelId;
     var userName = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);     // 用户名随机取
-    var publisherList = [];
+    var publisherList = [];             //
 
     /**
      * AliWebRTC isSupport检测
@@ -111,7 +111,7 @@
                 console.log('将该用户新增到推流列表')
                 publisherList.push(publisher);
                 console.log('更新服务器中的推送流列表')
-                uploadPublisherUserinfo()
+                uploadPublisherUserinfo(publisherList)
             }
             console.log("publisherList", publisherList);
 
@@ -225,6 +225,7 @@
     var updateUserList = () => {
         $('.user-ul').empty();
         let userList = aliWebrtc.getUserList();
+        console.log('在线人数的信息userList', userList)
         let frg = document.createDocumentFragment();
         userList.map((user) => {
             let html = $('<li class="user-ul-li">' + user.displayName + '<ul class="menu"></ul></li>');
@@ -481,7 +482,7 @@
     /**
      * 将发布了流的用户信息上传到服务器保存
      * **/
-    var uploadPublisherUserinfo = () => {
+    var uploadPublisherUserinfo = (publisherList) => {
         $.ajax({
                 url: '/upload/Publisher',
                 type: 'POST',

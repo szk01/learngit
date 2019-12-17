@@ -19,7 +19,6 @@ from optparse import OptionParser
 
 main = Blueprint('rtc', __name__)
 
-
 parser = OptionParser()
 # parser.add_option("-a", "--listen", dest="listen", help="Listen port")
 # parser.add_option("-d", "--appid", dest="zk46xnwd", help="ID of app")
@@ -37,6 +36,19 @@ app_key = 'dde07e3682c1ea002a70a2d7d743edbd'.encode('utf-8'),
 客服端发送过来的参数有：
     
 '''
+
+
+class PublisherInfo(object):
+    pInfo = {}
+
+    def removePub(self, userId):
+        p = PublisherInfo.pInfo.get(userId)
+        PublisherInfo.pInfo.pop(p)
+
+    def addPub(self, pub):
+        pub = json.loads(pub)
+        PublisherInfo.pInfo.update(pub)
+
 
 
 class MyEncoder(json.JSONEncoder):
@@ -89,6 +101,7 @@ def all_querys(args):
 def index():
     return render_template('rtc.html')
 
+
 # ajax请求
 @main.route('/app/v1/login', methods=['POST', 'GET'])
 def rtc():
@@ -101,7 +114,8 @@ def rtc():
     nonce = "AK-%s" % str(uuid.uuid4())
     expire = datetime.datetime.now() + datetime.timedelta(days=2)  # expire 到期
     timestamp = int(time.mktime(expire.timetuple()))
-    token = create_token('zk46xnwd'.encode('utf-8'), 'dde07e3682c1ea002a70a2d7d743edbd'.encode('utf-8'), channel_id, user_id, nonce.encode('utf-8'), timestamp)
+    token = create_token('zk46xnwd'.encode('utf-8'), 'dde07e3682c1ea002a70a2d7d743edbd'.encode('utf-8'), channel_id,
+                         user_id, nonce.encode('utf-8'), timestamp)
 
     username = "%s?appid=%s&channel=%s&nonce=%s&timestamp=%d" % (
         user_id, app_id, channel_id, nonce, timestamp
@@ -129,21 +143,23 @@ def screenTrack():
     user_id = create_user_id(channel_id, querys.get("user"))
 
     ret = json.dumps({"code": 101, "data": {
-             "userId": user_id, "label": "sophon_video_screen_share",
-        }})
+        "userId": user_id, "label": "sophon_video_screen_share",
+    }})
     response = make_response(ret)
     response.headers["Content-Type"] = "application/json"
     return response
 
-publisherInfo = {}
 
 # ajax的上传发布流的人数
 @main.route('/upload/Publisher', methods=['POST'])
 def publisherInfo():
     data = request.form
-    publisherInfo = data
+    log('上传到服务器', data)
+    pub = PublisherInfo()
+    pub.addPub(json.loads(data))
     log('服务器中发布流的信息', publisherInfo)
     return 'upload success'
+
 
 # ajax 取得上传发布流的人数
 @main.route('/get/Publisher', methods=['POST'])
@@ -151,7 +167,6 @@ def getPublisher():
     data = json.dumps(publisherInfo)
     log('存在的发布流的人', data)
     return data
-
 
 
 # AppKey：dde07e3682c1ea002a70a2d7d743edbd
