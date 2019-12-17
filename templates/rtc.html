@@ -113,13 +113,14 @@
             }
             console.log("publisherList", publisherList);
             for (var i = 0; i < publisherList.length; i++) {
-                console.log('开始订阅全部频道')
-                aliWebrtc.subscribe(publisherList[i].userId).then(re => {
-                    resolve();
-                }).catch((err) => {
-                    reject(err);
-                    alert(err.message);
-                });
+                // 订阅此用户
+                console.log('订阅此用户', publisherList[i].displayName);
+                let v = publisherList[i].streamConfigs[1]
+                receivePublishManual(v).then(re => {
+                creatDomAndshowRemoteVideo(v)
+                console.log('订阅成功')
+            });
+
             }
         });
 
@@ -324,6 +325,7 @@
      * 订阅&取消订阅
      */
     var unSub = (evt) => {
+        console.log('点击订阅&取消订阅', evt)
         let v = evt.data
         console.log(v)
         if(v.subscribed){
