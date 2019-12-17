@@ -80,7 +80,7 @@
      */
     AliRtcEngine.isSupport().then(re => {           // 进入此页面就会执行这段程序
         console.log(re);
-        init();                 // 初始化调用
+        init();                 // 初始化调用，各种监听
     }).catch(err => {
         alert(err.message);
     })
@@ -92,8 +92,10 @@
          * remote用户加入房间 onJoin
          * 更新在线用户列表
          */
+        console.log('新创建一个aliWebrtc成功，开始监听各种事件')
         aliWebrtc.on('onJoin', (publisher) => {
             if(publisher.userId){
+                console.log('更新在线用户列表')
                 updateUserList();
             }
         });
@@ -106,6 +108,7 @@
             console.log("onPublisher", publisher);
             let index = publisherList.getIndexByProprety(publisher.userId, "userId");
             if (index === -1) {
+                console.log('将该用户新增到推流列表')
                 publisherList.push(publisher);
             }
         });
@@ -198,7 +201,7 @@
                 aliWebrtc.configLocalAudioPublish = true;
                 aliWebrtc.configLocalCameraPublish = true;
                 aliWebrtc.publish().then((res) => {
-                    console.log('发布流成功');
+                    console.log('发布本地流成功');
                     $('.local-display-name .streamstate b').text('视频流');
                 }, (error) => {
                     alert(error.message);
@@ -489,11 +492,12 @@
             aliWebrtc.configLocalAudioPublish = true
             aliWebrtc.configLocalCameraPublish = true
             aliWebrtc.configLocalScreenPublish = false
-
+            console.log('选择开启视频流')
         }else {
             aliWebrtc.configLocalAudioPublish = false
             aliWebrtc.configLocalCameraPublish = false
             aliWebrtc.configLocalScreenPublish = true
+            console.log('选择开启屏幕共享流')
         }
     })
 
