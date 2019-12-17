@@ -135,4 +135,23 @@ def screenTrack():
     response.headers["Content-Type"] = "application/json"
     return response
 
+publisherInfo = {}
+
+# ajax的上传发布流的人数
+@main.route('/upload/Publisher', methods=['POST'])
+def publisherInfo():
+    data = request.form
+    publisherInfo = data
+    log('服务器中发布流的信息', publisherInfo)
+    return 'upload success'
+
+# ajax 取得上传发布流的人数
+@main.route('/get/Publisher', methods=['POST'])
+def getPublisher():
+    data = json.dumps(publisherInfo)
+    log('存在的发布流的人', data)
+    return data
+
+
+
 # AppKey：dde07e3682c1ea002a70a2d7d743edbd
