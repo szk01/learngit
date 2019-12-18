@@ -107,11 +107,13 @@
             initialization(publisher.userId)
             console.log("onPublisher", publisher);
             console.log('发布了流的publisherInfo', publisher)
-            aliWebrtc.subscribe(publisher.userId).then(re => {
-                console.log('自动订阅成功')
-            }).catch((err) => {
-                console.log('订阅不成功的userId', publisher.userId)
+            let userId = publisher.userId
+            aliWebrtc.subscribe(userId).then((userId)=>{
+            },(error)=>{
+                console.log(error.message);
             });
+
+
             let index = publisherList.getIndexByProprety(publisher.userId, "userId");
             if (index === -1) {
                 console.log('将该用户新增到推流列表')
