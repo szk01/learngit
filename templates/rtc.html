@@ -112,6 +112,7 @@
             aliWebrtc.configRemoteCameraTrack(userId, true, true);
             aliWebrtc.configRemoteAudio(userId, true);
             aliWebrtc.subscribe(userId).then((userId)=>{
+                aliWebrtc.setDisplayRemoteVideo(userId, dom, 2);
             },(error)=>{
                 console.log(error.message);
             });
