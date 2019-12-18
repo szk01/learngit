@@ -104,6 +104,18 @@
          * 将该用户新增到推流列表
          */
         aliWebrtc.on('onPublisher', (publisher) => {
+            console.log('后进入有人发布流,是否监听到？')
+            let userInfo = aliWebrtc.getUserInfo(publisher.userId)
+            let streamTypeList = userInfo.streamConfigs.filter(item => {
+                return item.state === "active";
+            });
+            streamTypeList.map(item => {
+                receivePublishManual(item).then(re => {
+                    creatDomAndshowRemoteVideo(item)
+                    console.log('订阅成功')
+                });
+            })
+            
             initialization(publisher.userId)
             console.log("onPublisher", publisher);
             let index = publisherList.getIndexByProprety(publisher.userId, "userId");
@@ -113,12 +125,7 @@
             }
             console.log("publisherList", publisherList);
             // 订阅此publisher
-            let newPublisherInfo = aliWebrtc.getUserInfo(publisher.userId)
-            console.log('后进入房间的流信息', newPublisherInfo.streamConfigs[0])
-            receivePublishManual(newPublisherInfo.streamConfigs[0]).then(re => {
-                creatDomAndshowRemoteVideo(newPublisherInfo.streamConfigs[1])
-                console.log('订阅成功')
-            });
+
         });
 
         /**
@@ -312,6 +319,7 @@
             })
             $(event.target).find('.menu').append($(frg))
         }
+
     }
 
     /**
