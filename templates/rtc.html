@@ -113,12 +113,12 @@
             }
             console.log("publisherList", publisherList);
             // 订阅此publisher
-            aliWebrtc.subscribe(publisher.userId).then(re => {
-                console.log('订阅新加入的用户')
-            }), (error) => {
-                console.log(error.message)
-            }
-
+            let newPublisherInfo = aliWebrtc.getUserInfo(publisher.userId)
+            console.log('后进入房间的流信息', newPublisherInfo)
+            receivePublishManual(newPublisherInfo).then(re => {
+                creatDomAndshowRemoteVideo(newPublisherInfo)
+                console.log('订阅成功')
+            });
         });
 
         /**
