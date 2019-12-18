@@ -283,6 +283,7 @@
         let streamTypeList = userInfo.streamConfigs.filter(item => {
             return item.state === "active";
         });
+        console.log('可以用来订阅的信息', streamTypeList)
         var html = ""
         if(streamTypeList.length == 0){
             html = $('<li>该用户未推流</li>')
