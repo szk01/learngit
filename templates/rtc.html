@@ -461,7 +461,7 @@
         channelId = value
         joinroom()
         // 订阅所有发布流的用户
-        // subscribeAlL()
+         subscribeAlL()
 
         $('.login').hide()
         $('.main-web').show()
@@ -474,9 +474,9 @@
         let userList = aliWebrtc.getUserList();
         for (var i = 0; i < userList.length; i++) {
             // 订阅此用户
-            //console.log('订阅此用户, 用户信息是', aliWebrtc.getUserInfo(userList[i].userId)
+            console.log('订阅此用户, 用户信息是', aliWebrtc.getUserInfo(userList[i].userId))
             // 拿到此用户的信息
-            let userInfo = aliWebrtc.getUserInfo(userList[i].userId);
+            let userInfo = aliWebrtc.getUserInfo(userList[i].userId)
             // receivePublishManual(v).then(re => {
             //     creatDomAndshowRemoteVideo(v)
             //     console.log('订阅成功')
