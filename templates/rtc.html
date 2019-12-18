@@ -114,8 +114,8 @@
             console.log("publisherList", publisherList);
             // 订阅此publisher
             let newPublisherInfo = aliWebrtc.getUserInfo(publisher.userId)
-            console.log('后进入房间的流信息', newPublisherInfo.streamConfigs[1])
-            receivePublishManual(newPublisherInfo.streamConfigs[1]).then(re => {
+            console.log('后进入房间的流信息', newPublisherInfo.streamConfigs[0])
+            receivePublishManual(newPublisherInfo.streamConfigs[0]).then(re => {
                 creatDomAndshowRemoteVideo(newPublisherInfo.streamConfigs[1])
                 console.log('订阅成功')
             });
