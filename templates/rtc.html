@@ -108,6 +108,9 @@
             console.log("onPublisher", publisher);
             console.log('发布了流的publisherInfo', publisher)
             let userId = publisher.userId
+
+            aliWebrtc.configRemoteCameraTrack(userId, true, true);
+            aliWebrtc.configRemoteAudio(userId, true);
             aliWebrtc.subscribe(userId).then((userId)=>{
             },(error)=>{
                 console.log(error.message);
