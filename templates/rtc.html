@@ -112,6 +112,7 @@
             aliWebrtc.configRemoteCameraTrack(userId, true, true);
             aliWebrtc.configRemoteAudio(userId, true);
             aliWebrtc.subscribe(userId).then((userId)=>{
+                var dom = getDisplayRemoteVideo(userId, "sophon_video_camera_large")
                 aliWebrtc.setDisplayRemoteVideo(userId, dom, 2);
             },(error)=>{
                 console.log(error.message);
