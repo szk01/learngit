@@ -110,10 +110,14 @@
             if (index === -1) {
                 console.log('将该用户新增到推流列表')
                 publisherList.push(publisher);
-                console.log('更新服务器中的推送流列表')
-                uploadPublisherUserinfo(publisherList)
             }
             console.log("publisherList", publisherList);
+            // 订阅此publisher
+            aliWebrtc.subscribe(publisher.userId).then(re => {
+                console.log('订阅新加入的用户')
+            }), (error) => {
+                console.log(error.message)
+            }
 
         });
 
@@ -479,7 +483,7 @@
         }
     }
 
-    /**
+        /**
      * 将发布了流的用户信息上传到服务器保存
      * **/
     var uploadPublisherUserinfo = (publisherList) => {
