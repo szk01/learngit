@@ -109,11 +109,11 @@
             console.log('发布了流的publisherInfo', publisher)
             let userId = publisher.userId
 
-            aliWebrtc.configRemoteCameraTrack(userId, true, true);
+            aliWebrtc.configRemoteCameraTrack(userId, true, true)
             aliWebrtc.configRemoteAudio(userId, true);
             aliWebrtc.subscribe(userId).then((userId)=>{
                 var dom = getDisplayRemoteVideo(userId, "sophon_video_camera_large")
-                aliWebrtc.setDisplayRemoteVideo(userId, dom, 2);
+                aliWebrtc.setDisplayRemoteVideo(userId, dom, 1);
             },(error)=>{
                 console.log(error.message);
             });
