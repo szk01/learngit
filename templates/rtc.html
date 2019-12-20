@@ -55,16 +55,98 @@
                     />
                 </span>
             </div>
-            <div class='local-video'>
+            <div class='local-video'>           <!--最大的那个屏幕-->
                 <video autoplay playsinline></video>
             </div>
         </div>
 
-        <div class="video-container"></div>
+        <div class="video-container"></div>     <!--其他用户推送的流-->
     </div>
 </body>
 
 </html>
+<script>
+    /**
+     * 初始化.video-container的样式
+     * **/
+    $('.local-video video').css({
+        "width": "1330.28px",
+        "height": "686px",
+    }).addClass('active')
+
+    /**
+     * 设置remote-subscribe的高宽**/
+    $(".remote-subscriber").css({
+        "width": 260,
+        "height": 130,
+    })
+
+    var localVideoWH = {width: 1330.28, height: 686, top: 113, left: 244.86,}
+    var publiushVideoWH = {width: 260, height: 130}
+
+    $('.video-container').on('click', 'video', function () {
+        let self = $(this)
+        // console.log('dianji', $(this).offset())
+        let position = $(this).offset()
+        console.log('top, left', position.top, position.left)
+
+        if (self.hasClass('active')) {
+            console.log('点击激活状态的publisher，不会有动作')
+            return
+        } else {                                // video没有激活，那么必须激活
+            self.addClass('active')
+            self.css({
+                "width": localVideoWH.width,
+                "height": localVideoWH.height,
+                "top": localVideoWH.top,
+                "left": localVideoWH.left,
+                "background-color": "black",
+                "position": "fixed",
+            })
+            // 第二种情况找到有active的兄弟节点。互换
+            let activePublish = self.parent().siblings().children('video.active')
+            console.log('兄弟节点', activePublish)
+            if (activePublish.hasClass('active')) {         // 兄弟节点被激活，那么去除active,换到没有激活的状态
+                activePublish.removeClass('active')
+                activePublish.css({
+                    "width": publiushVideoWH.width,
+                    "height": publiushVideoWH.height,
+                    "top": position.top,
+                    "left": position.left,
+                    "background-color": "blue",
+                    "position": "fixed",
+                    "z-index": 99999,
+                })
+
+            } else {
+                console.log('第一次点击')
+            }
+        }
+        // 本地流是否激活
+        if ($(".local-video video").hasClass('active')) {       // 初始化的时候被激活
+            $(".local-video video").removeClass("active")
+            $(".local-video video").css({
+                "width": publiushVideoWH.width,
+                "height": publiushVideoWH.height,
+                "top": position.top,
+                "left": position.left-35,
+                "background-color": "red",
+                "position": "fixed",
+                "z-index": 99999,
+            })
+        }
+
+
+    })
+
+    $(".local-video video").click(function () {
+        console.log('offset', $(this).offset())
+        let self = $(this)
+        if (self.hasClass('active')) {
+            console.log('初始化状态')
+        }
+    })
+</script>
 <script>
     /**
      * 必须使用https
@@ -108,7 +190,7 @@
             console.log("onPublisher", publisher);
             console.log('发布了流的publisherInfo', publisher)
             let userId = publisher.userId
-
+            // 自动订阅
             aliWebrtc.configRemoteCameraTrack(userId, true, true)
             aliWebrtc.configRemoteAudio(userId, true);
             aliWebrtc.subscribe(userId).then((userId)=>{
@@ -472,31 +554,13 @@
         }
         channelId = value
         joinroom()
-        // 订阅所有发布流的用户
-         subscribeAlL()
 
         $('.login').hide()
         $('.main-web').show()
     })
 
-    /**
-     * 订阅所有已经发布流的user
-     * **/
-    var subscribeAlL = () => {
-        let userList = aliWebrtc.getUserList();
-        for (var i = 0; i < userList.length; i++) {
-            // 订阅此用户
-            console.log('订阅此用户, 用户信息是', aliWebrtc.getUserInfo(userList[i].userId))
-            // 拿到此用户的信息
-            let userInfo = aliWebrtc.getUserInfo(userList[i].userId)
-            // receivePublishManual(v).then(re => {
-            //     creatDomAndshowRemoteVideo(v)
-            //     console.log('订阅成功')
-            // });
-        }
-    }
 
-        /**
+    /**
      * 将发布了流的用户信息上传到服务器保存
      * **/
     var uploadPublisherUserinfo = (publisherList) => {
@@ -627,6 +691,20 @@
             return
         }
     });
+
+    /**
+     * 点击交换video的位置和大小
+     * **/
+    $('.video-container').on('click', 'video', (e) => {
+        let publish_position = $(this).position()
+        let pp = {x: publish_position.top, y: publish_position.left}
+        let local_position = $('.local-video video').position()
+        let lp = {x: local_position.top, y: local_position.left}
+        $(this).offset({top: lp.x, left: lp.y})
+        $('.local-video video').offset({top: pp.x, left: pp.y})
+
+    })
+
 
     /**
      * 页面刷新时调用离会
