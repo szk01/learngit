@@ -94,7 +94,7 @@
 
     $('.video-container').on('click', 'video', function () {
         let self = $(this)
-        console.log('dianji', self)
+        console.log('dianji', self, '本地流的位置', localVideoWH)
         let position = $(this).offset()
         console.log('top, left', position.top, position.left)
 
@@ -142,6 +142,7 @@
     })
 
     $(".local-video video").click(function () {
+        console.log('本地流的大小', localVideoWH)
         let self = $(this)
         if (self.hasClass('active')) {
             console.log('初始化状态')
