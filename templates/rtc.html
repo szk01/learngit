@@ -101,7 +101,6 @@
                 "height": localVideoWH.height,
                 "top": localVideoWH.top,
                 "left": localVideoWH.left,
-                "background-color": "black",
                 "position": "fixed",
             })
 
@@ -111,7 +110,6 @@
                 "height": publiushVideoWH.height,
                 "top": position.top,
                 "left": position.left,
-                "background-color": "red",
                 "position": "fixed",
                 "z-index": 99999,
             })
@@ -123,7 +121,6 @@
                 "height": localVideoWH.height,
                 "top": localVideoWH.top,
                 "left": localVideoWH.left,
-                "background-color": "black",
                 "position": "fixed",
             })
 
@@ -131,7 +128,7 @@
             activePublish[0].removeAttribute('style')
             activePublish.css(
                 "cssText", `width: 260px ; height:130px ; left:1640px ; top: ${position.top}px ; position: fixed;
-                background-color: yellow;`
+                `
             )
         }
     })
@@ -527,6 +524,7 @@
             } else if (v.label === "sophon_video_screen_share") {
                 console.log("订阅屏幕共享流");
                 aliWebrtc.configRemoteScreenTrack(v.userId, true);
+                aliWebrtc.configRemoteAudio(v.userId, true);
             }
             aliWebrtc.subscribe(v.userId).then(re => {
                 resolve();
@@ -701,19 +699,6 @@
             return
         }
     });
-
-    /**
-     * 点击交换video的位置和大小
-     * **/
-    $('.video-container').on('click', 'video', (e) => {
-        let publish_position = $(this).position()
-        let pp = {x: publish_position.top, y: publish_position.left}
-        let local_position = $('.local-video video').position()
-        let lp = {x: local_position.top, y: local_position.left}
-        $(this).offset({top: lp.x, left: lp.y})
-        $('.local-video video').offset({top: pp.x, left: pp.y})
-
-    })
 
 
     /**
