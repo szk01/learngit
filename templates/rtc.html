@@ -65,95 +65,104 @@
 </body>
 
 </html>
+<!--<script>-->
+<!--/**-->
+<!--     * 初始化.video-container的样式-->
+<!--     * **/-->
+<!--    $('.local-video').css(-->
+<!--        "cssText", `width: 1330.28px; height: 686px;`-->
+<!--    )-->
+
+<!--    $(".local-video video").addClass('active')-->
+
+<!--    /**-->
+<!--     * 设置remote-subscribe的高宽**/-->
+<!--    $(".remote-subscriber").css(-->
+<!--        "cssText", `width: 260px; height: 130px;`-->
+<!--    )-->
+
+<!--    var localVideoWH = {width: 1330.28, height: 686, top: 113, left: 244.86,}-->
+<!--    var publiushVideoWH = {width: 260, height: 130}-->
+
+<!--    $('.video-container').on('click', 'video', function () {-->
+<!--        let self = $(this)-->
+<!--        console.log('dianji', self)-->
+<!--        let position = $(this).offset()-->
+<!--        console.log('top, left', position.top, position.left)-->
+
+<!--        let activePublish = self.parent().siblings().children('video.active')-->
+<!--        console.log('兄弟节点', activePublish)-->
+
+<!--        if (!self.hasClass('active') && !activePublish.hasClass('active')) {    // 自己没有激活，兄弟节点没有激活-->
+<!--            console.log('自己没有被激活，兄弟节点也没有被激活')-->
+<!--            self.addClass('active')-->
+<!--            self.css({-->
+<!--                "width": localVideoWH.width,-->
+<!--                "height": localVideoWH.height,-->
+<!--                "top": localVideoWH.top,-->
+<!--                "left": localVideoWH.left,-->
+<!--                "position": "fixed",-->
+<!--            })-->
+
+<!--            $(".local-video video").removeClass("active")-->
+<!--            $(".local-video video").css({-->
+<!--                "width": publiushVideoWH.width,-->
+<!--                "height": publiushVideoWH.height,-->
+<!--                "top": position.top,-->
+<!--                "left": position.left,-->
+<!--                "position": "fixed",-->
+<!--                "z-index": 99999,-->
+<!--            })-->
+<!--        } else if (!self.hasClass('active') && activePublish.hasClass('active')) {         // 兄弟节点被激活,自己没有被激活-->
+<!--            console.log('兄弟节点被激活,自己没有被激活')-->
+<!--            self.addClass('active')-->
+<!--            self.css({-->
+<!--                "width": localVideoWH.width,-->
+<!--                "height": localVideoWH.height,-->
+<!--                "top": localVideoWH.top,-->
+<!--                "left": localVideoWH.left,-->
+<!--                "position": "fixed",-->
+<!--            })-->
+
+<!--            activePublish.removeClass('active')         // 修改被激活的兄弟节点-->
+<!--            activePublish[0].removeAttribute('style')-->
+<!--            activePublish.css(-->
+<!--                "cssText", `width: 260px ; height:130px ; left:1640px ; top: ${position.top}px ; position: fixed;-->
+<!--                `-->
+<!--            )-->
+<!--        }-->
+<!--    })-->
+
+<!--    $(".local-video video").click(function () {-->
+<!--        let self = $(this)-->
+<!--        if (self.hasClass('active')) {-->
+<!--            console.log('初始化状态')-->
+<!--        } else {-->
+<!--            let position = self.offset()-->
+<!--            console.log('local流回到原始状态', position)-->
+<!--            self.addClass("active")-->
+<!--            self.css(-->
+<!--                "cssText", `width: 1330.28px; height: ${localVideoWH.height}px; top: ${localVideoWH.top}px; left: ${localVideoWH.left}px;`-->
+<!--            )-->
+<!--            let activePublisher = $(".video-container").find("video.active")            // publisher流回到初始状态-->
+<!--            activePublisher.removeClass('active')-->
+<!--            activePublisher[0].removeAttribute('style')-->
+<!--            activePublisher.css(-->
+<!--                "cssText", `width: 260px; top: ${position.top}px; left: ${position.left}px; height: 130px; position:fixed`-->
+<!--            )-->
+<!--            console.log(activePublisher)-->
+<!--        }-->
+<!--    })-->
+<!--</script>-->
+
+<!--新的点击事件-->
 <script>
-/**
-     * 初始化.video-container的样式
-     * **/
-    $('.local-video').css(
-        "cssText", `width: 1330.28px; height: 686px;`
-    )
-
-    $(".local-video video").addClass('active')
-
-    /**
-     * 设置remote-subscribe的高宽**/
-    $(".remote-subscriber").css(
-        "cssText", `width: 260px; height: 130px;`
-    )
-
-    var localVideoWH = {width: 1330.28, height: 686, top: 113, left: 244.86,}
-    var publiushVideoWH = {width: 260, height: 130}
-
-    $('.video-container').on('click', 'video', function () {
-        let self = $(this)
-        console.log('dianji', self)
-        let position = $(this).offset()
-        console.log('top, left', position.top, position.left)
-
-        let activePublish = self.parent().siblings().children('video.active')
-        console.log('兄弟节点', activePublish)
-
-        if (!self.hasClass('active') && !activePublish.hasClass('active')) {    // 自己没有激活，兄弟节点没有激活
-            console.log('自己没有被激活，兄弟节点也没有被激活')
-            self.addClass('active')
-            self.css({
-                "width": localVideoWH.width,
-                "height": localVideoWH.height,
-                "top": localVideoWH.top,
-                "left": localVideoWH.left,
-                "position": "fixed",
-            })
-
-            $(".local-video video").removeClass("active")
-            $(".local-video video").css({
-                "width": publiushVideoWH.width,
-                "height": publiushVideoWH.height,
-                "top": position.top,
-                "left": position.left,
-                "position": "fixed",
-                "z-index": 99999,
-            })
-        } else if (!self.hasClass('active') && activePublish.hasClass('active')) {         // 兄弟节点被激活,自己没有被激活
-            console.log('兄弟节点被激活,自己没有被激活')
-            self.addClass('active')
-            self.css({
-                "width": localVideoWH.width,
-                "height": localVideoWH.height,
-                "top": localVideoWH.top,
-                "left": localVideoWH.left,
-                "position": "fixed",
-            })
-
-            activePublish.removeClass('active')         // 修改被激活的兄弟节点
-            activePublish[0].removeAttribute('style')
-            activePublish.css(
-                "cssText", `width: 260px ; height:130px ; left:1640px ; top: ${position.top}px ; position: fixed;
-                `
-            )
-        }
-    })
-
-    $(".local-video video").click(function () {
-        let self = $(this)
-        if (self.hasClass('active')) {
-            console.log('初始化状态')
-        } else {
-            let position = self.offset()
-            console.log('local流回到原始状态', position)
-            self.addClass("active")
-            self.css(
-                "cssText", `width: 1330.28px; height: ${localVideoWH.height}px; top: ${localVideoWH.top}px; left: ${localVideoWH.left}px;`
-            )
-            let activePublisher = $(".video-container").find("video.active")            // publisher流回到初始状态
-            activePublisher.removeClass('active')
-            activePublisher[0].removeAttribute('style')
-            activePublisher.css(
-                "cssText", `width: 260px; top: ${position.top}px; left: ${position.left}px; height: 130px; position:fixed`
-            )
-            console.log(activePublisher)
-        }
+    $('.video-container').on('click', '.remote-subscriber', function () {
+        let v = $(this).html()
+        $(".local-video").html(v)
     })
 </script>
+
 <script>
     /**
      * 必须使用https
