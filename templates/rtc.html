@@ -158,6 +158,7 @@
 <!--新的点击事件-->
 <script>
     $('.video-container').on('click', '.remote-subscriber', function () {
+        console.log('点击remote流，与local交换')
         let v = $(this).html()
         $(".local-video").html(v)
     })
