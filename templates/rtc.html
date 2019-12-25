@@ -628,18 +628,17 @@
         console.log(classList[1], info)
         if (info === "audio") {
             console.log('调用接口，关闭声音')
-            let enable = toggleStream(status, '打开音频流', '关闭音频流', $(this))
-            aliWebrtc.configLocalAudioPublish = enable
+            aliWebrtc.configLocalAudioPublish = toggleStream(status, '打开音频流', '关闭音频流', $(this))
 
         }  else if (info === "camera") {
             console.log("调用接口，关闭视频流")
-            let enable = toggleStream(status, '打开视频流', '关闭视频流', $(this))
-            aliWebrtc.configLocalCameraPublish = enable
+            aliWebrtc.configLocalCameraPublish = toggleStream(status, '打开视频流', '关闭视频流', $(this))
+            console.log('视频流状态',aliWebrtc.configLocalCameraPublish)
 
         } else if (info === "screen") {
             console.log("调用接口，关闭共享流")
-            let enable = toggleStream(status, '打开共享流', '关闭共享流', $(this))
-            aliWebrtc.configLocalScreenPublish = enable
+            aliWebrtc.configLocalScreenPublish = toggleStream(status, '打开共享流', '关闭共享流', $(this))
+            console.log('共享流状态', aliWebrtc.configLocalScreenPublish)
         }
     })
 
