@@ -626,28 +626,29 @@
         let info = $(this).attr("data-role")
         let status = classList[1]
         console.log(classList[1], info)
-        let user = getActiveUser()
-        console.log('user', user)
-        if (user.userId) {
-            if (info === "audio") {
-                console.log('调用接口，关闭声音')
-                let enable = toggleStream(status, '打开音频流', '关闭音频流', $(this))
-                aliWebrtc.configRemoteAudio(user.userId, enable)
+        getRTCAuthInfo().then((authInfo) => {
+            console.log('authInfo', authInfo)
+            let userId = authInfo.userid
+            if (userId) {
+                if (info === "audio") {
+                    console.log('调用接口，关闭声音')
+                    let enable = toggleStream(status, '打开音频流', '关闭音频流', $(this))
+                    aliWebrtc.configRemoteAudio(user.userId, enable)
 
-            }  else if (info === "camera") {
-                console.log("调用接口，关闭视频流")
-                let enable = toggleStream(status, '打开视频流', '关闭视频流', $(this))
-                aliWebrtc.configRemoteCameraTrack(userId, true, enable);
+                }  else if (info === "camera") {
+                    console.log("调用接口，关闭视频流")
+                    let enable = toggleStream(status, '打开视频流', '关闭视频流', $(this))
+                    aliWebrtc.configRemoteCameraTrack(userId, true, enable);
 
-            } else if (info === "screen") {
-                console.log("调用接口，关闭共享流")
-                let enable = toggleStream(status, '打开共享流', '关闭共享流', $(this))
-                aliWebrtc.configRemoteScreenTrack(userId, enable);
+                } else if (info === "screen") {
+                    console.log("调用接口，关闭共享流")
+                    let enable = toggleStream(status, '打开共享流', '关闭共享流', $(this))
+                    aliWebrtc.configRemoteScreenTrack(userId, enable);
+                }
+            } else {
+                confirm('没有找到用户')
             }
-        } else {
-            confirm('没有找到用户')
-        }
-
+        })
     })
 
 
