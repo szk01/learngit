@@ -629,16 +629,32 @@
         if (info === "audio") {
             console.log('调用接口，关闭声音')
             aliWebrtc.configLocalAudioPublish = toggleStream(status, '打开音频流', '关闭音频流', $(this))
+            console.log('声音状态', aliWebrtc.configLocalAudioPublish)
+            aliWebrtc.publish().then(re => {
+                console.log('修改成功')
+            }).catch(err => {
+                console.log('修改失败')
+            })
 
         }  else if (info === "camera") {
             console.log("调用接口，关闭视频流")
             aliWebrtc.configLocalCameraPublish = toggleStream(status, '打开视频流', '关闭视频流', $(this))
             console.log('视频流状态',aliWebrtc.configLocalCameraPublish)
+            aliWebrtc.publish().then(re => {
+                console.log('修改成功')
+            }).catch(err => {
+                console.log('修改失败')
+            })
 
         } else if (info === "screen") {
             console.log("调用接口，关闭共享流")
             aliWebrtc.configLocalScreenPublish = toggleStream(status, '打开共享流', '关闭共享流', $(this))
             console.log('共享流状态', aliWebrtc.configLocalScreenPublish)
+            aliWebrtc.publish().then(re => {
+                console.log('修改成功')
+            }).catch(err => {
+                console.log('修改失败')
+            })
         }
     })
 
