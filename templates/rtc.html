@@ -626,48 +626,24 @@
         let info = $(this).attr("data-role")
         let status = classList[1]
         console.log(classList[1], info)
-        getRTCAuthInfo().then((authInfo) => {
-            console.log('authInfo', authInfo)
-            let userId = authInfo.userid
-            if (userId) {
-                if (info === "audio") {
-                    console.log('调用接口，关闭声音')
-                    let enable = toggleStream(status, '打开音频流', '关闭音频流', $(this))
-                    aliWebrtc.configRemoteAudio(user.userId, enable)
+        if (info === "audio") {
+            console.log('调用接口，关闭声音')
+            let enable = toggleStream(status, '打开音频流', '关闭音频流', $(this))
+            aliWebrtc.configLocalAudioPublish = enable
 
-                }  else if (info === "camera") {
-                    console.log("调用接口，关闭视频流")
-                    let enable = toggleStream(status, '打开视频流', '关闭视频流', $(this))
-                    aliWebrtc.configRemoteCameraTrack(userId, true, enable);
+        }  else if (info === "camera") {
+            console.log("调用接口，关闭视频流")
+            let enable = toggleStream(status, '打开视频流', '关闭视频流', $(this))
+            aliWebrtc.configLocalCameraPublish = enable
 
-                } else if (info === "screen") {
-                    console.log("调用接口，关闭共享流")
-                    let enable = toggleStream(status, '打开共享流', '关闭共享流', $(this))
-                    aliWebrtc.configRemoteScreenTrack(userId, enable);
-                }
-            } else {
-                confirm('没有找到用户')
-            }
-        })
+        } else if (info === "screen") {
+            console.log("调用接口，关闭共享流")
+            let enable = toggleStream(status, '打开共享流', '关闭共享流', $(this))
+            aliWebrtc.configLocalScreenPublish = enable
+        }
     })
 
 
-    /**
-     * 得到激活的video
-     * **/
-    var getActiveUser = function() {
-        let activeName = $("span.username").children('b').text()
-        console.log('activeName', activeName)
-        let userList = aliWebrtc.getUserList()
-        console.log('userList', userList)
-        userList.filter((user) => {
-            if (user.displayName === activeName) {
-                return user
-            } else {
-                return 'no user join in room'
-            }
-        })
-    }
 
     /**
      * 是否切换button名**/
