@@ -196,8 +196,7 @@
             removeDom(publisher.userId);
         })
 
-        // 设置视频流的参数
-        settingCamera(640, 480, 20)
+
     }
 
     /**
@@ -228,6 +227,8 @@
                 // 4. 发布本地流
                 aliWebrtc.configLocalAudioPublish = true;
                 aliWebrtc.configLocalCameraPublish = true;
+                // 设置视频流的参数
+                settingCamera(640, 480, 20)
                 aliWebrtc.publish().then((res) => {
                     console.log('发布本地流成功');
                     $('.local-display-name .streamstate b').text('视频流');
