@@ -40,6 +40,7 @@
                     <button class="toggle-audio default" data-role="audio">关闭声音</button>
                     <button class="toggle-camera default" data-role="camera" style="visibility: visible">关闭视频流</button>
                     <button class="toggle-screen default" data-role="screen" style="visibility: hidden">关闭共享流</button>
+
                 </div>
             </div>
 
@@ -228,7 +229,7 @@
                 aliWebrtc.configLocalAudioPublish = true;
                 aliWebrtc.configLocalCameraPublish = true;
                 // 设置视频流的参数
-                settingCamera(640, 480, 20)
+                settingCamera(640, 480, 10)
                 aliWebrtc.publish().then((res) => {
                     console.log('发布本地流成功');
                     $('.local-display-name .streamstate b').text('视频流');
