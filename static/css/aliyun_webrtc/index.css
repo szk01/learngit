@@ -178,6 +178,10 @@ ul,li{
   font-size: 15px;
 }
 
+.local-display-name div {
+  display: inline-block;
+}
+
 .publisher
 {
   margin: 20px 0 20px calc(50 / 1080 * 100vh);

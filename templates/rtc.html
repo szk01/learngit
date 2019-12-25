@@ -37,6 +37,12 @@
                 <span class="channelid">Channel Id: <b></b></span>
                 <span class="streamstate">推流状态：<b></b></span>
             </div>
+            <div class="control-btn">
+                <button class="toggle-audio default" data-role="audio">关闭声音</button>
+                <button class="toggle-camera default" data-role="camera" style="visibility: hidden">关闭视频流</button>
+                <button class="toggle-screen default" data-role="screen" style="visibility: hidden">关闭共享流</button>
+            </div>
+
             <div class='publisher'>
                 <button class="select-preview">关闭预览</button>
                 <button class="push-stream">停止推流</button>&nbsp;&nbsp;
@@ -512,25 +518,6 @@
             });
     }
 
-    /**
-     * 从服务器拿到推送流列表**/
-    var getPublisherFromServer = () => {
-        return new Promise(function (resolve, reject) {
-            $.ajax({
-                url: '/get/Publisher',
-                type: 'POST',
-                success: (data) => {
-                    console.log('发布流的信息', data)
-                    resolve(JSON.parse(data))
-                },
-                failed: (error) => {
-                    reject(error);
-                }
-            });
-        })
-
-    }
-
 
     /**
      * 控制预览
@@ -600,8 +587,12 @@
                         $(this).text("停止推流")
                         if(aliWebrtc.configLocalScreenPublish) {
                             $('.local-display-name .streamstate b').text('共享流')
+                            $('.control-btn btn.toggle-screen').css('visibility', 'visible')
+                            $('.control-btn btn.toggle-camera').css('visibility', 'hidden')
                         } else {
                             $('.local-display-name .streamstate b').text('视频流')
+                            $('.control-btn btn.toggle-camera').css('visibility', 'visible')
+                            $('.control-btn btn.toggle-screen').css('visibility', 'hidden')
                         }
                     },3500)
                 })
@@ -626,6 +617,66 @@
             return
         }
     });
+
+     /**
+     * 控制是否显示XX流
+     * **/
+    $("div.control-btn").on('click', 'button', function (e) {
+        let classList = $(this)[0].classList
+        let info = $(this).attr("data-role")
+        let status = classList[1]
+        console.log(classList[1], info)
+        let user = getActiveUser()
+        console.log('user', user)
+        if (user.userId) {
+            if (info === "audio") {
+                console.log('调用接口，关闭声音')
+                let enable = toggleStream(status, '打开音频流', '关闭音频流', $(this))
+                aliWebrtc.configRemoteAudio(user.userId, false)
+
+            }  else if (info === "camera") {
+                console.log("调用接口，关闭视频流")
+                let enable = toggleStream(status, '打开视频流', '关闭视频流', $(this))
+                aliWebrtc.configRemoteCameraTrack(userId, true, enable);
+
+            } else if (info === "screen") {
+                console.log("调用接口，关闭共享流")
+                let enable = toggleStream(status, '打开共享流', '关闭共享流', $(this))
+                aliWebrtc.configRemoteScreenTrack(userId, enable);
+            }
+        } else {
+            confirm('没有找到用户')
+        }
+
+    })
+
+
+    /**
+     * 得到激活的video
+     * **/
+    var getActiveUser = function() {
+        let activeName = $("span.username").children('b').text()
+        console.log('activeName', activeName)
+        let userList = aliWebrtc.getUserList()
+        userList.filter((user) => {
+            if (user.displayName === activeName) {
+                return user
+            } else {
+                return 'no user join in room'
+            }
+        })
+    }
+
+    /**
+     * 是否切换button名**/
+    var toggleStream = function(status, text1, text2, elem) {
+        if (status === 'default') {
+            elem.removeClass("default").text(text1)
+            return false
+        }
+        elem.addClass('default').text(text2)
+        return true
+    }
 
 
     /**
