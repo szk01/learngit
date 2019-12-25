@@ -567,11 +567,15 @@
             aliWebrtc.configLocalAudioPublish = true
             aliWebrtc.configLocalCameraPublish = true
             aliWebrtc.configLocalScreenPublish = false
+            // 设置视频参数
+            settingCamera(640, 480, 10)
             console.log('选择开启视频流')
         }else {
             aliWebrtc.configLocalAudioPublish = true
             aliWebrtc.configLocalCameraPublish = false
             aliWebrtc.configLocalScreenPublish = true
+            // 设置视频参数
+            settingCamera(640, 480, 10)
             console.log('选择开启屏幕共享流')
         }
     })
@@ -629,6 +633,12 @@
         // 1, 获取设备信息
         aliWebrtc.getDevices().then((re) => {
             console.log('获取的设备信息', re)
+            let deviceVideoId = re.videoDevices[0].deviceId
+            aliWebrtc.getAvailableResolutions(deviceVideoId).then((re) => {
+                console.log('可支持的分辨率', re)
+            }).catch((error) => {
+                console.log(error.message)
+            })
         }).catch((error) => {
             console.log(error.message)
         })
