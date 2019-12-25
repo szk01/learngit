@@ -195,7 +195,10 @@
             updateUserList();
             removeDom(publisher.userId);
         })
-    }           //
+
+        // 设置视频流的参数
+        settingCamera(640, 480, 20)
+    }
 
     /**
      * 加入房间
@@ -617,6 +620,27 @@
             return
         }
     });
+
+    /**
+     * 设置视频流的参数**/
+    var settingCamera = function(width, height, frameRate) {
+        // 1, 获取设备信息
+        aliWebrtc.getDevices().then((re) => {
+            console.log('获取的设备信息', re)
+        }).catch((error) => {
+            console.log(error.message)
+        })
+
+        // 2，获取可支持的分辨率
+        aliWebrtc.getAvailableResolutions()
+
+        aliWebrtc.videoProfile = {
+            frameRate: frameRate,
+            width: width,
+            height: height,
+        }
+    }
+
 
      /**
      * 控制是否显示XX流
