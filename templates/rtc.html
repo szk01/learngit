@@ -36,11 +36,11 @@
                 <span class="username">User: <b></b></span>
                 <span class="channelid">Channel Id: <b></b></span>
                 <span class="streamstate">推流状态：<b></b></span>
-            </div>
-            <div class="control-btn">
-                <button class="toggle-audio default" data-role="audio">关闭声音</button>
-                <button class="toggle-camera default" data-role="camera" style="visibility: hidden">关闭视频流</button>
-                <button class="toggle-screen default" data-role="screen" style="visibility: hidden">关闭共享流</button>
+                <div class="control-btn">
+                    <button class="toggle-audio default" data-role="audio">关闭声音</button>
+                    <button class="toggle-camera default" data-role="camera" style="visibility: visible">关闭视频流</button>
+                    <button class="toggle-screen default" data-role="screen" style="visibility: hidden">关闭共享流</button>
+                </div>
             </div>
 
             <div class='publisher'>
@@ -587,12 +587,12 @@
                         $(this).text("停止推流")
                         if(aliWebrtc.configLocalScreenPublish) {
                             $('.local-display-name .streamstate b').text('共享流')
-                            $('.control-btn btn.toggle-screen').css('visibility', 'visible')
-                            $('.control-btn btn.toggle-camera').css('visibility', 'hidden')
+                            $('.control-btn button.toggle-screen').css('visibility', 'visible')
+                            $('.control-btn button.toggle-camera').css('visibility', 'hidden')
                         } else {
                             $('.local-display-name .streamstate b').text('视频流')
-                            $('.control-btn btn.toggle-camera').css('visibility', 'visible')
-                            $('.control-btn btn.toggle-screen').css('visibility', 'hidden')
+                            $('.control-btn button.toggle-camera').css('visibility', 'visible')
+                            $('.control-btn button.toggle-screen').css('visibility', 'hidden')
                         }
                     },3500)
                 })
@@ -632,7 +632,7 @@
             if (info === "audio") {
                 console.log('调用接口，关闭声音')
                 let enable = toggleStream(status, '打开音频流', '关闭音频流', $(this))
-                aliWebrtc.configRemoteAudio(user.userId, false)
+                aliWebrtc.configRemoteAudio(user.userId, enable)
 
             }  else if (info === "camera") {
                 console.log("调用接口，关闭视频流")
@@ -658,6 +658,7 @@
         let activeName = $("span.username").children('b').text()
         console.log('activeName', activeName)
         let userList = aliWebrtc.getUserList()
+        console.log('userList', userList)
         userList.filter((user) => {
             if (user.displayName === activeName) {
                 return user
