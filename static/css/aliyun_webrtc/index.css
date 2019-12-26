@@ -244,11 +244,14 @@ background: -moz-linear-gradient(top,  #468CCF,  #63B8EE);
 {
   margin: 10px 0;
   position: relative;
+  height: 200px;
+  width: 260px;
 }
 .video-container video        /*左侧视频*/
 {
   background: #000;
   width: 100%;
+  height: 100%;
 }
 
 .video-container .display-name
