@@ -570,6 +570,7 @@
             // 设置视频参数
             settingCamera(640, 480, 10)
             console.log('选择开启视频流')
+
         }else {
             aliWebrtc.configLocalAudioPublish = true
             aliWebrtc.configLocalCameraPublish = false
@@ -578,7 +579,34 @@
             settingCamera(640, 480, 10)
             console.log('选择开启屏幕共享流')
         }
+        // 开始推流
+        publishStream()
     })
+
+    /**
+     * 推流**/
+    var publishStream = function() {
+        aliWebrtc.publish().then(re => {
+            setTimeout(() => {
+                $(".streamType").css({
+                    visibility: "hidden"
+                })
+                $(this).text("停止推流")
+                if(aliWebrtc.configLocalScreenPublish) {
+                    $('.local-display-name .streamstate b').text('共享流')
+                    $('.control-btn button.toggle-screen').css('visibility', 'visible')
+                    $('.control-btn button.toggle-camera').css('visibility', 'hidden')
+                } else {
+                    $('.local-display-name .streamstate b').text('视频流')
+                    $('.control-btn button.toggle-camera').css('visibility', 'visible')
+                    $('.control-btn button.toggle-screen').css('visibility', 'hidden')
+                }
+            },3500)
+        }).catch(err => {
+            console.log(err.message)
+        });
+    }
+
 
     /**
      * 处理推流
