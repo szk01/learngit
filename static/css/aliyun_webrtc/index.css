@@ -265,10 +265,10 @@ background: -moz-linear-gradient(top,  #468CCF,  #63B8EE);
 }
 
 .remote-subscriber-active {
-  width: calc(100vw - 200 - 300 - 50 / 1080 * 100vh);
+  width: calc(100vw - 200px - 300px - 50 / 1080 * 100vh);
   height: calc(602 / 850 * 100vh);
   top: 70px;
-  left: calc(200 +  50 / 1080 * 100vh);
+  left: calc(200px +  50 / 1080 * 100vh);
   position: fixed;
 }
 
