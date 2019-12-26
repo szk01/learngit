@@ -588,10 +588,6 @@
     var publishStream = function() {
         aliWebrtc.publish().then(re => {
             setTimeout(() => {
-                $(".streamType").css({
-                    visibility: "hidden"
-                })
-                $(this).text("停止推流")
                 if(aliWebrtc.configLocalScreenPublish) {
                     $('.local-display-name .streamstate b').text('共享流')
                     $('.control-btn button.toggle-screen').css('visibility', 'visible')
