@@ -247,7 +247,7 @@ background: -moz-linear-gradient(top,  #468CCF,  #63B8EE);
   height: 200px;
   width: 260px;
 }
-.video-container video        /*左侧视频*/
+.video-container video        /*右侧视频*/
 {
   background: #000;
   width: 100%;
@@ -262,4 +262,19 @@ background: -moz-linear-gradient(top,  #468CCF,  #63B8EE);
   padding: 5px;
   background: rgba(0,0,0,0.1);
   color: white;
+}
+
+.remote-subscriber-active {
+  width: calc(100vw - 200 - 300 - 50/1080 * 100vh);
+  height: calc(602 / 850 * 100vh);
+  top: 70px;
+  left: calc(200 + calc(50 / 1080 * 100vh));
+  position: fixed;
+}
+
+.local-video-active {
+  width: 30px;
+  height: calc(602 / 850 * 40vh);
+  padding-left: 60%;
+  padding-top: 60%;
 }
