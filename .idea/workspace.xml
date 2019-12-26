@@ -26,18 +26,18 @@
   <component name="PropertiesComponent">
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/templates" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Desktop/归档" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\86177\Desktop\flask_copy\features" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\86177\Documents\GitHub\flaskWeb\templates" />
       <recent name="C:\Users\86177\Documents\GitHub\flaskWeb" />
       <recent name="C:\Users\86177\Documents\GitHub\flaskWeb\static" />
       <recent name="C:\Users\86177\Documents\GitHub\flaskWeb\routes" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\86177\Desktop\flask_copy\features" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -239,7 +239,15 @@
       <workItem from="1574385571580" duration="1038000" />
       <workItem from="1574387678763" duration="2818000" />
       <workItem from="1574737616746" duration="17682000" />
-      <workItem from="1576218424531" duration="4423000" />
+      <workItem from="1576218424531" duration="19526000" />
+      <workItem from="1576546467397" duration="53928000" />
+      <workItem from="1576828151977" duration="2000" />
+      <workItem from="1576828169341" duration="716000" />
+      <workItem from="1577065198446" duration="7966000" />
+      <workItem from="1577097296265" duration="3734000" />
+      <workItem from="1577176987305" duration="17621000" />
+      <workItem from="1577261871375" duration="4155000" />
+      <workItem from="1577324085520" duration="11666000" />
     </task>
     <servers />
   </component>

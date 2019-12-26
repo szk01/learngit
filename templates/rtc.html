@@ -830,11 +830,13 @@
 
 
 <script>
+    // 改变右侧的在线人数的样式
     $(".video-container").on('click','div.remote-subscriber', function () {
         $(this).attr('class', 'remote-subscriber-active')
         $(this).siblings().removeClass('remote-subscriber-active')
     })
 
+    // 改变localvideo的样式
     $(".local-video video").click(function () {
         if ($(this).hasClass('local-video-active')) {
             $(this).removeClass('local-video-active')
