@@ -116,18 +116,39 @@
             initialization(publisher.userId)
             console.log("onPublisher", publisher);
             console.log('发布了流的publisherInfo', publisher)
-            let userId = publisher.userId
             // 自动订阅
-            
-            aliWebrtc.configRemoteCameraTrack(userId, true, true)
-            aliWebrtc.configRemoteAudio(userId, true);
-            aliWebrtc.subscribe(userId).then((userId)=>{
-                var dom = getDisplayRemoteVideo(userId, "sophon_video_camera_large")
-                aliWebrtc.setDisplayRemoteVideo(userId, dom, 1);
-            },(error)=>{
-                console.log(error.message);
+            let streamTypeList = userInfo.streamConfigs.filter(item => {
+                return item.state === "active";
             });
 
+            if(streamTypeList.length == 0){
+                console.log('信息缺失，没有推流')
+            }else{
+                streamTypeList.map(item => {
+                    item.userId = userId
+                    if(item.type === "video"){
+                        aliWebrtc.configRemoteCameraTrack(userId, true, true)
+                        aliWebrtc.configRemoteAudio(userId, true);
+                        aliWebrtc.subscribe(userId).then((userId)=>{
+                            var dom = getDisplayRemoteVideo(userId, "sophon_video_camera_large")
+                            aliWebrtc.setDisplayRemoteVideo(userId, dom, 1);
+                            console.log('自动订阅视频流')
+                        },(error)=>{
+                            console.log(error.message);
+                        });
+                    } else if (item.type === "screen"){
+                        aliWebrtc.configRemoteScreenTrack(userId, true)
+                        aliWebrtc.configRemoteAudio(userId, true);
+                        aliWebrtc.subscribe(userId).then((userId)=>{
+                            var dom = getDisplayRemoteVideo(userId, "sophon_video_screen_share")
+                            aliWebrtc.setDisplayRemoteVideo(userId, dom, 2);
+                            console.log('自动订阅分享流')
+                        },(error)=>{
+                            console.log(error.message);
+                        });
+                    }
+                })
+            }
 
             let index = publisherList.getIndexByProprety(publisher.userId, "userId");
             if (index === -1) {
@@ -295,6 +316,7 @@
         $('.menu').hide();
         $(event.target).find('.menu').empty().show();
         let userInfo = aliWebrtc.getUserInfo(userId);
+        console.log('直接切换后更新的userInfo')
         let streamTypeList = userInfo.streamConfigs.filter(item => {
             return item.state === "active";
         });
@@ -485,7 +507,7 @@
           uploadPublisherUserinfo()
           console.log('更新服务器中的推送流列表')
         } else {
-          console.log("未找到之前的推流数据"); //删除推流用户
+          console.log("未找到之前的推流数据");
         }
     }
 
@@ -590,7 +612,7 @@
         aliWebrtc.unPublish().then(re => {
             setTimeout(() => {
                 console.log('停止推流, 触发updateUserList')
-            }, 2500)
+            }, 3500)
         }).catch(error => {
             console.log(error.message)
         })
@@ -606,7 +628,7 @@
                     $('.control-btn button.toggle-camera').css('visibility', 'visible')
                     $('.control-btn button.toggle-screen').css('visibility', 'hidden')
                 }
-            },2500)
+            },3500)
         }).catch(err => {
             console.log(err.message)
         });
@@ -636,7 +658,7 @@
                             $('.control-btn button.toggle-camera').css('visibility', 'visible')
                             $('.control-btn button.toggle-screen').css('visibility', 'hidden')
                         }
-                    },1000)
+                    },3500)
                 })
                 .catch(err => {
                     console.log(err.message)
