@@ -591,11 +591,11 @@
             aliWebrtc.configLocalAudioPublish = true
             aliWebrtc.configLocalCameraPublish = true
             aliWebrtc.configLocalScreenPublish = false
-            // 设置视频参数
-            settingCamera(640, 480, 10)
+
             console.log('选择开启视频流')
             // 停止屏幕流
             if (screenEnable) {
+                console.log('先停止推共享流')
                 aliWebrtc.unPublish().then((re)=>{
                     setTimeout(() => {
                         $('.local-display-name .streamstate b').text('当前未推流')
@@ -615,7 +615,9 @@
             console.log('选择开启屏幕共享流')
 
             if (cameraEnable) {
+                console.log('先停止推视频流')
                 aliWebrtc.unPublish().then((re)=>{
+                    console.log('关闭')
                     setTimeout(() => {
                         $('.local-display-name .streamstate b').text('当前未推流')
                     },3500)
@@ -624,8 +626,30 @@
                 });
             }
         }
-        // 开始推流
-        publishStream()
+
+        aliWebrtc
+                .publish()
+                .then(re => {
+                    setTimeout(() => {
+                        $(".streamType").css({
+                            visibility: "hidden"
+                        })
+                        $(this).text("停止推流")
+                        if(aliWebrtc.configLocalScreenPublish) {
+                            $('.local-display-name .streamstate b').text('共享流')
+                            $('.control-btn button.toggle-screen').css('visibility', 'visible')
+                            $('.control-btn button.toggle-camera').css('visibility', 'hidden')
+                        } else {
+                            $('.local-display-name .streamstate b').text('视频流')
+                            $('.control-btn button.toggle-camera').css('visibility', 'visible')
+                            $('.control-btn button.toggle-screen').css('visibility', 'hidden')
+                        }
+                    },3500)
+                })
+                .catch(err => {
+                    console.log('错误消息', err.message)
+                });
+
     })
 
     /**
@@ -644,7 +668,7 @@
                     $('.control-btn button.toggle-screen').css('visibility', 'hidden')
                 }
             },3500)
-            log('推流成功')
+            console.log("推流成功")
         }).catch(err => {
             console.log(err.message)
         });
