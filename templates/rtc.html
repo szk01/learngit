@@ -600,6 +600,21 @@
                     setTimeout(() => {
                         $('.local-display-name .streamstate b').text('当前未推流')
                     },3500)
+                    aliWebrtc.publish().then(re=>{
+                        console.log(re);
+                        $(this).text("停止推流")
+                            if(aliWebrtc.configLocalScreenPublish) {
+                                $('.local-display-name .streamstate b').text('共享流')
+                                $('.control-btn button.toggle-screen').css('visibility', 'visible')
+                                $('.control-btn button.toggle-camera').css('visibility', 'hidden')
+                            } else {
+                                $('.local-display-name .streamstate b').text('视频流')
+                                $('.control-btn button.toggle-camera').css('visibility', 'visible')
+                                $('.control-btn button.toggle-screen').css('visibility', 'hidden')
+                            }
+                    }).catch(error => {
+                        console.log('错误消息', error.message)
+                    })
                 } ,(err)=>{
                     console.log('停止屏幕流，切换出错',err.message);
                 });
@@ -621,14 +636,27 @@
                     setTimeout(() => {
                         $('.local-display-name .streamstate b').text('当前未推流')
                     },3500)
+                    aliWebrtc.publish().then(re=>{
+                        console.log(re);
+                        $(this).text("停止推流")
+                            if(aliWebrtc.configLocalScreenPublish) {
+                                $('.local-display-name .streamstate b').text('共享流')
+                                $('.control-btn button.toggle-screen').css('visibility', 'visible')
+                                $('.control-btn button.toggle-camera').css('visibility', 'hidden')
+                            } else {
+                                $('.local-display-name .streamstate b').text('视频流')
+                                $('.control-btn button.toggle-camera').css('visibility', 'visible')
+                                $('.control-btn button.toggle-screen').css('visibility', 'hidden')
+                            }
+                    }).catch(error => {
+                        console.log('错误消息', error.message)
+                    })
                 } ,(err)=>{
                     console.log('停止相机流，切换出错',err.message);
                 });
             }
         }
-        aliWebrtc.publish().then(re=>{
-            console.log(re);
-        })
+
         // setTimeout(aliWebrtc
         //     .publish().then(re => {
         //         setTimeout(() => {
