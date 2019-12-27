@@ -120,8 +120,8 @@
             let streamTypeList = publisher.streamConfigs.filter(item => {
                 return item.state === "active";
             });
-            log('streamTypeList', streamTypeList)
-            if(streamTypeList.length == 0){
+            console.log('streamTypeList', streamTypeList)
+            if(streamTypeList.length === 0){
                 console.log('信息缺失，没有推流')
             }else{
                 streamTypeList.map(item => {
@@ -593,12 +593,12 @@
             aliWebrtc.configLocalScreenPublish = false
 
             console.log('选择开启视频流')
-            // 停止屏幕流
+
             if (screenEnable) {
                 console.log('先停止推共享流')
                 aliWebrtc.unPublish().then((re)=>{
                     setTimeout(() => {
-                        $('.local-display-name .streamstate b').text('当前未推流')
+                        $('.local-display-name .streamstate b').text('开启共享流')
                     },3500)
                     aliWebrtc.publish().then(re=>{
                         console.log(re);
@@ -632,7 +632,7 @@
             if (cameraEnable) {
                 console.log('先停止推视频流')
                 aliWebrtc.unPublish().then((re)=>{
-                    console.log('关闭')
+                    console.log('关闭推流')
                     setTimeout(() => {
                         $('.local-display-name .streamstate b').text('当前未推流')
                     },3500)
@@ -656,24 +656,6 @@
                 });
             }
         }
-
-        // setTimeout(aliWebrtc
-        //     .publish().then(re => {
-        //         setTimeout(() => {
-        //             $(this).text("停止推流")
-        //             if(aliWebrtc.configLocalScreenPublish) {
-        //                 $('.local-display-name .streamstate b').text('共享流')
-        //                 $('.control-btn button.toggle-screen').css('visibility', 'visible')
-        //                 $('.control-btn button.toggle-camera').css('visibility', 'hidden')
-        //             } else {
-        //                 $('.local-display-name .streamstate b').text('视频流')
-        //                 $('.control-btn button.toggle-camera').css('visibility', 'visible')
-        //                 $('.control-btn button.toggle-screen').css('visibility', 'hidden')
-        //             }
-        //         },3500)
-        //     }).catch(err => {
-        //         console.log('错误消息', err.message)
-        //     }), 4000)
 
 
     })
