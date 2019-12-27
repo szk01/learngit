@@ -117,10 +117,10 @@
             console.log("onPublisher", publisher);
             console.log('发布了流的publisherInfo', publisher)
             // 自动订阅
-            let streamTypeList = userInfo.streamConfigs.filter(item => {
+            let streamTypeList = publisher.streamConfigs.filter(item => {
                 return item.state === "active";
             });
-
+            log('streamTypeList', streamTypeList)
             if(streamTypeList.length == 0){
                 console.log('信息缺失，没有推流')
             }else{
@@ -587,20 +587,42 @@
     $('.publisher .streamType input').click(function(e) {
         var config = $(this).attr('id')
         if(config === 'cameraPublisher'){
+            let screenEnable = aliWebrtc.configLocalScreenPublish
             aliWebrtc.configLocalAudioPublish = true
             aliWebrtc.configLocalCameraPublish = true
             aliWebrtc.configLocalScreenPublish = false
             // 设置视频参数
             settingCamera(640, 480, 10)
             console.log('选择开启视频流')
+            // 停止屏幕流
+            if (screenEnable) {
+                aliWebrtc.unPublish().then((re)=>{
+                    setTimeout(() => {
+                        $('.local-display-name .streamstate b').text('当前未推流')
+                    },3500)
+                } ,(err)=>{
+                    console.log('停止屏幕流，切换出错',err.message);
+                });
+            }
 
         }else {
+            let cameraEnable = aliWebrtc.configLocalCameraPublish
             aliWebrtc.configLocalAudioPublish = true
             aliWebrtc.configLocalCameraPublish = false
             aliWebrtc.configLocalScreenPublish = true
             // 设置视频参数
             settingCamera(640, 480, 10)
             console.log('选择开启屏幕共享流')
+
+            if (cameraEnable) {
+                aliWebrtc.unPublish().then((re)=>{
+                    setTimeout(() => {
+                        $('.local-display-name .streamstate b').text('当前未推流')
+                    },3500)
+                } ,(err)=>{
+                    console.log('停止相机流，切换出错',err.message);
+                });
+            }
         }
         // 开始推流
         publishStream()
@@ -609,13 +631,6 @@
     /**
      * 推流**/
     var publishStream = function() {
-        aliWebrtc.unPublish().then(re => {
-            setTimeout(() => {
-                console.log('停止推流, 触发updateUserList')
-            }, 3500)
-        }).catch(error => {
-            console.log(error.message)
-        })
 
         aliWebrtc.publish().then(re => {
             setTimeout(() => {
@@ -629,6 +644,7 @@
                     $('.control-btn button.toggle-screen').css('visibility', 'hidden')
                 }
             },3500)
+            log('推流成功')
         }).catch(err => {
             console.log(err.message)
         });
@@ -675,7 +691,7 @@
                     $('.local-display-name .streamstate b').text('当前未推流')
                 },3500)
             } ,(err)=>{
-                console.log(err.message);
+                console.log('错误信息',err.message);
             });
         }else {
             return
