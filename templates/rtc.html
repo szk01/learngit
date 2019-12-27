@@ -118,6 +118,7 @@
             console.log('发布了流的publisherInfo', publisher)
             let userId = publisher.userId
             // 自动订阅
+            
             aliWebrtc.configRemoteCameraTrack(userId, true, true)
             aliWebrtc.configRemoteAudio(userId, true);
             aliWebrtc.subscribe(userId).then((userId)=>{
@@ -192,7 +193,7 @@
          */
         aliWebrtc.on('onLeave', (publisher) => {
             initialization(publisher.userId);
-
+            console.log('用户离开')
             updateUserList();
             removeDom(publisher.userId);
         })
@@ -586,6 +587,14 @@
     /**
      * 推流**/
     var publishStream = function() {
+        aliWebrtc.unPublish().then(re => {
+            setTimeout(() => {
+                console.log('停止推流, 触发updateUserList')
+            }, 2500)
+        }).catch(error => {
+            console.log(error.message)
+        })
+
         aliWebrtc.publish().then(re => {
             setTimeout(() => {
                 if(aliWebrtc.configLocalScreenPublish) {
@@ -597,7 +606,7 @@
                     $('.control-btn button.toggle-camera').css('visibility', 'visible')
                     $('.control-btn button.toggle-screen').css('visibility', 'hidden')
                 }
-            },1000)
+            },2500)
         }).catch(err => {
             console.log(err.message)
         });

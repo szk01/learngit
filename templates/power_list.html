@@ -91,5 +91,38 @@
     </ul>
     </div>
 
+    <div>
+        <div>
+            <label>创建视频会议</label> <button class="btn-info create-room">生成连接</button>
+            <label class="link"></label> <button class="btn-default copy-link">复制链接</button>
+        </div>
+
+    </div>
+
+     <script>
+         $("button.create-room").click(function () {
+             let seed = "1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
+             let roomId = ''
+             for(let i = 0; i< 5; i++) {
+                 roomId += seed[Math.floor(Math.random() * seed.length)]
+             }
+             console.log('roomId', roomId)
+
+             let link = 'https://106.15.44.224/rtc' + roomId
+             $("label.link").val(link)
+         })
+
+         $(".copy-link").click(function () {
+             let link = $("label.link").val()
+             if (link) {
+                 console.log()
+                 $("label.link").select()
+                 let enable = document.execCommand('copy', false, null)
+                 if (enable) confirm('复制链接成功')
+             }
+             confirm('没有生成链接，尝试生成链接')
+         })
+     </script>
+
 </body>
 </html>
