@@ -626,23 +626,26 @@
                 });
             }
         }
-        setTimeout(aliWebrtc
-            .publish().then(re => {
-                setTimeout(() => {
-                    $(this).text("停止推流")
-                    if(aliWebrtc.configLocalScreenPublish) {
-                        $('.local-display-name .streamstate b').text('共享流')
-                        $('.control-btn button.toggle-screen').css('visibility', 'visible')
-                        $('.control-btn button.toggle-camera').css('visibility', 'hidden')
-                    } else {
-                        $('.local-display-name .streamstate b').text('视频流')
-                        $('.control-btn button.toggle-camera').css('visibility', 'visible')
-                        $('.control-btn button.toggle-screen').css('visibility', 'hidden')
-                    }
-                },3500)
-            }).catch(err => {
-                console.log('错误消息', err.message)
-            }), 4000)
+        aliWebrtc.publish().then(re=>{
+            console.log(re);
+        })
+        // setTimeout(aliWebrtc
+        //     .publish().then(re => {
+        //         setTimeout(() => {
+        //             $(this).text("停止推流")
+        //             if(aliWebrtc.configLocalScreenPublish) {
+        //                 $('.local-display-name .streamstate b').text('共享流')
+        //                 $('.control-btn button.toggle-screen').css('visibility', 'visible')
+        //                 $('.control-btn button.toggle-camera').css('visibility', 'hidden')
+        //             } else {
+        //                 $('.local-display-name .streamstate b').text('视频流')
+        //                 $('.control-btn button.toggle-camera').css('visibility', 'visible')
+        //                 $('.control-btn button.toggle-screen').css('visibility', 'hidden')
+        //             }
+        //         },3500)
+        //     }).catch(err => {
+        //         console.log('错误消息', err.message)
+        //     }), 4000)
 
 
     })
