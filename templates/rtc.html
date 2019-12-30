@@ -513,7 +513,7 @@
         }
         channelId = value
         joinroom()
-        
+
     })
 
 
@@ -831,7 +831,7 @@
      * 进入视频页面**/
     var __main = function() {
         let roomId = $('.main-web').attr('data-roomId')
-        if (roomId) {
+        if (roomId !== "None") {
             console.log('roomId', roomId)
             channelId = roomId
             joinroom()
