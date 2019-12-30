@@ -14,16 +14,9 @@
 
 <body>
 
-    {% if request.args.get("roomId") %}
-        <script>
-            $(".main-input input").val(request.args.get("roomId"))
-            $(".main-button").trigger("click")
-        </script>
-    {% endif %}
-
     <div class="login">
         <div class="main">
-            <div class="main-title">
+            <div class="main-title">{{ request.args.get("roomId") }}
                 <span>音视频通信</span>
             </div>
             <div class="main-input">
@@ -846,5 +839,28 @@
             $(".video-container .remote-subscriber-active").attr('class', 'remote-subscriber')
         }
     })
+</script>
+
+<script>
+    /**
+     * 获取url中的参数**/
+    let getQueryVariable = function(variable) {
+        let query = window.location.search.substring(1);
+        let vars = query.split("&");
+        for (let i=0; i<vars.length; i++) {
+               let pair = vars[i].split("=");
+               if (pair[0] === variable) {return pair[1]}
+        }
+        return false
+
+    }
+
+    let value = getQueryVariable('roomId')
+    if (value) {
+        console.log('query', value)
+        $(".main-input input").val(value)
+        $(".main-button").trigger("click")
+    }
+
 </script>
 
