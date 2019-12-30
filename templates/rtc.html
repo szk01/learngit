@@ -71,7 +71,6 @@
     var channelId;
     var userName = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);     // 用户名随机取
     var publisherList = [];             //
-    var localVideoWH = {}
 
     /**
      * AliWebRTC isSupport检测
@@ -79,6 +78,7 @@
     AliRtcEngine.isSupport().then(re => {           // 进入此页面就会执行这段程序
         console.log(re);
         init();                 // 初始化调用，各种监听
+        __main()
     }).catch(err => {
         alert(err.message);
     })
@@ -90,7 +90,7 @@
          * remote用户加入房间 onJoin
          * 更新在线用户列表
          */
-        console.log('新创建一个aliWebrtc成功，开始监听各种事件')
+        console.log('新创建一个aliWebrtc成功，开始监听各种事件', aliWebrtc)
         aliWebrtc.on('onJoin', (publisher) => {
             if(publisher.userId){
                 console.log('更新在线用户列表')
@@ -837,7 +837,6 @@
             joinroom()
         } else { confirm('网址有误')}
     }
-    __main()
 
 </script>
 
