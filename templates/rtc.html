@@ -73,7 +73,7 @@
 
 </html>
 
-<script>
+<script   >
     /**
      * 必须使用https
      */
@@ -120,12 +120,12 @@
             let streamTypeList = publisher.streamConfigs.filter(item => {
                 return item.state === "active";
             });
-            console.log('streamTypeList', streamTypeList)
+            let userId = publisher.userId
+            console.log('streamTypeList', streamTypeList, userId)
             if(streamTypeList.length === 0){
                 console.log('信息缺失，没有推流')
             }else{
                 streamTypeList.map(item => {
-                    item.userId = userId
                     if(item.type === "video"){
                         aliWebrtc.configRemoteCameraTrack(userId, true, true)
                         aliWebrtc.configRemoteAudio(userId, true);
