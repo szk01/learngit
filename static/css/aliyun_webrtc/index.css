@@ -94,8 +94,8 @@ ul,li{
 }
 
 .local-video video.active{
-  height: 300px !important;
-  width: 400px !important;
+  height: 200px !important;
+  width: 260px !important;
   display: block !important;
   z-index: 9 !important;
   position: absolute !important;
