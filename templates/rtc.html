@@ -14,20 +14,8 @@
 
 <body>
 
-    <div class="login">
-        <div class="main">
-            <div class="main-title">{{ request.args.get("roomId") }}
-                <span>音视频通信</span>
-            </div>
-            <div class="main-input">
-                <input type="text" placeholder="请输入房间号">
-            </div>
-            <div class="main-button">
-                <button>进入房间</button>
-            </div>
-        </div>
-    </div>
-    <div class="main-web" style="display: none;">
+
+    <div class="main-web" data-roomId={{request.args.get("roomId")}}>
         <div class="remote-user-list">
             <h2>房间成员</h2>
             <ul class="user-ul"></ul>
@@ -525,10 +513,7 @@
         }
         channelId = value
         joinroom()
-
-        $('.login').hide()
-        $('.main-web').show()
-        localVideoWH = domWH_position()
+        
     })
 
 
@@ -843,24 +828,16 @@
 
 <script>
     /**
-     * 获取url中的参数**/
-    let getQueryVariable = function(variable) {
-        let query = window.location.search.substring(1);
-        let vars = query.split("&");
-        for (let i=0; i<vars.length; i++) {
-               let pair = vars[i].split("=");
-               if (pair[0] === variable) {return pair[1]}
-        }
-        return false
-
+     * 进入视频页面**/
+    var __main = function() {
+        let roomId = $('.main-web').attr('data-roomId')
+        if (roomId) {
+            console.log('roomId', roomId)
+            channelId = roomId
+            joinroom()
+        } else { confirm('网址有误')}
     }
-
-    let value = getQueryVariable('roomId')
-    if (value) {
-        console.log('query', value)
-        $(".main-input input").val(value)
-        $(".main-button").trigger("click")
-    }
+    __main()
 
 </script>
 
