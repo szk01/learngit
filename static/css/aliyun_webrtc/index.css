@@ -83,6 +83,7 @@ ul,li{
 {
   margin: 0 calc(50 / 1080 * 100vh);
   position: relative;
+  height: calc(602 / 850 * 100vh);
 }
 
 .local-video video{
@@ -90,6 +91,16 @@ ul,li{
   width: 100%;
   display: block;
   background-color: black;
+}
+
+.local-video video.active{
+  height: 300px !important;
+  width: 400px !important;
+  display: block !important;
+  z-index: 9 !important;
+  position: absolute !important;
+  right: 0 !important;
+  bottom: 0 !important;
 }
 
 .remote-user-list
@@ -272,9 +283,3 @@ background: -moz-linear-gradient(top,  #468CCF,  #63B8EE);
   position: fixed;
 }
 
-.local-video-active {
-  width: 30px;
-  height: calc(602 / 850 * 40vh);
-  padding-left: 60%;
-  padding-top: 60%;
-}

@@ -915,6 +915,8 @@
     $(".video-container").on('click','div.remote-subscriber', function () {
         $(this).attr('class', 'remote-subscriber-active')
         $(this).siblings().removeClass('remote-subscriber-active').addClass('remote-subscriber')
+        // local-video video 的样式也要修改
+        $(".local-video video").addClass('active')
     })
 
     // 改变localvideo的样式
