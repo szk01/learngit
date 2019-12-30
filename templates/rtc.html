@@ -13,6 +13,14 @@
 </head>
 
 <body>
+
+    {% if request.args.get("roomId") %}
+        <script>
+            $(".main-input input").val(request.args.get("roomId"))
+            $(".main-button").trigger("click")
+        </script>
+    {% endif %}
+
     <div class="login">
         <div class="main">
             <div class="main-title">
@@ -839,3 +847,4 @@
         }
     })
 </script>
+
