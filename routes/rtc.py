@@ -177,7 +177,7 @@ ALLOWED_EXTENSIONS = set(['txt', 'png', 'xls', 'JPG', 'PNG', 'xlsx', 'gif', 'GIF
 
 # 判断文件是否合法
 def allowed_file(filename):
-    return '.' in filename and filename.spilt('.', 1)[1] in ALLOWED_EXTENSIONS
+    return '.' in filename and filename.split('.', 1)[1] in ALLOWED_EXTENSIONS
 
 
 # 上传文件
@@ -192,7 +192,7 @@ def uploadFile():
     log('上传文件的名称', f)
     if f and allowed_file(f.filename):
         fname = f.filename
-        ext = fname.spilit('.', 1)[1]                  # 获取文件后缀
+        ext = fname.split('.', 1)[1]                  # 获取文件后缀
         unix_time = int(time.time())
         new_filename = str(unix_time) + '.' + ext      # 修改文件名
         log('上传的文件', new_filename)
