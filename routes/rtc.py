@@ -195,8 +195,8 @@ def uploadFile():
         ext = fname.split('.', 1)[1]                  # 获取文件后缀
         unix_time = int(time.time())
         new_filename = str(unix_time) + '.' + ext      # 修改文件名
-        log('上传的文件', new_filename)
-        f.save(os.path.join(file_dir, new_filename))    # 保存文件到upload目录
+        log('上传的文件', new_filename.filename)
+        f.save(os.path.join(file_dir, new_filename.filename))    # 保存文件到upload目录
 
         return jsonify({"status": "success", "msg": "上传成功"})
     else:
