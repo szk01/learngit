@@ -19,6 +19,12 @@
         <div class="remote-user-list">
             <h2>房间成员</h2>
             <ul class="user-ul"></ul>
+            <div class="upload-file">
+                <form action="/api/upload" methods="post" enctype="multipart/form-data">
+                    <input type="file" name="myfile">
+                    <input type="submit" value="上传">
+                </form>
+            </div>
         </div>
         <div class="container-box">
             <div class='local-display-name'>

@@ -14,7 +14,7 @@ from models.ccompany import Ccompany1
 from utils import log, serialize
 import copy
 
-import hashlib, uuid, datetime, time, json
+import hashlib, uuid, datetime, time, json, os
 from optparse import OptionParser
 
 main = Blueprint('rtc', __name__)
@@ -170,3 +170,41 @@ def getPublisher():
 
 
 # AppKey：dde07e3682c1ea002a70a2d7d743edbd
+
+basedir = os.path.abspath(os.path.dirname(__file__))    # 获取当前项目的绝对路径
+ALLOWED_EXTENSIONS = set(['txt', 'png', 'xls', 'JPG', 'PNG', 'xlsx', 'gif', 'GIF', 'pdf', 'PDF'])   # 允许上传的文件后缀
+
+
+# 判断文件是否合法
+def allowed_file(filename):
+    return '.' in filename and filename.rspilt('.', 1)[1] in ALLOWED_EXTENSIONS
+
+
+# 上传文件
+@main.route('/api/upload', methods=['POST'])
+def uploadFile():
+    log('basedir', basedir)
+    file_dir = os.path.join(basedir, 'upload_file')
+    log("保存文件的文件夹", file_dir)
+    if not os.path.exists(file_dir):
+        os.makedirs(file_dir)
+    f = request.files['myfile']
+    log('上传文件的名称', f)
+    if f and allowed_file(f.filename):
+        fname = f.filename
+        ext = fname.rspilit('.', 1)[1]                  # 获取文件后缀
+        unix_time = int(time.time())
+        new_filename = str(unix_time) + '.' + ext      # 修改文件名
+        log('上传的文件', new_filename)
+        f.save(os.path.join(file_dir, new_filename))    # 保存文件到upload目录
+
+        return jsonify({"status": "error", "msg": "上传成功"})
+    else:
+        return jsonify({"status": "success", "msg": "上传失败"})
+
+
+
+
+
+
+
