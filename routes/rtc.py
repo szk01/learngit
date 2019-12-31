@@ -198,9 +198,9 @@ def uploadFile():
         log('上传的文件', new_filename)
         f.save(os.path.join(file_dir, new_filename))    # 保存文件到upload目录
 
-        return jsonify({"status": "error", "msg": "上传成功"})
+        return jsonify({"status": "success", "msg": "上传成功"})
     else:
-        return jsonify({"status": "success", "msg": "上传失败"})
+        return jsonify({"status": "error", "msg": "上传失败"})
 
 
 
